@@ -67,6 +67,7 @@ class StandardDiffusionLoss(nn.Module):
         additional_model_inputs = {
             key: batch[key] for key in self.batch2model_keys.intersection(batch)
         }
+
         sigmas = self.sigma_sampler(input.shape[0]).to(input)
 
         noise = torch.randn_like(input)

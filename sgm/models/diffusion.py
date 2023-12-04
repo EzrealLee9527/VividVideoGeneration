@@ -318,14 +318,21 @@ class DiffusionEngine(pl.LightningModule):
             else [],
         )
 
-        sampling_kwargs = {}
+        sampling_kwargs = kwargs
+
+        # num_frames = 14
+        # sampling_kwargs["num_video_frames"] = num_frames
+        sampling_kwargs["image_only_indicator"] = torch.zeros(x.shape[0]//sampling_kwargs['num_video_frames']*2, sampling_kwargs['num_video_frames']).to(self.device)
+        N = int(sampling_kwargs["N"])
 
         N = min(x.shape[0], N)
         x = x.to(self.device)[:N]
         log["inputs"] = x
         z = self.encode_first_stage(x)
         log["reconstructions"] = self.decode_first_stage(z)
-        log.update(self.log_conditionings(batch, N))
+
+        # llz debug: 没txt prompt先注释了
+        # log.update(self.log_conditionings(batch, N))
 
         for k in c:
             if isinstance(c[k], torch.Tensor):

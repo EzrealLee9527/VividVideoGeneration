@@ -24,6 +24,8 @@ from pytorch_lightning.trainer import Trainer
 from pytorch_lightning.utilities import rank_zero_only
 
 from sgm.util import exists, instantiate_from_config, isheatmap
+from torch.utils.data import DataLoader, Dataset
+from functools import partial
 
 MULTINODE_HACKS = True
 
@@ -226,7 +228,132 @@ def get_checkpoint_name(logdir):
     print(f"Current melk ckpt name: {melk_ckpt_name}")
     return ckpt, melk_ckpt_name
 
+class WrappedDataset(Dataset):
+    """Wraps an arbitrary object with __len__ and __getitem__ into a pytorch dataset"""
 
+    def __init__(self, dataset):
+        self.data = dataset
+
+    def __len__(self):
+        return len(self.data)
+
+    def __getitem__(self, idx):
+        return self.data[idx]
+
+
+def worker_init_fn(_):
+    worker_info = torch.utils.data.get_worker_info()
+
+    dataset = worker_info.dataset
+    worker_id = worker_info.id
+
+    return np.random.seed(np.random.get_state()[1][0] + worker_id)
+
+class DataModuleFromConfig(pl.LightningDataModule):
+    def __init__(self, batch_size, train=None, validation=None, test=None, predict=None,
+                 wrap=False, num_workers=None, shuffle_test_loader=False, use_worker_init_fn=False,
+                 shuffle_val_dataloader=False):
+        super().__init__()
+        self.batch_size = batch_size
+        self.dataset_configs = dict()
+        self.num_workers = num_workers if num_workers is not None else batch_size * 2
+        self.use_worker_init_fn = use_worker_init_fn
+        if train is not None:
+            self.dataset_configs["train"] = train
+            self.train_dataloader = self._train_dataloader
+        if validation is not None:
+            self.dataset_configs["validation"] = validation
+            self.val_dataloader = partial(
+                self._val_dataloader, shuffle=shuffle_val_dataloader)
+        if test is not None:
+            self.dataset_configs["test"] = test
+            self.test_dataloader = partial(
+                self._test_dataloader, shuffle=shuffle_test_loader)
+        if predict is not None:
+            self.dataset_configs["predict"] = predict
+            self.predict_dataloader = self._predict_dataloader
+        self.wrap = wrap
+
+    def prepare_data(self):
+        for data_cfg in self.dataset_configs.values():
+            print('data_cfg', data_cfg)
+            instantiate_from_config(data_cfg)
+
+    def setup(self, stage=None):
+        self.datasets = dict(
+            (k, instantiate_from_config(self.dataset_configs[k]))
+            for k in self.dataset_configs)
+        if self.wrap:
+            for k in self.datasets:
+                self.datasets[k] = WrappedDataset(self.datasets[k])
+    
+    def collate_fn(self, batch):
+        input_keys = ['pixel_values', 'shape_detail_imgs', 'shape_imgs',
+                      'motion_bucket_id', 'fps_id', 'cond_aug', 'cond_frames','cond_frames_without_noise',
+                      'num_video_frames', 'image_only_indicator']
+        rearrange_input_keys = ['pixel_values', 'shape_detail_imgs', 'shape_imgs',
+                      'motion_bucket_id', 'fps_id', 'cond_aug', 'cond_frames','cond_frames_without_noise',
+                       'image_only_indicator']
+        batch = list(filter(lambda x: x is not None, batch))  
+        if len(batch) == 0: return None  
+        new_batch = {}
+        for input_key in input_keys:
+            if input_key in rearrange_input_keys:
+                values = torch.stack([item[input_key] for item in batch])
+                if values.ndim == 5:
+                    b, t, c, h, w = values.size()
+                    values = values.view(b * t, c, h, w)
+                elif values.ndim == 3:
+                    b, c, t = values.size()
+                    values = values.view(b * c, t)
+                elif values.ndim == 2:
+                    b, t = values.size()
+                    values = values.view(b * t)
+            else:
+                values = batch[0][input_key]
+            new_batch[input_key] = values
+        return new_batch
+
+    def _train_dataloader(self):
+        if self.use_worker_init_fn:
+            init_fn = worker_init_fn
+        else:
+            init_fn = None
+        return DataLoader(self.datasets["train"], batch_size=self.batch_size,
+                          num_workers=self.num_workers, shuffle=True,
+                          worker_init_fn=init_fn,collate_fn=self.collate_fn)
+
+    def _val_dataloader(self, shuffle=False):
+        if self.use_worker_init_fn:
+            init_fn = worker_init_fn
+        else:
+            init_fn = None
+        return DataLoader(self.datasets["validation"],
+                          batch_size=self.batch_size,
+                          num_workers=self.num_workers,
+                          worker_init_fn=init_fn,
+                          shuffle=shuffle,
+                          collate_fn=self.collate_fn)
+
+    def _test_dataloader(self, shuffle=False):
+        if self.use_worker_init_fn:
+            init_fn = worker_init_fn
+        else:
+            init_fn = None
+
+        return DataLoader(self.datasets["test"], batch_size=self.batch_size,
+                          num_workers=self.num_workers, worker_init_fn=init_fn, shuffle=shuffle,
+                          collate_fn=self.collate_fn)
+
+    def _predict_dataloader(self, shuffle=False):
+        if self.use_worker_init_fn:
+            init_fn = worker_init_fn
+        else:
+            init_fn = None
+        return DataLoader(self.datasets["predict"], batch_size=self.batch_size,
+                          num_workers=self.num_workers, worker_init_fn=init_fn,
+                          collate_fn=self.collate_fn)
+    
 class SetupCallback(Callback):
     def __init__(
         self,
@@ -337,6 +464,17 @@ class ImageLogger(Callback):
         self.log_before_first_step = log_before_first_step
 
     @rank_zero_only
+    def _testtube(self, pl_module, images, batch_idx, split):
+        for k in images:
+            grid = torchvision.utils.make_grid(images[k])
+            grid = (grid + 1.0) / 2.0  # -1,1 -> 0,1; c,h,w
+
+            tag = f"{split}/{k}"
+            pl_module.logger.experiment.add_image(
+                tag, grid,
+                global_step=pl_module.global_step)
+            
+    @rank_zero_only
     def log_local(
         self,
         save_dir,
@@ -412,9 +550,10 @@ class ImageLogger(Callback):
                 "dtype": torch.get_autocast_gpu_dtype(),
                 "cache_enabled": torch.is_autocast_cache_enabled(),
             }
+            # should suit for video generation
             with torch.no_grad(), torch.cuda.amp.autocast(**gpu_autocast_kwargs):
                 images = pl_module.log_images(
-                    batch, split=split, **self.log_images_kwargs
+                    batch, **self.log_images_kwargs
                 )
 
             for k in images:
@@ -685,8 +824,15 @@ if __name__ == "__main__":
                     "save_dir": logdir,
                 },
             },
+            "testtube": {
+                "target": "pytorch_lightning.loggers.TensorBoardLogger",
+                "params": {
+                    "name": "testtube",
+                    "save_dir": logdir,
+                }
+            },
         }
-        default_logger_cfg = default_logger_cfgs["wandb" if opt.wandb else "csv"]
+        default_logger_cfg = default_logger_cfgs["testtube"]
         if opt.wandb:
             # TODO change once leaving "swiffer" config directory
             try:
@@ -832,7 +978,7 @@ if __name__ == "__main__":
         # calling these ourselves should not be necessary but it is.
         # lightning still takes care of proper multiprocessing though
         data.prepare_data()
-        # data.setup()
+        data.setup()
         print("#### Data #####")
         try:
             for k in data.datasets:
@@ -897,6 +1043,7 @@ if __name__ == "__main__":
         # run
         if opt.train:
             try:
+                print('Start training!')
                 trainer.fit(model, data, ckpt_path=ckpt_resume_path)
             except Exception:
                 if not opt.debug:

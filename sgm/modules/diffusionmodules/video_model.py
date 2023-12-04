@@ -67,7 +67,6 @@ class VideoResBlock(ResBlock):
         image_only_indicator: Optional[th.Tensor] = None,
     ) -> th.Tensor:
         x = super().forward(x, emb)
-
         x_mix = rearrange(x, "(b t) c h w -> b c t h w", t=num_video_frames)
         x = rearrange(x, "(b t) c h w -> b c t h w", t=num_video_frames)
 

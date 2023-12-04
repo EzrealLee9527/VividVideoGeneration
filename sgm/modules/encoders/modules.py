@@ -74,6 +74,7 @@ class GeneralConditioner(nn.Module):
 
     def __init__(self, emb_models: Union[List, ListConfig]):
         super().__init__()
+        
         embedders = []
         for n, embconfig in enumerate(emb_models):
             embedder = instantiate_from_config(embconfig)
