@@ -1,15 +1,51 @@
 # Vivid Video Generation
 
-## News
-**2023.12.04**
-- finetune from svd
+# News
+**2023.12.05**
+- 环境配置文件上传
+- 把各个步骤的脚本上传
+- 在pexels数据集上测试过:  [worklog](https://wiki.megvii-inc.com/pages/viewpage.action?pageId=519812610)
 
 
-## Training:
+# 环境配置
+- conda配置文件：svd_env.yaml
+- 文字检测会用到的Craft存在环境不适配问题, 需要修改一些代码:
+  - [ImportError: cannot import name 'model_urls' from 'torchvision.models.vgg'](https://github.com/clovaai/CRAFT-pytorch/issues/191)
+  - [ValueError: setting an array element with a sequence. The requested array has an inhomogeneous shape after 1 dimensions. The detected shape was (19,) + inhomogeneous part.](https://blog.csdn.net/m0_53127772/article/details/132492224)
+- 其余问题应该不大, 爬坑记录:  [worklog](https://wiki.megvii-inc.com/pages/viewpage.action?pageId=518190042)
+- 模型文件：目前都存放在火山云的tos上
+  - insightface: s3://data-transfer-tos-shanghai-818/midjourney/jmh/Video/SVD/DataCuration/models/.insightface
+  - Caption/Aesthetic/Similarity:  s3://data-transfer-tos-shanghai-818/midjourney/jmh/Video/SVD/DataCuration/models/huggingface/hub/
+  - TextDetection:  s3://data-transfer-tos-shanghai-818/midjourney/jmh/Video/SVD/DataCuration/models/huggingface/hub/craft
 
-As an finetuning example, run
+# 各个脚本调用
+### 分镜检测
+目前仅支持最简单的使用方式,还未考虑fade-in/fade-out的情况.
 
-```
-CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python main.py --base configs/train/finetune_from_svd.yaml -t --devices 0,1,2,3,4,5,6,7
-```
+`python3 scripts/cur_detection.py`
 
+### 调用InsightFace检测人脸
+目前仅支持onnx的CPU版本eval, gpu环境有冲突, 有必要的话可以专门配置一下insightface的gpu环境:
+
+`python3 scripts/insightface_detection.py`
+
+### MotionScore
+- #### OpenCV Farneback:
+  `python3 scripts/motion_score.py`
+
+### Caption
+- #### CoCa
+  `python3 scripts/caption_coca.py`
+- #### VideoBLIP
+  `python3 scripts/caption_videoblip.py`
+- #### LLM：
+  coming soon
+
+### AestheticScore
+`python3 scripts/aesthetics_score.py`
+
+### Text-Image Similarity
+`python3 scripts/text_image_similarities.py`
+
+### 检测文字
+`python3 scripts/text_detection.py`
