@@ -55,6 +55,10 @@ def get_global_motion_score(video_path, optflow_fps=1, optflow_shortest_px=16)->
 
 def worker(video_s3path_list, out_jsonl_dir, cache_dir="/dev/shm/")-> float:
 
+    megfile.smart_makedirs(cache_dir, exist_ok=True)    
+
+
+    ret_dic = {}
     for video_s3path in tqdm(video_s3path_list):
         video_name = video_s3path.split('/')[-1]
         video_localpath = megfile.smart_path_join(cache_dir, video_name)
@@ -70,12 +74,14 @@ def worker(video_s3path_list, out_jsonl_dir, cache_dir="/dev/shm/")-> float:
         cache_jsonl_path = megfile.smart_path_join(cache_dir, f"{video_name}.motionscore.jsonl")
         with jsonlines.open(cache_jsonl_path, mode="w") as file_jsonl:
             file_jsonl.write({
-                "video_clip":video_s3path,
                 "motion_score":motion_score
             })
         out_jsonl_path = megfile.smart_path_join(out_jsonl_dir, f"{video_name}.motionscore.jsonl")
         megfile.smart_move(cache_jsonl_path, out_jsonl_path)
         os.remove(video_localpath)
+        
+        ret_dic[video_s3path] = motion_score
+    return ret_dic
 
 
 if __name__ == "__main__":    

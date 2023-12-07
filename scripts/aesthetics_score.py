@@ -47,9 +47,9 @@ def worker(video_s3path_list, out_jsonl_dir, cache_dir="/dev/shm/")-> float:
     model = AestheticsPredictorV1.from_pretrained(pretrained)
     processor = CLIPProcessor.from_pretrained(pretrained)
 
+    megfile.smart_makedirs(cache_dir, exist_ok=True)    
 
-    # model = VideoBlipVisionModel.from_pretrained(pretrained).to(device)
-
+    ret_dic = {}
     for video_s3path in tqdm(video_s3path_list):
         video_name = video_s3path.split('/')[-1]
         video_localpath = megfile.smart_path_join(cache_dir, video_name)
@@ -70,6 +70,9 @@ def worker(video_s3path_list, out_jsonl_dir, cache_dir="/dev/shm/")-> float:
         out_jsonl_path = megfile.smart_path_join(out_jsonl_dir, f"{video_name}.aesthetic.jsonl")
         megfile.smart_move(cache_jsonl_path, out_jsonl_path)
         os.remove(video_localpath)
+
+        ret_dic[video_s3path] = aesthetic_score
+    return ret_dic
 
 
 if __name__ == "__main__":    

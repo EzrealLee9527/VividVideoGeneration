@@ -63,6 +63,9 @@ def worker(video_s3path_list, out_jsonl_dir, cache_dir="/dev/shm/")-> float:
     refine_net = load_refinenet_model(cuda=True, weight_path="/data/users/jingminhao/.cache/craft/craft_refiner_CTW1500.pth")
     craft_net = load_craftnet_model(cuda=True, weight_path="/data/users/jingminhao/.cache/craft/craft_mlt_25k.pth")
 
+    megfile.smart_makedirs(cache_dir, exist_ok=True)    
+
+    ret_dic = {}
     for video_s3path in tqdm(video_s3path_list):
         video_name = video_s3path.split('/')[-1]
         video_localpath = megfile.smart_path_join(cache_dir, video_name)
@@ -76,12 +79,13 @@ def worker(video_s3path_list, out_jsonl_dir, cache_dir="/dev/shm/")-> float:
         cache_jsonl_path = megfile.smart_path_join(cache_dir, f"{video_name}.text_detection.jsonl")
         with jsonlines.open(cache_jsonl_path, mode="w") as file_jsonl:
             file_jsonl.write({
-                "video_clip":video_s3path,
                 "text_region_ratio":text_region_ratio
             })
         out_jsonl_path = megfile.smart_path_join(out_jsonl_dir, f"{video_name}.text_detection.jsonl")
         megfile.smart_move(cache_jsonl_path, out_jsonl_path)
         os.remove(video_localpath)
+        ret_dic[video_s3path] = text_region_ratio
+    return ret_dic
 
 
 if __name__ == "__main__":    

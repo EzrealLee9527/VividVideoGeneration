@@ -41,7 +41,7 @@ def get_caption_videoblip(video_path, model, processor, device)-> float:
     
     inputs = process(processor, video=frames, text=None).to(device) # 尺寸会缩放到224x224
     with torch.no_grad():
-        generated_ids = model.generate(**inputs)
+        generated_ids = model.generate(**inputs, max_length=100)
     generated_text = processor.batch_decode(generated_ids, skip_special_tokens=True)[0].strip()
     
     return generated_text
@@ -57,6 +57,9 @@ def worker(video_s3path_list, out_jsonl_dir, cache_dir="/dev/shm/")-> float:
     # processor = Blip2Processor.from_pretrained(pretrained)
     # model = VideoBlipVisionModel.from_pretrained(pretrained).to(device)
 
+    megfile.smart_makedirs(cache_dir, exist_ok=True)    
+
+    ret_dic = {}
     for video_s3path in tqdm(video_s3path_list):
         video_name = video_s3path.split('/')[-1]
         video_localpath = megfile.smart_path_join(cache_dir, video_name)
@@ -71,13 +74,15 @@ def worker(video_s3path_list, out_jsonl_dir, cache_dir="/dev/shm/")-> float:
         cache_jsonl_path = megfile.smart_path_join(cache_dir, f"{video_name}.videoblip.jsonl")
         with jsonlines.open(cache_jsonl_path, mode="w") as file_jsonl:
             file_jsonl.write({
-                "video_clip":video_s3path,
-                "caption_videoblip":caption_videoblip
+                "caption":caption_videoblip
             })
         out_jsonl_path = megfile.smart_path_join(out_jsonl_dir, f"{video_name}.videoblip.jsonl")
         megfile.smart_move(cache_jsonl_path, out_jsonl_path)
         os.remove(video_localpath)
-
+        
+        ret_dic[video_s3path] = caption_videoblip
+    
+    return ret_dic
 
 if __name__ == "__main__":    
     import argparse
