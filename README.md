@@ -1,6 +1,8 @@
 # Vivid Video Generation
 
 # News
+**2023.12.07**
+- 添加了生成MetaInfo的Pipeline,包括生成Caption(CoCa,VideoBLIP), 计算MotionScore(Farneback法计算稠密光流), 计算Text-Image相似度(CoCa/VideoBLIP), 计算美学得分(CLIP+MLP), 计算文字覆盖率(Craft)等流程; 
 **2023.12.05**
 - 环境配置文件上传
 - 把各个步骤的脚本上传
