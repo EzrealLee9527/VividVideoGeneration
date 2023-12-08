@@ -294,7 +294,7 @@ class DiffusionEngine(pl.LightningModule):
     def log_images(
         self,
         batch: Dict,
-        N: int = 8,
+        # N: int = 8,
         sample: bool = True,
         ucg_keys: List[str] = None,
         **kwargs,
@@ -318,12 +318,12 @@ class DiffusionEngine(pl.LightningModule):
             else [],
         )
 
-        sampling_kwargs = kwargs
+        sampling_kwargs = {}
 
         # num_frames = 14
-        # sampling_kwargs["num_video_frames"] = num_frames
+        sampling_kwargs["num_video_frames"] = kwargs["num_video_frames"]
         sampling_kwargs["image_only_indicator"] = torch.zeros(x.shape[0]//sampling_kwargs['num_video_frames']*2, sampling_kwargs['num_video_frames']).to(self.device)
-        N = int(sampling_kwargs["N"])
+        N = int(kwargs["N"])
 
         N = min(x.shape[0], N)
         x = x.to(self.device)[:N]
