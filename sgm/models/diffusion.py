@@ -323,7 +323,7 @@ class DiffusionEngine(pl.LightningModule):
         # num_frames = 14
         # sampling_kwargs["num_video_frames"] = num_frames
         sampling_kwargs["image_only_indicator"] = torch.zeros(x.shape[0]//sampling_kwargs['num_video_frames']*2, sampling_kwargs['num_video_frames']).to(self.device)
-        N = int(sampling_kwargs["N"])
+        # N = int(sampling_kwargs["N"])
 
         N = min(x.shape[0], N)
         x = x.to(self.device)[:N]
