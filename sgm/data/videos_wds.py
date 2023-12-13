@@ -225,7 +225,7 @@ class S3VideosIterableDataset(IterableDataset):
             if self.is_image:
                 frames = frames[0]
 
-            frames_captions = ['A photo of a face'] * self.video_length
+            frames_captions = [meta_dic["tag"]["caption_coca"]] * self.video_length
             assert(len(frames_captions) > 0)
 
             cond_dict = self.get_conditions(frames)
@@ -308,7 +308,7 @@ if __name__ == "__main__":
     #     for tarfile_name in tarfile_name_list]
 
     dataset = S3VideosIterableDataset(
-        ["s3://weisiyuan-sh/datasets/CelebV_webdataset_20231211/",],
+        ["s3://data-transfer-tos-shanghai-818/midjourney/jmh/Video/wds/CelebV_webdataset_20231211",],
         video_length = 14,
         resolution = [512,512],
         frame_stride = 4,
@@ -318,7 +318,7 @@ if __name__ == "__main__":
         dataset, 
         batch_size=1,
         shuffle=False,
-        num_workers=8,
+        num_workers=0,
         collate_fn = None,
     ).with_length(len(dataset))
     # pbar = tqdm()
