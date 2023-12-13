@@ -184,7 +184,7 @@ data:
   target: main.DataModuleFromConfig
   params:
     batch_size: 1
-    num_workers: 0
+    num_workers: 8
     wrap: false
     train:
       target: sgm.data.videos_wds.S3VideosIterableDataset
@@ -195,7 +195,7 @@ data:
         video_length:       14
         shuffle:            true
         resampled:          true
-        dataset_length:     100000
+        dataset_length:     1000000
     validation:
       target: sgm.data.videos_wds.S3VideosIterableDataset
       params:
@@ -203,7 +203,7 @@ data:
         resolution:         [512, 512]
         frame_stride:       4
         video_length:       14
-        dataset_length:     100
+        dataset_length:     10
 
 # for training
 lightning:
@@ -211,7 +211,7 @@ lightning:
     image_logger:
       target: main.ImageLogger
       params:
-        batch_frequency: 1
+        batch_frequency: 1000
         max_images: 8
         increase_log_steps: False
         log_images_kwargs: {'N': 14, 'num_video_frames': 14 }
@@ -220,5 +220,4 @@ lightning:
   trainer:
     benchmark: True
     max_epochs: -1
-
     strategy: ddp_find_unused_parameters_false

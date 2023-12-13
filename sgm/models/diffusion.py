@@ -14,6 +14,7 @@ from ..modules.diffusionmodules.wrappers import OPENAIUNETWRAPPER
 from ..modules.ema import LitEma
 from ..util import (default, disabled_train, get_obj_from_str,
                     instantiate_from_config, log_txt_as_img)
+import time
 
 
 class DiffusionEngine(pl.LightningModule):
@@ -164,14 +165,28 @@ class DiffusionEngine(pl.LightningModule):
 
     def training_step(self, batch, batch_idx):
         loss, loss_dict = self.shared_step(batch)
-
+        
         self.log_dict(
             loss_dict, prog_bar=True, logger=True, on_step=True, on_epoch=False
         )
 
+        # self.log(
+        #     "global_step",
+        #     self.global_step,
+        #     prog_bar=True,
+        #     logger=True,
+        #     on_step=True,
+        #     on_epoch=False,
+        # )
+
+        if hasattr(self, "time_batch_st") and hasattr(self, "time_batch_ed"):
+            self.data_timecost = self.time_batch_st - self.time_batch_ed
+        else:
+            self.data_timecost = -1
+
         self.log(
-            "global_step",
-            self.global_step,
+            "data_cost",
+            self.data_timecost,
             prog_bar=True,
             logger=True,
             on_step=True,
@@ -183,16 +198,19 @@ class DiffusionEngine(pl.LightningModule):
             self.log(
                 "lr_abs", lr, prog_bar=True, logger=True, on_step=True, on_epoch=False
             )
-
         return loss
 
     def on_train_start(self, *args, **kwargs):
         if self.sampler is None or self.loss_fn is None:
             raise ValueError("Sampler and loss function need to be set for training.")
 
+    def on_train_batch_start(self, *args, **kwargs):
+        self.time_batch_st = time.time()
+
     def on_train_batch_end(self, *args, **kwargs):
         if self.use_ema:
-            self.model_ema(self.model)
+            self.model_ema(self.model)        
+        self.time_batch_ed = time.time()
 
     @contextmanager
     def ema_scope(self, context=None):
