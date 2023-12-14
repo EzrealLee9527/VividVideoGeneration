@@ -1,0 +1,46 @@
+# self define e.g text_classfication
+TaskName: "infering-multi-model2img"
+# description for this task
+Description: ""
+Priority: 6
+# entry point command
+Entrypoint: "bash"
+Tags: []
+# user define env var
+Envs:
+    - Name: "OSS_ENDPOINT"
+      Value: "http://tos-s3-cn-shanghai.ivolces.com"
+# queue created under Resource Group, empty as default queue
+# ResourceQueueID: "q-20230813141347-9dddg" # A800队列
+ResourceQueueID: "q-20230712153135-nmqtb" # A10队列
+# distributed framework, support: TensorFlow PS,PyTorch DDP,Horovod,BytePS
+# Framework: "PyTorchDDP"
+Framework: "Custom"
+TaskRoleSpecs:
+    - RoleName: "worker"
+      RoleReplicas: 1
+      # Flavor: "ml.pni2l.3xlarge" # A800x1
+      Flavor: "ml.gni2.3xlarge" # A10 x1
+ActiveDeadlineSeconds: 0
+DelayExitTimeSeconds: 2592000
+# enable tensor board or not
+EnableTensorBoard: false
+# storages
+Storages: []
+ImageUrl: "registry-cn-shanghai.cr.volces.com/images/weisiyuan_aigc:3dmm"
+# ImageUrl: "registry-cn-shanghai.cr.volces.com/images/jmh-lab:1030"
+# CacheType: "Cloudfs"
+# user code挂载好像是以copy的形式,建议直接挂载ssd
+# UserCodePath: /root/multi-model2img
+# RemoteMountCodePath: "/data/multi-model2img"
+Storages: 
+    - Type: "Vepfs"
+      MountPath: "/data/users/weisiyuan"
+      SubPath: "group-xiangyu/weisiyuan"
+    # - Type: "Tos"                                             
+    #   MountPath: "/data/datasets"                     
+    #   Bucket: "weisiyuan" 
+    #   Prefix: "datasets"                    
+      # Prefix: "replace with your prefix"                      
+      # MetaCacheCapacity: "replace with cache number"          
+      # MetaCacheExpiryMsec: "replace with cache expired time" 
