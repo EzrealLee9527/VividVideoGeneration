@@ -7,7 +7,7 @@ model:
     disable_first_stage_autocast: True
 
     # for training
-    ckpt_path: /data/users/jingminhao/.cache/custom_cache/models/stable-video-diffusion-img2vid/svd.safetensors #checkpoints/svd.safetensors
+    ckpt_path: /models00/svd_checkpoints/svd.safetensors 
     input_key: pixel_values
 
 
