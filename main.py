@@ -24,7 +24,8 @@ from pytorch_lightning.trainer import Trainer
 from pytorch_lightning.utilities import rank_zero_only
 
 from sgm.util import exists, instantiate_from_config, isheatmap
-from torch.utils.data import DataLoader, Dataset
+from torch.utils.data import DataLoader, Dataset, IterableDataset
+import webdataset as wds
 from functools import partial
 
 MULTINODE_HACKS = True
@@ -277,7 +278,8 @@ class DataModuleFromConfig(pl.LightningDataModule):
     def prepare_data(self):
         for data_cfg in self.dataset_configs.values():
             print('data_cfg', data_cfg)
-            instantiate_from_config(data_cfg)
+            # ? 这个有什么作用, 似乎没必要?
+            # instantiate_from_config(data_cfg)
 
     def setup(self, stage=None):
         self.datasets = dict(
@@ -288,12 +290,25 @@ class DataModuleFromConfig(pl.LightningDataModule):
                 self.datasets[k] = WrappedDataset(self.datasets[k])
     
     def collate_fn(self, batch):
-        input_keys = ['pixel_values', 'shape_detail_imgs', 'shape_imgs',
-                      'motion_bucket_id', 'fps_id', 'cond_aug', 'cond_frames','cond_frames_without_noise',
-                      'num_video_frames', 'image_only_indicator']
-        rearrange_input_keys = ['pixel_values', 'shape_detail_imgs', 'shape_imgs',
-                      'motion_bucket_id', 'fps_id', 'cond_aug', 'cond_frames','cond_frames_without_noise',
-                       'image_only_indicator']
+        input_keys = [
+            'pixel_values',
+            'motion_bucket_id', 
+            'fps_id', 
+            'cond_aug', 
+            'cond_frames',
+            'cond_frames_without_noise',
+            'num_video_frames', 
+            'image_only_indicator'
+        ]
+        rearrange_input_keys = [
+            'pixel_values',
+            'motion_bucket_id', 
+            'fps_id', 
+            'cond_aug', 
+            'cond_frames',
+            'cond_frames_without_noise',
+            'image_only_indicator'
+        ]
         batch = list(filter(lambda x: x is not None, batch))  
         if len(batch) == 0: return None  
         new_batch = {}
@@ -319,21 +334,51 @@ class DataModuleFromConfig(pl.LightningDataModule):
             init_fn = worker_init_fn
         else:
             init_fn = None
-        return DataLoader(self.datasets["train"], batch_size=self.batch_size,
-                          num_workers=self.num_workers, shuffle=True,
-                          worker_init_fn=init_fn,collate_fn=self.collate_fn)
+        
+        if isinstance(self.datasets["train"], IterableDataset):
+            return wds.WebLoader(
+                self.datasets["train"], 
+                batch_size=self.batch_size,
+                num_workers=self.num_workers, 
+                worker_init_fn=init_fn,
+                collate_fn=self.collate_fn
+            ).with_length(len(self.datasets["train"]))
+        elif isinstance(self.datasets["train"], Dataset):
+            return DataLoader(
+                self.datasets["train"], 
+                batch_size=self.batch_size,
+                num_workers=self.num_workers, 
+                shuffle=True, # 在Dataset中设置
+                worker_init_fn=init_fn,
+                collate_fn=self.collate_fn
+            )
+        else:
+            raise NotImplementedError
 
     def _val_dataloader(self, shuffle=False):
         if self.use_worker_init_fn:
             init_fn = worker_init_fn
         else:
             init_fn = None
-        return DataLoader(self.datasets["validation"],
-                          batch_size=self.batch_size,
-                          num_workers=self.num_workers,
-                          worker_init_fn=init_fn,
-                          shuffle=shuffle,
-                          collate_fn=self.collate_fn)
+        if isinstance(self.datasets["validation"], IterableDataset):
+            return wds.WebLoader(
+                self.datasets["validation"], 
+                batch_size=self.batch_size,
+                num_workers=self.num_workers, 
+                worker_init_fn=init_fn,
+                collate_fn=self.collate_fn
+            ).with_length(len(self.datasets["validation"]))
+        elif isinstance(self.datasets["validation"], Dataset):
+            return DataLoader(
+                self.datasets["validation"], 
+                batch_size=self.batch_size,
+                num_workers=self.num_workers, 
+                shuffle=shuffle, # 在Dataset中设置
+                worker_init_fn=init_fn,
+                collate_fn=self.collate_fn
+            )
+        else:
+            raise NotImplementedError
 
     def _test_dataloader(self, shuffle=False):
         if self.use_worker_init_fn:
@@ -341,18 +386,52 @@ class DataModuleFromConfig(pl.LightningDataModule):
         else:
             init_fn = None
 
-        return DataLoader(self.datasets["test"], batch_size=self.batch_size,
-                          num_workers=self.num_workers, worker_init_fn=init_fn, shuffle=shuffle,
-                          collate_fn=self.collate_fn)
+        if isinstance(self.datasets["test"], IterableDataset):
+            return wds.WebLoader(
+                self.datasets["test"], 
+                batch_size=self.batch_size,
+                num_workers=self.num_workers, 
+                worker_init_fn=init_fn,
+                collate_fn=self.collate_fn
+            ).with_length(len(self.datasets["test"]))
+        elif isinstance(self.datasets["test"], Dataset):
+            return DataLoader(
+                self.datasets["test"], 
+                batch_size=self.batch_size,
+                num_workers=self.num_workers, 
+                shuffle=shuffle, # 在Dataset中设置
+                worker_init_fn=init_fn,
+                collate_fn=self.collate_fn
+            )
+        else:
+            raise NotImplementedError
 
     def _predict_dataloader(self, shuffle=False):
         if self.use_worker_init_fn:
             init_fn = worker_init_fn
         else:
             init_fn = None
-        return DataLoader(self.datasets["predict"], batch_size=self.batch_size,
-                          num_workers=self.num_workers, worker_init_fn=init_fn,
-                          collate_fn=self.collate_fn)
+        
+        if isinstance(self.datasets["predict"], IterableDataset):
+            return wds.WebLoader(
+                self.datasets["predict"], 
+                batch_size=self.batch_size,
+                num_workers=self.num_workers, 
+                worker_init_fn=init_fn,
+                collate_fn=self.collate_fn
+            ).with_length(len(self.datasets["predict"]))
+        elif isinstance(self.datasets["predict"], Dataset):
+            return DataLoader(
+                self.datasets["predict"], 
+                batch_size=self.batch_size,
+                num_workers=self.num_workers, 
+                shuffle=shuffle, # 在Dataset中设置
+                worker_init_fn=init_fn,
+                collate_fn=self.collate_fn
+            )
+        else:
+            raise NotImplementedError
+
     
 class SetupCallback(Callback):
     def __init__(
@@ -860,9 +939,10 @@ if __name__ == "__main__":
             "target": "pytorch_lightning.callbacks.ModelCheckpoint",
             "params": {
                 "dirpath": ckptdir,
-                "filename": "{epoch:06}",
+                "filename": "{step:09}",
                 "verbose": True,
                 "save_last": True,
+                "every_n_train_steps" : 1000
             },
         }
         if hasattr(model, "monitor"):
@@ -1086,5 +1166,9 @@ if __name__ == "__main__":
 
         if opt.wandb:
             wandb.finish()
+
+        if trainer.global_rank > 0:
+            exit(0)
+
         # if trainer.global_rank == 0:
         #    print(trainer.profiler.summary())

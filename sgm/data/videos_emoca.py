@@ -388,6 +388,8 @@ def generate_gaussian_response(image_shape, landmarks, sigma=3):
     heatmap = heatmap[:,:,np.newaxis]
     return heatmap 
 
+
+"""
 if __name__ == '__main__':
 
 
@@ -548,3 +550,34 @@ if __name__ == '__main__':
 
         if idx >= 100:
             break
+"""
+
+if __name__ == "__main__":
+
+
+    """
+    target: sgm.data.videos_emoca.S3VideosDataset
+      params:
+        data_dirs:          ['s3://ljj-sh/Datasets/Videos/videos_emoca_labels_v0']
+        resolution:         [512, 512]
+        valid_size:         256
+        frame_stride:       4
+        video_length:       14
+    
+    """
+
+    dataset = S3VideosDataset(
+        # ['s3://ljj-sh/Datasets/Videos/videos_emoca_labels_v0'],
+        ["s3://data-transfer-tos-shanghai-818/midjourney/jmh/Video/tempfile/wds-dev", ],
+        resolution = [512,512],
+        valid_size = 256,
+        frame_stride = 4,
+        video_length = 14,
+    )
+
+    for data in dataset:
+        import pdb; pdb.set_trace()
+        pass
+
+
+    print("...")

@@ -184,24 +184,26 @@ data:
   target: main.DataModuleFromConfig
   params:
     batch_size: 1
-    num_workers: 0
+    num_workers: 2
     wrap: false
     train:
-      target: sgm.data.videos_emoca.S3VideosDataset
+      target: sgm.data.videos_wds.S3VideosIterableDataset
       params:
-        data_dirs:          ['s3://ljj-sh/Datasets/Videos/videos_emoca_labels_v0']
+        data_dirs:          ['s3://data-transfer-tos-shanghai-818/midjourney/jmh/Video/wds/CelebV_webdataset_20231211',]
         resolution:         [512, 512]
-        valid_size:         256
         frame_stride:       4
         video_length:       14
+        shuffle:            true
+        resampled:          true
+        dataset_length:     1000000
     validation:
-      target: sgm.data.videos_emoca.S3VideosDataset
+      target: sgm.data.videos_wds.S3VideosIterableDataset
       params:
-        data_dirs:          ['s3://ljj-sh/Datasets/Videos/videos_emoca_labels_v0']
+        data_dirs:          ['s3://data-transfer-tos-shanghai-818/midjourney/jmh/Video/wds/CelebV_webdataset_20231211',]
         resolution:         [512, 512]
-        valid_size:         256
         frame_stride:       4
         video_length:       14
+        dataset_length:     10
 
 # for training
 lightning:
@@ -209,14 +211,17 @@ lightning:
     image_logger:
       target: main.ImageLogger
       params:
-        batch_frequency: 1
+        batch_frequency: 1000
         max_images: 8
         increase_log_steps: False
         log_images_kwargs: {'N': 14, 'num_video_frames': 14 }
-        
+  
+  modelcheckpoint:
+    target: pytorch_lightning.callbacks.ModelCheckpoint
+    params:
+      every_n_train_steps: 1000
 
   trainer:
     benchmark: True
     max_epochs: -1
-
     strategy: ddp_find_unused_parameters_false
