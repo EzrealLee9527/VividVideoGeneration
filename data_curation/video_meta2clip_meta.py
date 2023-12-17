@@ -296,6 +296,8 @@ def main(args):
                                     start_time = start_time,
                                     duration = end_time - start_time,    
                                 )
+                                if item_meta['duration'] < min_duration:
+                                    continue
                                 yield local_video_file, item_meta
                             
                         else:

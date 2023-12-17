@@ -293,7 +293,7 @@ def fetch_videos(rootdir,filetypes = ['mp4']):
     return video_files
     
 # default celebV
-def fetch_video_from_tars(rootdir = 's3://weisiyuan-sh/datasets/CelebV-Text/', filetypes = ['mp4']):
+def fetch_video_from_tars(rootdir = 's3://weisiyuan-sh/datasets/CelebV-Text/', filetypes = ['mp4'],return_bytes = True):
     #  return video path and bytes
     from glob import glob
     from collections import defaultdict
@@ -323,8 +323,10 @@ def fetch_video_from_tars(rootdir = 's3://weisiyuan-sh/datasets/CelebV-Text/', f
                     
                     if not flag:
                         continue
-                    
-                    yield os.path.join(tar_f, member.name), tf.extractfile(member.name).read()
+                    if return_bytes:
+                        yield os.path.join(tar_f, member.name), tf.extractfile(member.name).read()
+                    else:
+                        yield os.path.join(tar_f, member.name)
 
 import hashlib
 import os

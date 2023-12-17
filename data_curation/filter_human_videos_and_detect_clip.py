@@ -1,4 +1,8 @@
 import tempfile
+import cv2
+import matplotlib.pyplot as plt
+from face_detection.insight_face_model import FaceAnalysis
+from utils import volces_get_worker_cnt_worldsize
 import os
 import sys
 from tqdm import tqdm
@@ -20,7 +24,7 @@ from craft_text_detector import (
 DEBUG = os.environ.get('DEBUG')
 CONTENT_DET_TH = int(os.environ.get('CONTENT_DET_TH',20))
 
-
+@lru_cache()
 def get_text_det_models():
     refine_net = load_refinenet_model(cuda=True, weight_path="/data/users/weisiyuan/cache/craft/craft_refiner_CTW1500.pth")
     craft_net = load_craftnet_model(cuda=True, weight_path="/data/users/weisiyuan/cache/craft/craft_mlt_25k.pth")
@@ -292,6 +296,88 @@ def extract_frame(input_file, frame_offset,shape):
 
     return frame
 
+@lru_cache()
+def get_face_ana():
+    face_ana = FaceAnalysis(allowed_modules= [
+        # 'landmark_3d_68',
+        'detection',
+        # 'genderage',
+        # 'recognition'
+        ])
+    face_ana.prepare(ctx_id=0, det_size=(640, 640))
+    return face_ana
+
+def filter_single_video(tmpfile):
+    text_region_ratio_thresold = 0.07 # from SVD appendix
+    face_ana = get_face_ana()
+    refine_net,craft_net = get_text_det_models()
+    try:
+        # load all frames leads to OOM
+        cap = cv2.VideoCapture(tmpfile)
+        per_sec_frame_face_num_list,per_sec_frame_valid_flag_list ,fps,frame_num,shape = check_video_per_sec_frame(cap,face_ana)
+        cap.release()
+        
+        if not any(per_sec_frame_face_num_list):
+            return None
+        frame_num_per_sec = int(fps)
+    
+        scene_list = split_video_into_scenes(tmpfile,None)
+        # print(f'scene_list : {len(scene_list)}')
+        if scene_list:
+            frame_num_level_scene_list = [ (clip[0].frame_num,clip[1].frame_num) for clip in scene_list]
+        else:
+            frame_num_level_scene_list = [[0,frame_num-1]]
+        valid_frame_num_level_scene_list = []
+
+        
+        clip_meta_list = []
+        keyframe_info = extract_key_frame_info(tmpfile)
+        for frame_st,frame_ed in frame_num_level_scene_list:
+            
+            # find the middle time, round it in the second level
+            mid_sec_idx = int(round(  (frame_st +frame_ed) //2 / fps ))
+            if not (mid_sec_idx > frame_st/fps and mid_sec_idx < frame_ed/fps):
+                continue
+            elif per_sec_frame_valid_flag_list[mid_sec_idx]:
+                # faces bboxes check pass
+                
+                mid_sec_frame = extract_frame(tmpfile, int(mid_sec_idx * fps),shape )
+                text_area_ratio = get_text_ratio(mid_sec_frame,refine_net,craft_net)
+                
+                if text_area_ratio>text_region_ratio_thresold:
+                    continue
+                
+                n_face = per_sec_frame_face_num_list[mid_sec_idx]
+                clip_meta_list.append(
+                    dict(n_face = n_face,text_area_ratio = text_area_ratio)
+                )
+                
+                fixed_frame_st,fixed_frame_ed = find_cloest_key_frame(
+                    keyframe_info, frame_st,frame_ed,fps
+                )
+                valid_frame_num_level_scene_list.append((fixed_frame_st,fixed_frame_ed))
+
+                if DEBUG:
+                    ffmpeg_split_video(
+                        tmpfile,
+                        os.path.join('debug',f'{fname}-{frame_st}-{frame_ed}.mp4'),
+                        fixed_frame_st,
+                        fixed_frame_ed,
+                        fps
+                    )
+    
+        
+        return {
+            'clips':valid_frame_num_level_scene_list,
+            'fps':fps,
+            'total_frames':frame_num,
+            'ori_shape':shape[:2],
+            'clip_meta_list':clip_meta_list
+        }
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        traceback.print_exc(file=sys.stderr)
+        return None
         
 if __name__ == "__main__":
     import argparse
@@ -315,10 +401,7 @@ if __name__ == "__main__":
         default=False,
     )
     args = parser.parse_args()
-    import cv2
-    import matplotlib.pyplot as plt
-    from face_detection.insight_face_model import FaceAnalysis
-    from utils import volces_get_worker_cnt_worldsize
+    
     
     worke_cnt, worldsize = volces_get_worker_cnt_worldsize()
     

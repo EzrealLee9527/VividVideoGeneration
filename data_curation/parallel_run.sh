@@ -10,7 +10,7 @@ mkdir -p $logdir
 for ((rank=0; rank<parallel; rank++))
 do
 echo $rank"/"$parallel
- WORLD=$parallel RANK=$rank  ${python_alias} video_meta2clip_meta.py -i s3://weisiyuan-sh/datasets/CelebV/ -o s3://weisiyuan-sh/datasets/CelebV_webdataset/ \
+ WORLD=$parallel RANK=$rank  ${python_alias} filter_clip_dump_tar.py -i s3://weisiyuan-sh/datasets/CelebV/ -o s3://weisiyuan-sh/datasets/CelebV_webdataset/ \
     > $logdir/${rank}.txt  2>&1 &
 
 done

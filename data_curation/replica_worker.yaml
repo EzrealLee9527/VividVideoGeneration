@@ -4,7 +4,7 @@ TaskName: "infering-multi-model2img"
 Description: ""
 Priority: 4
 # entry point command
-Entrypoint: "cd /data/users/weisiyuan/multi-model2img/aigc/tools/; bash run.sh"
+Entrypoint: "cd /data/users/weisiyuan/projects/VividVideoGeneration/data_curation/; bash run.sh"
 Tags: []
 # user define env var
 Envs:
@@ -20,7 +20,7 @@ Framework: "PyTorchDDP"
 # Framework: "Custom"
 TaskRoleSpecs:
     - RoleName: "worker"
-      RoleReplicas: 18
+      RoleReplicas: 16
       Flavor: "ml.gni2.3xlarge"
 ActiveDeadlineSeconds: 0
 DelayExitTimeSeconds: 2592000
