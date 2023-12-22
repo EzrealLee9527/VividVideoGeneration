@@ -5,3 +5,6 @@
 
 # environment setting
 - conda ：environment.yaml
+
+# Train:
+`bash ./train.sh accelerate_configs/8gpu_fp16_config.yaml`
