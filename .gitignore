@@ -1,6 +1,11 @@
 # extensions
 *.egg-info
 *.py[cod]
+*.pkl
+*.mp4
+*.npy
+*.gif
+*.txt
 
 # envs
 .pt13
@@ -12,3 +17,6 @@
 /outputs
 /build
 /src
+/output
+/.vscode
+/__pycache__
