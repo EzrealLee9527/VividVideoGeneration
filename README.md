@@ -1,7 +1,7 @@
 # Finetuning SVD with Diffusers+Accelerate .
 # News
 **2023.12.22**
-- support for fine-tuning Image2Video SVD.
+- support for fine-tuning Image2Video SVD. I will record a detailed worklog in https://wiki.megvii-inc.com/pages/viewpage.action?pageId=523140390 later.
 
 # environment setting
 - conda ：environment.yaml
