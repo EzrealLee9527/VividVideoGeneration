@@ -34,7 +34,7 @@ import torch.nn.functional as F
 import torch.utils.checkpoint
 from torch.utils.data import RandomSampler
 import transformers
-from accelerate import Accelerator
+from accelerate import Accelerator, DistributedType
 from accelerate.logging import get_logger
 from accelerate.utils import ProjectConfiguration, set_seed
 from huggingface_hub import create_repo, upload_folder
@@ -56,7 +56,8 @@ from diffusers.utils.import_utils import is_xformers_available
 # from torch.utils.data import Dataset
 from dataset import S3VideosIterableDataset
 import webdataset as wds
-
+from torch.distributed.fsdp import FullyShardedDataParallel as FSDP
+from torch.distributed.fsdp import StateDictType
 
 # Will error if the minimal version of diffusers is not installed. Remove at your own risks.
 check_min_version("0.24.0.dev0")
@@ -111,73 +112,6 @@ image_d = 64
 noise_d_low = 32
 noise_d_high = 64
 sigma_data = 0.5
-
-'''
-class DummyDataset(Dataset):
-    def __init__(self, num_samples=100000,):
-        """
-        Args:
-            num_samples (int): Number of samples in the dataset.
-            channels (int): Number of channels, default is 3 for RGB.
-        """
-        self.num_samples = num_samples
-        # Define the path to the folder containing video frames
-        self.base_folder = 'bdd100k/images/track/train'
-        self.folders = os.listdir(self.base_folder)
-        self.channels = 3
-
-    def __len__(self):
-        return self.num_samples
-
-    def __getitem__(self, idx):
-        """
-        Args:
-            idx (int): Index of the sample to return.
-
-        Returns:
-            dict: A dictionary containing the 'pixel_values' tensor of shape (16, channels, 320, 512).
-        """
-        # Randomly select a folder (representing a video) from the base folder
-        chosen_folder = random.choice(self.folders)
-        folder_path = os.path.join(self.base_folder, chosen_folder)
-        frames = os.listdir(folder_path)
-        # Sort the frames by name
-        frames.sort()
-
-        # Ensure the selected folder has at least 16 frames
-        if len(frames) < 16:
-            raise ValueError(
-                f"The selected folder '{chosen_folder}' contains fewer than 16 frames.")
-
-        # Randomly select a start index for frame sequence
-        start_idx = random.randint(0, len(frames) - 16)
-        selected_frames = frames[start_idx:start_idx + 16]
-
-        # Initialize a tensor to store the pixel values
-        pixel_values = torch.empty((16, self.channels, 320, 512))
-
-        # Load and process each frame
-        for i, frame_name in enumerate(selected_frames):
-            frame_path = os.path.join(folder_path, frame_name)
-            with Image.open(frame_path) as img:
-                # Resize the image and convert it to a tensor
-                img_resized = img.resize((512, 320)) # hard code here
-                img_tensor = torch.from_numpy(np.array(img_resized)).float()
-
-                # Normalize the image by scaling pixel values to [0, 1]
-                img_normalized = img_tensor / 255.0
-
-                # Rearrange channels if necessary
-                if self.channels == 3:
-                    img_normalized = img_normalized.permute(
-                        2, 0, 1)  # For RGB images
-                elif self.channels == 1:
-                    img_normalized = img_normalized.mean(
-                        dim=2, keepdim=True)  # For grayscale images
-
-                pixel_values[i] = img_normalized
-        return {'pixel_values': pixel_values}
-'''
 # resizing utils
 # TODO: clean up later
 
@@ -779,8 +713,8 @@ def main():
                 model.load_state_dict(load_model.state_dict())
                 del load_model
 
-        accelerator.register_save_state_pre_hook(save_model_hook)
-        accelerator.register_load_state_pre_hook(load_model_hook)
+        # accelerator.register_save_state_pre_hook(save_model_hook)
+        # accelerator.register_load_state_pre_hook(load_model_hook)
 
     if args.gradient_checkpointing:
         unet.enable_gradient_checkpointing()
@@ -826,25 +760,6 @@ def main():
     #     eps=args.adam_epsilon,
     # )
 
-    optimizer = optimizer_cls(
-        unet.parameters(),
-        lr=args.learning_rate,
-        betas=(args.adam_beta1, args.adam_beta2),
-        weight_decay=args.adam_weight_decay,
-        eps=args.adam_epsilon,
-    )
-
-    # check para
-    if accelerator.is_main_process:
-        rec_txt1 = open('rec_para.txt', 'w')
-        rec_txt2 = open('rec_para_train.txt', 'w')
-        for name, para in unet.named_parameters():
-            if para.requires_grad is False:
-                rec_txt1.write(f'{name}\n')
-            else:
-                rec_txt2.write(f'{name}\n')
-        rec_txt1.close()
-        rec_txt2.close()
     # DataLoaders creation:
     args.global_batch_size = args.per_gpu_batch_size * accelerator.num_processes
 
@@ -886,16 +801,24 @@ def main():
         args.max_train_steps = args.num_train_epochs * num_update_steps_per_epoch
         overrode_max_train_steps = True
 
+
+    unet  = accelerator.prepare(unet)
+    optimizer = optimizer_cls(
+        unet.parameters(),
+        lr=args.learning_rate,
+        betas=(args.adam_beta1, args.adam_beta2),
+        weight_decay=args.adam_weight_decay,
+        eps=args.adam_epsilon,
+    )
     lr_scheduler = get_scheduler(
         args.lr_scheduler,
         optimizer=optimizer,
         num_warmup_steps=args.lr_warmup_steps * accelerator.num_processes,
         num_training_steps=args.max_train_steps * accelerator.num_processes,
     )
-
     # Prepare everything with our `accelerator`.
-    unet, optimizer, lr_scheduler, train_dataloader = accelerator.prepare(
-        unet, optimizer, lr_scheduler, train_dataloader
+    optimizer, lr_scheduler, train_dataloader = accelerator.prepare(
+        optimizer, lr_scheduler, train_dataloader
     )
 
     if args.use_ema:
@@ -1034,10 +957,11 @@ def main():
                                                   sigma_data=sigma_data, min_value=min_value, max_value=max_value).to(latents.device)
                 # Add noise to the latents according to the noise magnitude at each timestep
                 # (this is the forward diffusion process)
-                noisy_latents = latents + noise * sigmas
                 timesteps = torch.Tensor(
                     [0.25 * sigma.log() for sigma in sigmas])
-
+                
+                sigmas = sigmas[:,None,None,None,None]
+                noisy_latents = latents + noise * sigmas
                 inp_noisy_latents = noisy_latents / ((sigmas**2 + 1) ** 0.5)
 
                 # Get the text embedding for conditioning.
@@ -1060,12 +984,21 @@ def main():
                         bsz, device=latents.device, generator=generator)
                     # Sample masks for the edit prompts.
                     prompt_mask = random_p < 2 * args.conditioning_dropout_prob
+                    '''
                     prompt_mask = prompt_mask.reshape(bsz, 1, 1)
                     # Final text conditioning.
                     null_conditioning = torch.zeros_like(encoder_hidden_states)
                     encoder_hidden_states = torch.where(
                         prompt_mask, null_conditioning, encoder_hidden_states)
-
+                    '''
+                    null_conditioning = torch.zeros_like(encoder_hidden_states)
+                    temp_list = []
+                    for idx, p in enumerate(prompt_mask):
+                        if p:
+                            temp_list.append(null_conditioning[idx,None,None,...])
+                        else:
+                            temp_list.append(encoder_hidden_states[idx,None,None,...])
+                    encoder_hidden_states = torch.concatenate(temp_list,dim=0)
                     # Sample masks for the original images.
                     image_mask_dtype = conditional_latents.dtype
                     image_mask = 1 - (
@@ -1133,38 +1066,48 @@ def main():
                 accelerator.log({"train_loss": train_loss}, step=global_step)
                 train_loss = 0.0
 
-                if accelerator.is_main_process:
+                # # here, 
+                # with FSDP.state_dict_type(unet, StateDictType.FULL_STATE_DICT,):
+                #     unshard_unet_state_dict = unet.state_dict()
+
+                if accelerator.is_main_process or accelerator.distributed_type == DistributedType.FSDP:
                     # save checkpoints!
                     if global_step % args.checkpointing_steps == 0:
                         # _before_ saving state, check if this save would set us over the `checkpoints_total_limit`
-                        if args.checkpoints_total_limit is not None:
-                            checkpoints = os.listdir(args.output_dir)
-                            checkpoints = [
-                                d for d in checkpoints if d.startswith("checkpoint")]
-                            checkpoints = sorted(
-                                checkpoints, key=lambda x: int(x.split("-")[1]))
+                        
+                        if accelerator.is_main_process:
+                            if args.checkpoints_total_limit is not None:
+                                checkpoints = os.listdir(args.output_dir)
+                                checkpoints = [
+                                    d for d in checkpoints if d.startswith("checkpoint")]
+                                checkpoints = sorted(
+                                    checkpoints, key=lambda x: int(x.split("-")[1]))
 
-                            # before we save the new checkpoint, we need to have at _most_ `checkpoints_total_limit - 1` checkpoints
-                            if len(checkpoints) >= args.checkpoints_total_limit:
-                                num_to_remove = len(
-                                    checkpoints) - args.checkpoints_total_limit + 1
-                                removing_checkpoints = checkpoints[0:num_to_remove]
+                                # before we save the new checkpoint, we need to have at _most_ `checkpoints_total_limit - 1` checkpoints
+                                if len(checkpoints) >= args.checkpoints_total_limit:
+                                    num_to_remove = len(
+                                        checkpoints) - args.checkpoints_total_limit + 1
+                                    removing_checkpoints = checkpoints[0:num_to_remove]
 
-                                logger.info(
-                                    f"{len(checkpoints)} checkpoints already exist, removing {len(removing_checkpoints)} checkpoints"
-                                )
-                                logger.info(
-                                    f"removing checkpoints: {', '.join(removing_checkpoints)}")
+                                    logger.info(
+                                        f"{len(checkpoints)} checkpoints already exist, removing {len(removing_checkpoints)} checkpoints"
+                                    )
+                                    logger.info(
+                                        f"removing checkpoints: {', '.join(removing_checkpoints)}")
 
-                                for removing_checkpoint in removing_checkpoints:
-                                    removing_checkpoint = os.path.join(
-                                        args.output_dir, removing_checkpoint)
-                                    shutil.rmtree(removing_checkpoint)
-
+                                    for removing_checkpoint in removing_checkpoints:
+                                        removing_checkpoint = os.path.join(
+                                            args.output_dir, removing_checkpoint)
+                                        shutil.rmtree(removing_checkpoint)
+                        
+                        if accelerator.distributed_type == DistributedType.FSDP:
+                            accelerator.wait_for_everyone()
+                        
                         save_path = os.path.join(
                             args.output_dir, f"checkpoint-{global_step}")
                         accelerator.save_state(save_path)
                         logger.info(f"Saved state to {save_path}")
+                    
                     # sample images!
                     if (
                         (global_step % args.validation_steps == 0)
@@ -1178,68 +1121,85 @@ def main():
                             # Store the UNet parameters temporarily and load the EMA parameters to perform inference.
                             ema_unet.store(unet.parameters())
                             ema_unet.copy_to(unet.parameters())
+                        
                         # The models need unwrapping because for compatibility in distributed training mode.
-                        pipeline = StableVideoDiffusionPipeline.from_pretrained(
-                            args.pretrained_model_name_or_path,
-                            unet=accelerator.unwrap_model(unet),
-                            image_encoder=accelerator.unwrap_model(
-                                image_encoder),
-                            vae=accelerator.unwrap_model(vae),
-                            revision=args.revision,
-                            torch_dtype=weight_dtype,
-                        )
-                        pipeline = pipeline.to(accelerator.device)
-                        pipeline.set_progress_bar_config(disable=True)
+                        unet = unet.eval()
+                        unet_stat_dict = accelerator.get_state_dict(unet) # the unet_stat_dict is empty if not in main_prcess
 
-                        # run inference
-                        val_save_dir = os.path.join(
-                            args.output_dir, "validation_images")
+                        if accelerator.is_main_process:
+                            _unet = UNetSpatioTemporalConditionModel.from_pretrained(
+                                args.pretrained_model_name_or_path if args.pretrain_unet is None else args.pretrain_unet,
+                                subfolder="unet",
+                                low_cpu_mem_usage=True,
+                                variant="fp16",
+                            )
+                            _unet.load_state_dict(unet_stat_dict)
+                            _unet = _unet.requires_grad_(False)
+                            _unet = _unet.eval()
 
-                        if not os.path.exists(val_save_dir):
-                            os.makedirs(val_save_dir)
+                            pipeline = StableVideoDiffusionPipeline.from_pretrained(
+                                args.pretrained_model_name_or_path,
+                                unet = _unet,
+                                image_encoder=accelerator.unwrap_model(
+                                    image_encoder),
+                                vae=accelerator.unwrap_model(vae),
+                                revision=args.revision,
+                                torch_dtype=weight_dtype,
+                            )
+                            pipeline = pipeline.to(accelerator.device)
+                            pipeline.set_progress_bar_config(disable=True)
 
-                        with torch.autocast(
-                            str(accelerator.device).replace(":0", ""), enabled=accelerator.mixed_precision == "fp16"
-                        ):
-                            for val_img_idx in range(args.num_validation_images):
-                                num_frames = args.num_frames
-                                video_frames = pipeline(
-                                    load_image('images/gaoyuanyuan.png').resize((args.width, args.height)),
-                                    height=args.height,
-                                    width=args.width,
-                                    num_frames=num_frames,
-                                    decode_chunk_size=8,
-                                    motion_bucket_id=127,
-                                    fps=7,
-                                    noise_aug_strength=0.0,
-                                    # generator=generator,
-                                ).frames[0]
+                            # run inference
+                            val_save_dir = os.path.join(
+                                args.output_dir, "validation_images")
 
-                                out_file = os.path.join(
-                                    val_save_dir,
-                                    f"step_{global_step}_val_img_{val_img_idx}.mp4",
-                                )
+                            if not os.path.exists(val_save_dir):
+                                os.makedirs(val_save_dir)
 
-                                for i in range(num_frames):
-                                    img = video_frames[i]
-                                    video_frames[i] = np.array(img)
-                                    export_to_gif(video_frames, out_file, 8)
-                                
-                                # log .mp4 using wandb.Video, input np.array should be in the shape of [N,C,H,W]
-                                accelerator.log(
-                                    {
-                                        f"Synthetic Video": wandb.Video(
-                                            np.array([np.array(video_frame).tranpose(2,0,1) for video_frame in video_frames]), 
-                                            fps=7
-                                        )}, 
-                                    step=global_step
-                                )
+                            with torch.autocast(
+                                str(accelerator.device).replace(":0", ""), enabled=accelerator.mixed_precision == "fp16"
+                            ):
+                                for val_img_idx in range(args.num_validation_images):
+                                    num_frames = args.num_frames
+                                    video_frames = pipeline(
+                                        load_image('images/gaoyuanyuan.png').resize((args.width, args.height)),
+                                        height=args.height,
+                                        width=args.width,
+                                        num_frames=num_frames,
+                                        decode_chunk_size=8,
+                                        motion_bucket_id=127,
+                                        fps=7,
+                                        noise_aug_strength=0.0,
+                                        # generator=generator,
+                                    ).frames[0]
 
+                                    out_file = os.path.join(
+                                        val_save_dir,
+                                        f"step_{global_step}_val_img_{val_img_idx}.mp4",
+                                    )
+
+                                    for i in range(num_frames):
+                                        img = video_frames[i]
+                                        video_frames[i] = np.array(img)
+                                        export_to_gif(video_frames, out_file, 8)
+                                    
+                                    # log .mp4 using wandb.Video, input np.array should be in the shape of [N,C,H,W]
+                                    accelerator.log(
+                                        {
+                                            f"Synthetic Video": wandb.Video(
+                                                np.array([np.array(video_frame).transpose(2,0,1) for video_frame in video_frames]), 
+                                                fps=7
+                                            )}, 
+                                        step=global_step
+                                    )
+
+                        unet = unet.train()
                         if args.use_ema:
                             # Switch back to the original UNet parameters.
                             ema_unet.restore(unet.parameters())
 
-                        del pipeline
+                        if accelerator.is_main_process:
+                            del pipeline, _unet
                         torch.cuda.empty_cache()
 
             logs = {"step_loss": loss.detach().item(
