@@ -28,7 +28,8 @@ def export_to_gif(frames, output_gif_path, fps):
                        loop=0)
 
 pipe = StableVideoDiffusionPipeline.from_pretrained(
-    "stabilityai/stable-video-diffusion-img2vid", torch_dtype=torch.float16, variant="fp16"
+    "/data/users/jingminhao/.cache/huggingface/hub/models--stabilityai--stable-video-diffusion-img2vid/snapshots/0f2d55c1e358d608120344d3ea9c35fb5f2c31b3", torch_dtype=torch.float16, variant="fp16"
+    #"stabilityai/stable-video-diffusion-img2vid", torch_dtype=torch.float16, variant="fp16"
 )
 pipe.enable_model_cpu_offload()
 
