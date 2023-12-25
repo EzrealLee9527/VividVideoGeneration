@@ -215,12 +215,27 @@ class S3VideosIterableDataset(IterableDataset):
             # sample_dic.update(cond_dict)
             yield sample_dic
 
-'''
-def interpolate(data, crop_y1, crop_y2, crop_x1, crop_x2, size):
-    data = torch.tensor(np.array(data)).permute(0, 3, 1, 2).float()
-    data = F.interpolate(input=data[...,crop_y1:crop_y2, crop_x1:crop_x2], size=size, mode='bilinear', align_corners=False)
-    return data
-'''
+
+def train_collate_fn(examples):
+    images = torch.stack([example["pixel_values"] for example in examples])
+    images = images.to(memory_format=torch.contiguous_format).float()
+    masked_images = torch.stack([example["masked_image"] for example in examples])
+    masked_images = masked_images.to(memory_format=torch.contiguous_format).float()
+    masks = torch.stack([example["mask"] for example in examples])
+    masks = masks.to(memory_format=torch.contiguous_format).float()
+    caption_tokens = torch.stack([example["caption_token"] for example in examples])
+    caption_tokens = caption_tokens.to(memory_format=torch.contiguous_format).long()
+    caption_tokens_2 = torch.stack([example["caption_token_2"] for example in examples])
+    caption_tokens_2 = caption_tokens_2.to(memory_format=torch.contiguous_format).long()
+    return {
+        "image"           : images, 
+        "masked_image"    : masked_images, 
+        "mask"            : masks, 
+        "caption_token"   : caption_tokens,
+        "caption_token_2" : caption_tokens_2,
+    }
+
+
 
 def gaussian(x, y, sigma):
     exponent = -(x**2 + y**2) / (2 * sigma**2)
@@ -270,7 +285,7 @@ if __name__ == "__main__":
 
     dataloader = wds.WebLoader(
         dataset, 
-        batch_size=1,
+        batch_size=2,
         shuffle=False,
         num_workers=0,
         collate_fn = None,
@@ -278,7 +293,7 @@ if __name__ == "__main__":
     # pbar = tqdm()
     for data in tqdm(dataloader):
         # pbar.update(1)
-        # import pdb; pdb.set_trace()
+        import pdb; pdb.set_trace()
         # print(f"RAM PEAK: {resource.getrusage(resource.RUSAGE_SELF).ru_maxrss/(1024**3):.4f}")
         pass
  
