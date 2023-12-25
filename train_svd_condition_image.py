@@ -836,7 +836,7 @@ def main():
     # We need to initialize the trackers we use, and also store our configuration.
     # The trackers initializes automatically on the main process.
     if accelerator.is_main_process:
-        accelerator.init_trackers("SVDXtend", config=vars(args))
+        accelerator.init_trackers("SVD-I2V", config=vars(args))
 
     # Train!
     total_batch_size = args.per_gpu_batch_size * \
