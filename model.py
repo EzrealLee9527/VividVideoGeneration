@@ -62,7 +62,10 @@ class StableVideoDiffusion(L.LightningModule):
         timesteps = self.scheduler.timesteps[timesteps]
         noise = torch.randn_like(video_latents)
         noisy_video_latents = self.scheduler.add_noise(video_latents, noise, timesteps)
-        unet_input = torch.cat([noisy_video_latents, image_latents], dim=2)
+
+        self.scheduler._step_index = None
+        unet_input = self.scheduler.scale_model_input(noisy_video_latents, timesteps)
+        unet_input = torch.cat([unet_input, image_latents], dim=2)
 
         noise_pred = self.unet(
             unet_input,
@@ -72,31 +75,37 @@ class StableVideoDiffusion(L.LightningModule):
             return_dict=False,
         )[0]
 
-        # FIXME: wrong, need fix loss func
-        loss = F.mse_loss(noise_pred, noise)
+        self.scheduler._step_index = None
+        pred_original_sample = self.scheduler.step(
+            noise_pred, timesteps, noisy_video_latents
+        ).pred_original_sample
+        loss = F.mse_loss(pred_original_sample, video_latents)
         return loss
 
     def configure_optimizers(self) -> Tuple[Optimizer, LRScheduler]:
-        # FIXME: optmizer and scheduler need to be finished
         optimizer = optim.AdamW(
             self.unet.parameters(),
             lr=self.config.train.optimizer.lr,
+            betas=(
+                self.config.train.optimizer.beta1,
+                self.config.train.optimizer.beta2,
+            ),
             weight_decay=self.config.train.optimizer.weight_decay,
         )
         lr_scheduler = optim.lr_scheduler.CosineAnnealingLR(
-            optimizer, self.config.train.num_iteration
+            optimizer,
+            T_max=self.config.train.num_iteration,
+            eta_min=self.config.train.optimizer.min_lr,
         )
         return optimizer, lr_scheduler
 
     def _clip_encode_image(self, image: torch.Tensor) -> torch.Tensor:
         image_embeddings = self.image_encoder(image).image_embeds
-        # TODO: check image_embeddings shape
         image_embeddings = image_embeddings.unsqueeze(1)
         return image_embeddings
 
     def _vae_encode_image(self, image: torch.Tensor) -> torch.Tensor:
         image_latents = self.vae.encode(image).latent_dist.mode()
-        # TODO: check image_latents shape
         image_latents = einops.repeat(
             image_latents, "b c h w -> b f c h w", f=self.num_frames
         )
@@ -108,6 +117,7 @@ class StableVideoDiffusion(L.LightningModule):
         video_latents = einops.rearrange(
             video_latents, "(b f) c h w -> b f c h w ", f=self.num_frames
         )
+        video_latents = video_latents * self.vae.config.scaling_factor
         return video_latents
 
 

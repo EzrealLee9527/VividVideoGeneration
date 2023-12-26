@@ -4,6 +4,10 @@ fs:
   model_dir: "models"
   tensorboard_dir: "tensorboard"
 
+control:
+  det_model_path: "dwpose/models/yolox_l.onnx"
+  pose_model_path: "dwpose/models/dw-ll_ucoco_384.onnx"
+
 model:
   model_id: "stabilityai/stable-video-diffusion-img2vid"
   use_ema: false
@@ -27,7 +31,10 @@ train:
   num_iteration: 10000
   batch_size: 512
   optimizer:
+    beta1: 0.9
+    beta2: 0.999
     lr: 1e-4
+    min_lr: 0
     weight_decay: 1e-3
 
 monitor:

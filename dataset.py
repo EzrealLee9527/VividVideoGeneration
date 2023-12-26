@@ -6,6 +6,7 @@ import webdataset as wds
 import torch
 from torch.nn import Module
 from torchvision.transforms import Compose, Resize, CenterCrop, Normalize
+from dwpose.pipeline import DWPose
 
 # type hint
 from typing import List, Dict, Tuple
@@ -80,12 +81,15 @@ class ClipCenterCrop(CenterCrop):
 
 
 class ParseKeypoint(Module):
-    def __init__(self) -> None:
+    def __init__(self, det_model_path, pose_model_path) -> None:
         super().__init__()
+        self.dwpose = DWPose(det_model_path, pose_model_path)
 
     def forward(self, x: Tuple[Tensor, Dict]) -> Tuple[Tensor, Dict]:
         video, json = x
-        # TODO: unfinish
+        for frame in video:
+            kps = self.dwpose(frame)
+
         return video, json
 
 
@@ -104,7 +108,9 @@ def _get_transforms(config: DictConfig) -> Compose:
             Resize(config.data.size),
             CenterCrop(config.data.size),
             RandomClip(config.data.num_frames, config.data.frame_stride),
-            ParseKeypoint(),
+            ParseKeypoint(
+                config.control.det_model_path, config.control.pose_model_path
+            ),
             ClipNormalize(config.data.norm_mean, config.data.norm_std),
         ]
     )

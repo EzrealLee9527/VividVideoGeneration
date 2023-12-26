@@ -49,7 +49,7 @@ def train(
             train_helper.ema.update(model.unet, cfg.model.ema_momentum)
 
         if train_helper.clock.step % cfg.monitor.log_interval == 0:
-            logger.info(train_helper.dict2str(metric))
+            logger.info(LoggerHelper.dict2str(metric))
 
         fabric.barrier()
         if train_helper.clock.step % cfg.monitor.latest_interval == 0:
