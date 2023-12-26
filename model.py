@@ -17,6 +17,8 @@ from diffusers import (
 from torch.optim import Optimizer
 from torch.optim.lr_scheduler import LRScheduler
 
+from controlnet import UNetSpatioTemporalConditionModelV2, ControlNetSpatioTemporalModel
+
 
 class StableVideoDiffusion(L.LightningModule):
     def __init__(
@@ -30,15 +32,20 @@ class StableVideoDiffusion(L.LightningModule):
         super().__init__()
         self.vae = vae
         self.image_encoder = image_encoder
-        self.unet = unet
+        self.unet = UNetSpatioTemporalConditionModelV2.from_config(unet.config)
         self.scheduler = scheduler
 
         self.num_frames: int = self.unet.config.num_frames
         self.num_train_timesteps: int = self.scheduler.config.num_train_timesteps
 
+        self.unet.load_state_dict(unet.state_dict())
+        self.controlnet = ControlNetSpatioTemporalModel.from_unet(self.unet)
+
         self.vae.requires_grad_(False)
         self.image_encoder.requires_grad_(False)
-        self.unet.requires_grad_(True)
+        self.unet.requires_grad_(False)
+        self.controlnet.requires_grad_(True)
+
         self.scheduler.set_timesteps(self.num_train_timesteps)
         self.config = config
 
@@ -52,6 +59,7 @@ class StableVideoDiffusion(L.LightningModule):
         vae_image_input = batch["vae_image_input"]
         vae_video_input = batch["vae_video_input"]
         added_time_ids = batch["added_time_ids"]
+        controlnet_cond = batch["controlnet_cond"]
 
         image_embeddings = self._clip_encode_image(clip_input)
         image_latents = self._vae_encode_image(vae_image_input)
@@ -66,12 +74,23 @@ class StableVideoDiffusion(L.LightningModule):
         self.scheduler._step_index = None
         unet_input = self.scheduler.scale_model_input(noisy_video_latents, timesteps)
         unet_input = torch.cat([unet_input, image_latents], dim=2)
+        control_model_input = unet_input
+
+        down_block_res_samples, mid_block_res_sample = self.controlnet(
+            control_model_input,
+            timesteps,
+            encoder_hidden_states=image_embeddings,
+            added_time_ids=added_time_ids,
+            controlnet_cond=controlnet_cond,
+        )
 
         noise_pred = self.unet(
             unet_input,
             timesteps,
             encoder_hidden_states=image_embeddings,
             added_time_ids=added_time_ids,
+            down_block_additional_residuals=down_block_res_samples,
+            mid_block_additional_residual=mid_block_res_sample,
             return_dict=False,
         )[0]
 
