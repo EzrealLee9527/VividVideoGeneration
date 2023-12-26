@@ -1,6 +1,6 @@
 import onnxruntime as ort
-from det import inference_detector
-from pose import inference_pose
+from .det import inference_detector
+from .pose import inference_pose
 
 from torch import Tensor
 
