@@ -12,9 +12,6 @@ model:
 data:
   root_dirs:
     - "s3://data-transfer-tos-shanghai-818/midjourney/jmh/Video/wds/CelebV_webdataset_20231211_videoblip"
-    - "s3://data-transfer-tos-shanghai-818/midjourney/jmh/Video/wds/hdvila100m_20231216"
-    - "s3://data-transfer-tos-shanghai-818/midjourney/jmh/Video/wds/pexels_20231217"
-    - "s3://data-transfer-tos-shanghai-818/midjourney/jmh/Video/wds/xiaohongshu_webdataset_20231212"
   num_workers: 0
   size: 512
   frame_stride: 2

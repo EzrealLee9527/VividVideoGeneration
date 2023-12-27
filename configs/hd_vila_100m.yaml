@@ -1,0 +1,37 @@
+fs:
+  output_dir: "outputs"
+  log_path: "worklog.log"
+  model_dir: "models"
+  tensorboard_dir: "tensorboard"
+
+model:
+  model_id: "stabilityai/stable-video-diffusion-img2vid"
+  use_ema: false
+  ema_momentum: 0.999
+
+data:
+  root_dirs:
+    - "s3://data-transfer-tos-shanghai-818/midjourney/jmh/Video/wds/hdvila100m_20231216"
+  num_workers: 0
+  size: 512
+  frame_stride: 2
+
+  num_frames: 24
+  vae_scale_factor: 8
+
+train:
+  resume: true
+  seed: 1234
+  num_iteration: 10000
+  batch_size: 4
+  optimizer:
+    beta1: 0.9
+    beta2: 0.999
+    lr: 1e-4
+    min_lr: 0
+    weight_decay: 1e-3
+
+monitor:
+  log_interval: 100
+  save_interval: 100
+  latest_interval: 10
