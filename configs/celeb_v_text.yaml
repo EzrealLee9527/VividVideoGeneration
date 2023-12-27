@@ -15,7 +15,7 @@ data:
     - "s3://data-transfer-tos-shanghai-818/midjourney/jmh/Video/wds/hdvila100m_20231216"
     - "s3://data-transfer-tos-shanghai-818/midjourney/jmh/Video/wds/pexels_20231217"
     - "s3://data-transfer-tos-shanghai-818/midjourney/jmh/Video/wds/xiaohongshu_webdataset_20231212"
-  num_workers: 4
+  num_workers: 0
   size: 512
   frame_stride: 2
 
@@ -26,7 +26,7 @@ train:
   resume: true
   seed: 1234
   num_iteration: 10000
-  batch_size: 512
+  batch_size: 4
   optimizer:
     beta1: 0.9
     beta2: 0.999

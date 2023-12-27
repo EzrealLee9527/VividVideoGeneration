@@ -29,9 +29,8 @@ def train(
     metric = {}
     pbar = train_helper.process_bar("train", total=cfg.train.num_iteration)
 
-    model.unet.train()
+    model.controlnet.train()
     for idx, batch in enumerate(dataloader):
-        # TODO: batch data
         loss = model(batch, idx)
         fabric.backward(loss)
         optimizer.step()
@@ -46,7 +45,7 @@ def train(
         pbar.set_postfix(metric)
 
         if cfg.model.use_ema:
-            train_helper.ema.update(model.unet, cfg.model.ema_momentum)
+            train_helper.ema.update(model.controlnet, cfg.model.ema_momentum)
 
         if train_helper.clock.step % cfg.monitor.log_interval == 0:
             logger.info(LoggerHelper.dict2str(metric))
@@ -55,7 +54,7 @@ def train(
         if train_helper.clock.step % cfg.monitor.latest_interval == 0:
             checkpoint = os.path.join(cfg.fs.model_dir, "latest")
             train_helper.save_checkpoint(
-                checkpoint, model.unet, optimizer, lr_scheduler
+                checkpoint, model.controlnet, optimizer, lr_scheduler
             )
 
         fabric.barrier()
@@ -64,14 +63,14 @@ def train(
                 cfg.fs.model_dir, f"step_{train_helper.clock.step}"
             )
             train_helper.save_checkpoint(
-                checkpoint, model.unet, optimizer, lr_scheduler
+                checkpoint, model.controlnet, optimizer, lr_scheduler
             )
 
         fabric.barrier()
         if train_helper.clock.step > cfg.num_iteration:
             checkpoint = os.path.join(cfg.fs.model_dir, "final")
             train_helper.save_checkpoint(
-                checkpoint, model.unet, optimizer, lr_scheduler
+                checkpoint, model.controlnet, optimizer, lr_scheduler
             )
             break
 
@@ -90,7 +89,7 @@ def main():
     cfg = HP.instance()
 
     fabric = L.Fabric(
-        strategy="deepspeed_stage_3_offload",
+        strategy="deepspeed_stage_3",
         precision="16-true",
         loggers=TensorBoardLogger(
             root_dir=cfg.fs.output_dir,
@@ -121,11 +120,17 @@ def main():
     # setup model and optimizer
     model, optimizer = fabric.setup(model, optimizer)
 
-    if cfg.train.resume:
-        checkpoint = os.path.join(cfg.fs.model_dir, "latest")
-        train_helper.loal_checkpoint(checkpoint, model.unet, optimizer, lr_scheduler)
+    train_helper.clock.tick()
+    for data in dataloader:
+        train_helper.clock.update()
+        print(train_helper.clock.tock())
+        if train_helper.clock.step > cfg.num_iteration:
+            break
+    # if cfg.train.resume:
+    #     checkpoint = os.path.join(cfg.fs.model_dir, "latest")
+    #     train_helper.loal_checkpoint(checkpoint, model.controlnet, optimizer, lr_scheduler)
 
-    train(fabric, model, dataloader, optimizer, lr_scheduler, train_helper)
+    # train(fabric, model, dataloader, optimizer, lr_scheduler, train_helper)
 
 
 if __name__ == "__main__":

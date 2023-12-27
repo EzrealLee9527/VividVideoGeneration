@@ -221,7 +221,7 @@ class ClipNormalize(Module):
     def __init__(self):
         super().__init__()
         self.clip_normalize = Normalize(mean=IMAGE_MEAN, std=IMAGE_STD)
-        self.normalize = Normalize(mean=0.5, std=0.5)
+        self.vae_normalize = Normalize(mean=0.5, std=0.5)
 
     def forward(self, x: Tuple[Tensor, Dict]) -> Tuple[Tensor, Dict]:
         video, info = x
@@ -236,11 +236,11 @@ class ClipNormalize(Module):
         # for vae
         vae_video_input = []
         for frame in video:
-            vae_video_input.append(self.normalize(frame))
+            vae_video_input.append(self.vae_normalize(frame))
         vae_video_input = torch.stack(vae_video_input)
         vae_image_input = deepcopy(vae_video_input[0])
 
-        info["controlnet_cond"] = self.normalize(info["controlnet_cond"] / 255)
+        info["controlnet_cond"] = info["controlnet_cond"] / 255
         info["clip_input"] = clip_input
         info["vae_video_input"] = vae_video_input
         info["vae_image_input"] = vae_image_input
@@ -268,7 +268,7 @@ def _get_transforms(config: DictConfig) -> Compose:
             RandomClip(config.data.num_frames, config.data.frame_stride),
             ParseCondition(),
             ClipNormalize(),
-            Decompose(),
+            # Decompose(),
         ]
     )
     return transforms
@@ -287,44 +287,42 @@ def _get_data_urls(root_dirs: List[str]) -> List[str]:
 
 def collation_fn(samples):
     batch = {}
-    keys = [
-        "clip_input",
-        "vae_image_input",
-        "vae_video_input",
-        "added_time_ids",
-        "controlnet_cond",
-    ]
-    for key, value in zip(keys, samples):
-        batch[key] = value
-    # batch["clip_input"] = torch.stack([sample["clip_input"] for sample in samples])
-    # batch["vae_image_input"] = torch.stack(
-    #     [sample["vae_image_input"] for sample in samples]
-    # )
-    # batch["vae_video_input"] = torch.stack(
-    #     [sample["vae_video_input"] for sample in samples]
-    # )
-    # batch["controlnet_cond"] = torch.stack(
-    #     [sample["controlnet_cond"] for sample in samples]
-    # )
-    # batch["added_time_ids"] = torch.stack(
-    #     [sample["added_time_ids"] for sample in samples]
-    # )
+    batch["clip_input"] = torch.stack([sample["clip_input"] for sample in samples])
+    batch["vae_image_input"] = torch.stack(
+        [sample["vae_image_input"] for sample in samples]
+    )
+    batch["vae_video_input"] = torch.stack(
+        [sample["vae_video_input"] for sample in samples]
+    )
+    batch["controlnet_cond"] = torch.stack(
+        [sample["controlnet_cond"] for sample in samples]
+    )
+    batch["added_time_ids"] = torch.stack(
+        [sample["added_time_ids"] for sample in samples]
+    )
     return batch
 
 
 def get_dataloader(config: DictConfig) -> wds.WebLoader:
+    def data_filter(data):
+        if data["mp4"][0].size(0) < config.data.num_frames * config.data.frame_stride:
+            return False
+        return True
+
     urls = _get_data_urls(config.data.root_dirs)
-    dataset = (
-        wds.WebDataset(urls, resampled=True)
-        .shuffle(100)
-        .decode(wds.torch_video)
-        .to_tuple("mp4", "json")
-        .map(_get_transforms(config))
-        .batched(config.train.batch_size, partial=False)
+    dataset = wds.DataPipeline(
+        wds.ResampledShards(urls),
+        wds.shuffle(10),
+        wds.split_by_node,
+        wds.tarfile_to_samples(),
+        wds.shuffle(10),
+        wds.decode(wds.torch_video),
+        wds.select(data_filter),
+        wds.to_tuple("mp4", "json"),
+        wds.map(_get_transforms(config)),
+        wds.batched(config.train.batch_size, collation_fn=collation_fn, partial=False)
     )
-    dataloader = (
-        wds.WebLoader(dataset, batch_size=None, num_workers=config.data.num_workers)
-        .unbatched()
-        .shuffle(100)
+    dataloader = wds.WebLoader(
+        dataset, batch_size=None, num_workers=config.data.num_workers
     )
     return dataloader
