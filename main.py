@@ -5,7 +5,7 @@ import lightning as L
 from lightning.fabric.loggers import TensorBoardLogger
 
 from model import get_pipeline, get_model
-from dataset import get_dataloader
+from dataset import get_dataloader, collation_fn
 from utils import LoggerHelper, TrainHelper, HyperParams as HP
 
 # type hint
@@ -113,7 +113,11 @@ def main():
     optimizer, lr_scheduler = model.configure_optimizers()
     # init dataloader
     dataloader = get_dataloader(cfg)
-    dataloader = dataloader.batched(cfg.train.batch_size // fabric.world_size)
+    dataloader = dataloader.batched(
+        cfg.train.batch_size // fabric.world_size,
+        collation_fn=collation_fn,
+        partial=True,
+    )
     # setup model and optimizer
     model, optimizer = fabric.setup(model, optimizer)
 

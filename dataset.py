@@ -7,9 +7,7 @@ import torch
 from torch.nn import Module
 from torchvision.transforms import Compose, Resize, CenterCrop, Normalize
 from copy import deepcopy
-from diffusers.image_processor import VaeImageProcessor
-from transformers import CLIPImageProcessor
-from dwpose.pipeline import DWPose
+from dwpose import DWposeDetector
 
 # type hint
 from typing import List, Dict, Tuple
@@ -18,6 +16,8 @@ from omegaconf import DictConfig
 
 URL_PATTERN = "pipe: aws --endpoint-url={} s3 cp {} -"
 ENDPOINT_URL = "http://tos-s3-cn-shanghai.ivolces.com"
+IMAGE_MEAN = [0.48145466, 0.4578275, 0.40821073]
+IMAGE_STD = [0.26862954, 0.26130258, 0.27577711]
 
 
 def _resize_with_antialiasing(input, size, interpolation="bicubic", align_corners=True):
@@ -134,50 +134,6 @@ def _gaussian_blur2d(input, kernel_size, sigma):
     return out
 
 
-def _prepare_for_clip(clip_image_processor, image):
-    image = image * 2.0 - 1.0
-    image = _resize_with_antialiasing(image, (224, 224))
-    image = (image + 1.0) / 2.0
-
-    # Normalize the image with for CLIP input
-    image = clip_image_processor(
-        images=image,
-        do_normalize=True,
-        do_center_crop=False,
-        do_resize=False,
-        do_rescale=False,
-        return_tensors="pt",
-    ).pixel_values
-    return image
-
-
-class PrepareImage(Module):
-    def __init__(
-        self,
-        clip_image_processor: CLIPImageProcessor,
-        vae_image_processor: VaeImageProcessor,
-        height: int,
-        width: int,
-    ) -> None:
-        super().__init__()
-        self.clip_image_processor = clip_image_processor
-        self.vae_image_processor = vae_image_processor
-        self.height = height
-        self.width = width
-
-    def forward(self, x: Tuple[Tensor, Dict]) -> Tuple[Tensor, Dict]:
-        video, info = x
-        clip_input = _prepare_for_clip(self.clip_image_processor, video[0])
-        vae_video_input = []
-        for frame in video:
-            vae_video_input.append(
-                self.vae_image_processor.preprocess(
-                    video[0], height=self.height, width=self.width
-                )
-            )
-        vae_image_input = deepcopy(vae_video_input[0])
-
-
 class FilterData(Module):
     def __init__(self, video_idx: int) -> None:
         super().__init__()
@@ -185,9 +141,14 @@ class FilterData(Module):
 
     def forward(self, x: Tuple[Tensor, Dict]) -> Tuple[Tensor, Dict]:
         data, json = x
-        fps = round(data[2]["video_fps"])
+        fps = data[2]["video_fps"]
         motion = json["tag"]["motionscore"]
-        info = {"fps": fps, "motion": motion}
+        motion_bucket_id = motion * 255 if motion != -1 else -1
+        noise_aug_strength = 0.0
+        info = {}
+        info["added_time_ids"] = torch.tensor(
+            [fps, motion_bucket_id, noise_aug_strength]
+        )
         return data[self.video_idx], info
 
 
@@ -227,34 +188,74 @@ class RandomClip(Module):
 class ClipResize(Resize):
     def forward(self, x: Tuple[Tensor, Dict]) -> Tuple[Tensor, Dict]:
         video, info = x
-        video_resized = []
-        for frame in video:
-            video_resized.append(super().forward(frame))
-        video = torch.stack(video_resized)
+        video = super().forward(video)
         return video, info
 
 
 class ClipCenterCrop(CenterCrop):
     def forward(self, x: Tuple[Tensor, Dict]) -> Tuple[Tensor, Dict]:
         video, info = x
-        video_cropped = []
-        for frame in video:
-            video_cropped.append(super().forward(frame))
-        video = torch.stack(video_cropped)
+        video = super().forward(video)
         return video, info
 
 
-class ParseKeypoint(Module):
-    def __init__(self, det_model_path, pose_model_path) -> None:
+class ParseCondition(Module):
+    def __init__(self) -> None:
         super().__init__()
-        self.dwpose = DWPose(det_model_path, pose_model_path)
+        self.dwpose = DWposeDetector()
 
     def forward(self, x: Tuple[Tensor, Dict]) -> Tuple[Tensor, Dict]:
         video, info = x
+        controlnet_cond = []
         for frame in video:
-            kps = self.dwpose(frame)
-        # TODO: kps need covert to image
+            frame = frame.numpy().transpose(1, 2, 0)
+            cond = self.dwpose(frame)
+            cond = torch.from_numpy(cond.transpose(2, 0, 1))
+            controlnet_cond.append(cond)
+        controlnet_cond = torch.stack(controlnet_cond)
+        info["controlnet_cond"] = controlnet_cond
         return video, info
+
+
+class ClipNormalize(Module):
+    def __init__(self):
+        super().__init__()
+        self.clip_normalize = Normalize(mean=IMAGE_MEAN, std=IMAGE_STD)
+        self.normalize = Normalize(mean=0.5, std=0.5)
+
+    def forward(self, x: Tuple[Tensor, Dict]) -> Tuple[Tensor, Dict]:
+        video, info = x
+        video = video / 255
+        # for clip
+        clip_input = video[0].unsqueeze(0)
+        clip_input = clip_input * 2.0 - 1.0
+        clip_input = _resize_with_antialiasing(clip_input, (224, 224))
+        clip_input = (clip_input + 1.0) / 2.0
+        clip_input = self.clip_normalize(clip_input)
+        clip_input = clip_input[0]
+        # for vae
+        vae_video_input = []
+        for frame in video:
+            vae_video_input.append(self.normalize(frame))
+        vae_video_input = torch.stack(vae_video_input)
+        vae_image_input = deepcopy(vae_video_input[0])
+
+        info["controlnet_cond"] = self.normalize(info["controlnet_cond"] / 255)
+        info["clip_input"] = clip_input
+        info["vae_video_input"] = vae_video_input
+        info["vae_image_input"] = vae_image_input
+        return info
+
+
+class Decompose(Module):
+    def forward(slef, info):
+        return (
+            info["clip_input"],
+            info["vae_image_input"],
+            info["vae_video_input"],
+            info["added_time_ids"],
+            info["controlnet_cond"],
+        )
 
 
 def _get_transforms(config: DictConfig) -> Compose:
@@ -262,13 +263,12 @@ def _get_transforms(config: DictConfig) -> Compose:
         [
             FilterData(video_idx=0),
             ToChannelFirst(),
-            Resize(config.data.size),
-            CenterCrop(config.data.size),
+            ClipResize(config.data.size),
+            ClipCenterCrop(config.data.size),
             RandomClip(config.data.num_frames, config.data.frame_stride),
-            ParseKeypoint(
-                config.control.det_model_path, config.control.pose_model_path
-            ),
-            PrepareImage(),
+            ParseCondition(),
+            ClipNormalize(),
+            Decompose(),
         ]
     )
     return transforms
@@ -283,6 +283,33 @@ def _get_data_urls(root_dirs: List[str]) -> List[str]:
                 tarfile_path = tarfile_path.replace("tos://", "s3://")
             urls.append(URL_PATTERN.format(ENDPOINT_URL, tarfile_path))
     return sorted(urls)
+
+
+def collation_fn(samples):
+    batch = {}
+    keys = [
+        "clip_input",
+        "vae_image_input",
+        "vae_video_input",
+        "added_time_ids",
+        "controlnet_cond",
+    ]
+    for key, value in zip(keys, samples):
+        batch[key] = value
+    # batch["clip_input"] = torch.stack([sample["clip_input"] for sample in samples])
+    # batch["vae_image_input"] = torch.stack(
+    #     [sample["vae_image_input"] for sample in samples]
+    # )
+    # batch["vae_video_input"] = torch.stack(
+    #     [sample["vae_video_input"] for sample in samples]
+    # )
+    # batch["controlnet_cond"] = torch.stack(
+    #     [sample["controlnet_cond"] for sample in samples]
+    # )
+    # batch["added_time_ids"] = torch.stack(
+    #     [sample["added_time_ids"] for sample in samples]
+    # )
+    return batch
 
 
 def get_dataloader(config: DictConfig) -> wds.WebLoader:

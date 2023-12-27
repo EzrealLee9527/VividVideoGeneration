@@ -103,7 +103,7 @@ class StableVideoDiffusion(L.LightningModule):
 
     def configure_optimizers(self) -> Tuple[Optimizer, LRScheduler]:
         optimizer = optim.AdamW(
-            self.unet.parameters(),
+            self.controlnet.parameters(),
             lr=self.config.train.optimizer.lr,
             betas=(
                 self.config.train.optimizer.beta1,

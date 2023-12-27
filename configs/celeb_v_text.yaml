@@ -4,10 +4,6 @@ fs:
   model_dir: "models"
   tensorboard_dir: "tensorboard"
 
-control:
-  det_model_path: "dwpose/models/yolox_l.onnx"
-  pose_model_path: "dwpose/models/dw-ll_ucoco_384.onnx"
-
 model:
   model_id: "stabilityai/stable-video-diffusion-img2vid"
   use_ema: false
@@ -22,8 +18,9 @@ data:
   num_workers: 4
   size: 512
   frame_stride: 2
-  norm_mean: 0.5
-  norm_std: 0.5
+
+  num_frames: 24
+  vae_scale_factor: 8
 
 train:
   resume: true

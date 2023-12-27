@@ -6,6 +6,7 @@ from copy import deepcopy
 from omegaconf import OmegaConf
 from deepspeed.utils import safe_get_full_fp32_param, safe_set_full_fp32_param
 from tqdm.auto import tqdm
+from time import time
 
 # type hint
 from typing import Dict
@@ -103,12 +104,21 @@ class EMAModule:
 class Clock:
     def __init__(self) -> None:
         self._step = 1
+        self._tic = 0
 
     def update(self, n_step=1) -> None:
         self._step += n_step
 
     def reset(self, step=1) -> None:
         self._step = step
+
+    def tick(self):
+        self._tic = time()
+
+    def tock(self):
+        used_time = time() - self._tic
+        self._tic = time()
+        return used_time
 
     @property
     def step(self) -> int:
@@ -181,3 +191,39 @@ class TrainHelper:
 
     def process_bar(self, desc: str, total: int = None) -> tqdm:
         return tqdm(desc=desc, total=total, disable=not self.fabric.is_global_zero)
+
+
+class profiling:
+    def __init__(self, flag_msg, n_digits=7) -> None:
+        self.flag_msg = flag_msg
+        self.n_digits = n_digits
+        self.tic = 0
+
+    def __enter__(self):
+        print(f"'{self.flag_msg}' started...")
+        self.tic = time()
+
+    def __exit__(self, exc_type, exc_value, exc_traceback):
+        used = time() - self.tic
+        print(f"'{self.flag_msg}' finished! used {used:.{self.n_digits}f}s")
+
+
+def profiling_it(flag_msg=None, flag_appendix=None, n_digits=7):
+    def wrapper(func):
+        def inner_wrapper(*args, **kwargs):
+            msg = ""
+            if hasattr(func, "__self__"):
+                msg += f"{func.__self__.__class__.__name__}."
+            msg += func.__name__
+            if flag_msg:
+                msg = f"'{flag_msg}'"
+            if flag_appendix:
+                msg += f"({flag_appendix})"
+
+            with profiling(f"function {msg}", n_digits=n_digits):
+                res = func(*args, **kwargs)
+            return res
+
+        return inner_wrapper
+
+    return wrapper
