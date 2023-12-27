@@ -7,7 +7,7 @@ from .pose import inference_pose
 
 class Wholebody:
     def __init__(self):
-        device = "cuda:0"
+        device = "cpu"
         providers = (
             ["CPUExecutionProvider"] if device == "cpu" else ["CUDAExecutionProvider"]
         )

@@ -320,7 +320,7 @@ def get_dataloader(config: DictConfig) -> wds.WebLoader:
         wds.select(data_filter),
         wds.to_tuple("mp4", "json"),
         wds.map(_get_transforms(config)),
-        wds.batched(config.train.batch_size, collation_fn=collation_fn, partial=False)
+        wds.batched(config.train.batch_size, collation_fn=collation_fn, partial=False),
     )
     dataloader = wds.WebLoader(
         dataset, batch_size=None, num_workers=config.data.num_workers

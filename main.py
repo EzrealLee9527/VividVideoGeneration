@@ -5,7 +5,7 @@ import lightning as L
 from lightning.fabric.loggers import TensorBoardLogger
 
 from model import get_pipeline, get_model
-from dataset import get_dataloader, collation_fn
+from dataset import get_dataloader
 from utils import LoggerHelper, TrainHelper, HyperParams as HP
 
 # type hint
@@ -97,6 +97,7 @@ def main():
         ),
     )
     fabric.launch()
+    fabric.seed_everything(cfg.train.seed + fabric.local_rank)
 
     logger = LoggerHelper.config_logger(
         logger, log_path=cfg.fs.log_path, local_rank=fabric.local_rank
@@ -112,25 +113,14 @@ def main():
     optimizer, lr_scheduler = model.configure_optimizers()
     # init dataloader
     dataloader = get_dataloader(cfg)
-    dataloader = dataloader.batched(
-        cfg.train.batch_size // fabric.world_size,
-        collation_fn=collation_fn,
-        partial=True,
-    )
     # setup model and optimizer
     model, optimizer = fabric.setup(model, optimizer)
 
-    train_helper.clock.tick()
-    for data in dataloader:
-        train_helper.clock.update()
-        print(train_helper.clock.tock())
-        if train_helper.clock.step > cfg.num_iteration:
-            break
-    # if cfg.train.resume:
-    #     checkpoint = os.path.join(cfg.fs.model_dir, "latest")
-    #     train_helper.loal_checkpoint(checkpoint, model.controlnet, optimizer, lr_scheduler)
+    if cfg.train.resume:
+        checkpoint = os.path.join(cfg.fs.model_dir, "latest")
+        train_helper.loal_checkpoint(checkpoint, model.controlnet, optimizer, lr_scheduler)
 
-    # train(fabric, model, dataloader, optimizer, lr_scheduler, train_helper)
+    train(fabric, model, dataloader, optimizer, lr_scheduler, train_helper)
 
 
 if __name__ == "__main__":

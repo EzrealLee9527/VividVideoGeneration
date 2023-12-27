@@ -20,6 +20,7 @@ cffi
 charset-normalizer
 click
 colorama
+coloredlogs
 comm
 contourpy
 cryptography
@@ -34,6 +35,7 @@ einops
 exceptiongroup
 executing
 filelock
+flatbuffers
 fonttools
 frozenlist
 fsspec
@@ -44,8 +46,10 @@ grpcio
 hf_transfer
 hjson
 huggingface-hub
+humanfriendly
 idna
 imageio
+imageio-ffmpeg
 importlib-metadata
 ipykernel
 ipython
@@ -84,8 +88,10 @@ numpy
 # nvidia-nvtx-cu12
 oauthlib
 omegaconf
+onnxruntime
 open-clip-torch
 opencv-python
+opencv-python-headless
 packaging
 paramiko
 parso

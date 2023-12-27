@@ -38,22 +38,22 @@ ImageUrl: "registry-cn-shanghai.cr.volces.com/images/aigc-research:20231219"
 # 队列 ID，为空时使用公共队列
 ResourceQueueID: "q-20230813141347-9dddg"
 # 队列名称，优先级高于 ResourceQueueID
-ResourceQueueName: "a800-midjourney"
+ResourceQueueName: "a10-b"
 # 训练框架，支持 TensorFlowPS / PyTorchDDP / MPI / BytePS / Custom
 Framework: "PyTorchDDP"
 # 实例配置，包含角色名称（RoleName）、角色数量（RoleReplicas）以及具体的实例规格（Flavor）
 TaskRoleSpecs:
   - RoleName: "worker"
     RoleReplicas: 1
-    Flavor: "ml.hpcpni2l.28xlarge"
+    Flavor: "ml.gni2.28xlarge"
     # GpuRate: 0.125 # 非必填，当需要切分GPU时，填写切分比例，如：0.25表示只使用1/4张卡。取值范围是(0-1]。
 # 最长运行时间
-ActiveDeadlineSeconds: 432000
+ActiveDeadlineSeconds: 2419200
 # 实例保留时长
-DelayExitTimeSeconds: 432000
+DelayExitTimeSeconds: 2419200
 Preemptible: false # 非必填，配置该任务是否为可抢占任务，默认不可抢占
 # 是否开启 TensorBoard
-EnableTensorBoard: false
+EnableTensorBoard: true
 # 挂载分布式数据盘至训练容器中，支 Tos，vePFS 等数据盘挂载方式
 Storages:
   - Type: "Vepfs" # 挂载 vePFS 数据盘
