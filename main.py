@@ -14,8 +14,6 @@ from torch.optim import Optimizer
 from torch.optim.lr_scheduler import LRScheduler
 from webdataset import WebLoader
 
-logger = LoggerHelper.get_logger(__name__)
-
 
 def train(
     fabric: L.Fabric,
@@ -26,12 +24,27 @@ def train(
     train_helper: TrainHelper,
 ) -> None:
     cfg = HP.instance()
-    metric = {}
+    logger = LoggerHelper.get_logger(__name__)
+
     pbar = train_helper.process_bar("train", total=cfg.train.num_iteration)
 
     model.controlnet.train()
     for idx, batch in enumerate(dataloader):
-        loss = model(batch, idx)
+        metric = {}
+        clip_input = batch["clip_input"].to(fabric.device)
+        vae_image_input = batch["vae_image_input"].to(fabric.device)
+        vae_video_input = batch["vae_video_input"].to(fabric.device)
+        added_time_ids = batch["added_time_ids"].to(fabric.device)
+        controlnet_cond = batch["controlnet_cond"].to(fabric.device)
+
+        model.set_timesteps(fabric.device)
+        loss = model(
+            clip_input,
+            vae_image_input,
+            vae_video_input,
+            added_time_ids,
+            controlnet_cond,
+        )
         fabric.backward(loss)
         optimizer.step()
         optimizer.zero_grad()
@@ -67,7 +80,7 @@ def train(
             )
 
         fabric.barrier()
-        if train_helper.clock.step > cfg.num_iteration:
+        if train_helper.clock.step > cfg.train.num_iteration:
             checkpoint = os.path.join(cfg.fs.model_dir, "final")
             train_helper.save_checkpoint(
                 checkpoint, model.controlnet, optimizer, lr_scheduler
@@ -99,6 +112,10 @@ def main():
     fabric.launch()
     fabric.seed_everything(cfg.train.seed + fabric.local_rank)
 
+    if fabric.is_global_zero:
+        os.makedirs(cfg.fs.output_dir, exist_ok=True)
+
+    logger = LoggerHelper.get_logger(__name__)
     logger = LoggerHelper.config_logger(
         logger, log_path=cfg.fs.log_path, local_rank=fabric.local_rank
     )
@@ -118,7 +135,9 @@ def main():
 
     if cfg.train.resume:
         checkpoint = os.path.join(cfg.fs.model_dir, "latest")
-        train_helper.loal_checkpoint(checkpoint, model.controlnet, optimizer, lr_scheduler)
+        train_helper.loal_checkpoint(
+            checkpoint, model.controlnet, optimizer, lr_scheduler
+        )
 
     train(fabric, model, dataloader, optimizer, lr_scheduler, train_helper)
 

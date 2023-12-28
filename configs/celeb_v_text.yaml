@@ -16,14 +16,14 @@ data:
   size: 512
   frame_stride: 2
 
-  num_frames: 24
+  num_frames: 14
   vae_scale_factor: 8
 
 train:
   resume: true
   seed: 1234
   num_iteration: 10000
-  batch_size: 4
+  batch_size: 1
   optimizer:
     beta1: 0.9
     beta2: 0.999

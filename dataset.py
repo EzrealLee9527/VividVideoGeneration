@@ -2,6 +2,7 @@ import os
 import einops
 import megfile
 import random
+from torchvision.transforms.functional import InterpolationMode
 import webdataset as wds
 import torch
 from torch.nn import Module
@@ -139,6 +140,7 @@ class FilterData(Module):
         super().__init__()
         self.video_idx = video_idx
 
+    @torch.no_grad()
     def forward(self, x: Tuple[Tensor, Dict]) -> Tuple[Tensor, Dict]:
         data, json = x
         fps = data[2]["video_fps"]
@@ -156,6 +158,7 @@ class ToChannelFirst(Module):
     def __init__(self) -> None:
         super().__init__()
 
+    @torch.no_grad()
     def forward(self, x: Tuple[Tensor, Dict]) -> Tuple[Tensor, Dict]:
         video, info = x
         video = einops.rearrange(video, "f h w c -> f c h w")
@@ -169,6 +172,7 @@ class RandomClip(Module):
         self.frame_stride = frame_stride
         self.origin_clip_frames = num_frames * frame_stride
 
+    @torch.no_grad()
     def forward(self, x: Tuple[Tensor, Dict]) -> Tuple[Tensor, Dict]:
         video, info = x
         total_frames = video.size(0)
@@ -186,6 +190,16 @@ class RandomClip(Module):
 
 
 class ClipResize(Resize):
+    def __init__(
+        self,
+        size,
+        interpolation=InterpolationMode.BILINEAR,
+        max_size=None,
+        antialias=True,
+    ):
+        super().__init__(size, interpolation, max_size, antialias)
+
+    @torch.no_grad()
     def forward(self, x: Tuple[Tensor, Dict]) -> Tuple[Tensor, Dict]:
         video, info = x
         video = super().forward(video)
@@ -193,6 +207,7 @@ class ClipResize(Resize):
 
 
 class ClipCenterCrop(CenterCrop):
+    @torch.no_grad()
     def forward(self, x: Tuple[Tensor, Dict]) -> Tuple[Tensor, Dict]:
         video, info = x
         video = super().forward(video)
@@ -204,6 +219,7 @@ class ParseCondition(Module):
         super().__init__()
         self.dwpose = DWposeDetector()
 
+    @torch.no_grad()
     def forward(self, x: Tuple[Tensor, Dict]) -> Tuple[Tensor, Dict]:
         video, info = x
         controlnet_cond = []
@@ -223,6 +239,7 @@ class ClipNormalize(Module):
         self.clip_normalize = Normalize(mean=IMAGE_MEAN, std=IMAGE_STD)
         self.vae_normalize = Normalize(mean=0.5, std=0.5)
 
+    @torch.no_grad()
     def forward(self, x: Tuple[Tensor, Dict]) -> Tuple[Tensor, Dict]:
         video, info = x
         video = video / 255
@@ -247,17 +264,6 @@ class ClipNormalize(Module):
         return info
 
 
-class Decompose(Module):
-    def forward(slef, info):
-        return (
-            info["clip_input"],
-            info["vae_image_input"],
-            info["vae_video_input"],
-            info["added_time_ids"],
-            info["controlnet_cond"],
-        )
-
-
 def _get_transforms(config: DictConfig) -> Compose:
     transforms = Compose(
         [
@@ -268,7 +274,6 @@ def _get_transforms(config: DictConfig) -> Compose:
             RandomClip(config.data.num_frames, config.data.frame_stride),
             ParseCondition(),
             ClipNormalize(),
-            # Decompose(),
         ]
     )
     return transforms

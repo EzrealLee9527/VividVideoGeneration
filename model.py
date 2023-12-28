@@ -1,8 +1,8 @@
 import einops
 import torch
+import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
-import lightning as L
 from transformers import CLIPVisionModelWithProjection
 from diffusers import StableVideoDiffusionPipeline
 
@@ -20,7 +20,7 @@ from torch.optim.lr_scheduler import LRScheduler
 from controlnet import UNetSpatioTemporalConditionModelV2, ControlNetSpatioTemporalModel
 
 
-class StableVideoDiffusion(L.LightningModule):
+class StableVideoDiffusion(nn.Module):
     def __init__(
         self,
         vae: AutoencoderKLTemporalDecoder,
@@ -46,21 +46,32 @@ class StableVideoDiffusion(L.LightningModule):
         self.unet.requires_grad_(False)
         self.controlnet.requires_grad_(True)
 
-        self.scheduler.set_timesteps(self.num_train_timesteps)
         self.config = config
 
-    def forward(self, batch: Dict[str, torch.Tensor], batch_idx: int) -> torch.Tensor:
-        return self.training_step(batch, batch_idx)
-
-    def training_step(
-        self, batch: Dict[str, torch.Tensor], batch_idx: int
+    def forward(
+        self,
+        clip_input,
+        vae_image_input,
+        vae_video_input,
+        added_time_ids,
+        controlnet_cond,
     ) -> torch.Tensor:
-        clip_input = batch["clip_input"]
-        vae_image_input = batch["vae_image_input"]
-        vae_video_input = batch["vae_video_input"]
-        added_time_ids = batch["added_time_ids"]
-        controlnet_cond = batch["controlnet_cond"]
+        return self.train_forward(
+            clip_input,
+            vae_image_input,
+            vae_video_input,
+            added_time_ids,
+            controlnet_cond,
+        )
 
+    def train_forward(
+        self,
+        clip_input,
+        vae_image_input,
+        vae_video_input,
+        added_time_ids,
+        controlnet_cond,
+    ) -> torch.Tensor:
         image_embeddings = self._clip_encode_image(clip_input)
         image_latents = self._vae_encode_image(vae_image_input)
         video_latents = self._vae_encode_video(vae_video_input)
@@ -71,10 +82,9 @@ class StableVideoDiffusion(L.LightningModule):
         noise = torch.randn_like(video_latents)
         noisy_video_latents = self.scheduler.add_noise(video_latents, noise, timesteps)
 
-        self.scheduler._step_index = None
-        unet_input = self.scheduler.scale_model_input(noisy_video_latents, timesteps)
-        unet_input = torch.cat([unet_input, image_latents], dim=2)
-        control_model_input = unet_input
+        unet_inputs = self._scale_model_input(noisy_video_latents, timesteps)
+        unet_inputs = torch.cat([unet_inputs, image_latents], dim=2)
+        control_model_input = unet_inputs
 
         down_block_res_samples, mid_block_res_sample = self.controlnet(
             control_model_input,
@@ -82,10 +92,11 @@ class StableVideoDiffusion(L.LightningModule):
             encoder_hidden_states=image_embeddings,
             added_time_ids=added_time_ids,
             controlnet_cond=controlnet_cond,
+            return_dict=False,
         )
 
-        noise_pred = self.unet(
-            unet_input,
+        noise_preds = self.unet(
+            unet_inputs,
             timesteps,
             encoder_hidden_states=image_embeddings,
             added_time_ids=added_time_ids,
@@ -94,12 +105,11 @@ class StableVideoDiffusion(L.LightningModule):
             return_dict=False,
         )[0]
 
-        self.scheduler._step_index = None
-        pred_original_sample = self.scheduler.step(
-            noise_pred, timesteps, noisy_video_latents
-        ).pred_original_sample
-        loss = F.mse_loss(pred_original_sample, video_latents)
-        return loss
+        pred_original_samples = self.pred_original_samples(
+            noise_preds, timesteps, noisy_video_latents
+        )
+        loss = F.mse_loss(pred_original_samples.float(), video_latents.float())
+        return 
 
     def configure_optimizers(self) -> Tuple[Optimizer, LRScheduler]:
         optimizer = optim.AdamW(
@@ -118,11 +128,16 @@ class StableVideoDiffusion(L.LightningModule):
         )
         return optimizer, lr_scheduler
 
+    def set_timesteps(self, device):
+        self.scheduler.set_timesteps(self.num_train_timesteps, device=device)
+
+    @torch.no_grad()
     def _clip_encode_image(self, image: torch.Tensor) -> torch.Tensor:
         image_embeddings = self.image_encoder(image).image_embeds
         image_embeddings = image_embeddings.unsqueeze(1)
         return image_embeddings
 
+    @torch.no_grad()
     def _vae_encode_image(self, image: torch.Tensor) -> torch.Tensor:
         image_latents = self.vae.encode(image).latent_dist.mode()
         image_latents = einops.repeat(
@@ -130,6 +145,7 @@ class StableVideoDiffusion(L.LightningModule):
         )
         return image_latents
 
+    @torch.no_grad()
     def _vae_encode_video(self, video: torch.Tensor) -> torch.Tensor:
         video_frames = einops.rearrange(video, "b f c h w -> (b f) c h w")
         video_latents = self.vae.encode(video_frames).latent_dist.sample()
@@ -138,6 +154,28 @@ class StableVideoDiffusion(L.LightningModule):
         )
         video_latents = video_latents * self.vae.config.scaling_factor
         return video_latents
+
+    @torch.no_grad()
+    def _scale_model_input(self, noisy_video_latents, timesteps):
+        unet_inputs = []
+        for noisy_video_latent, timestep in zip(noisy_video_latents, timesteps):
+            self.scheduler._step_index = None
+            unet_input = self.scheduler.scale_model_input(noisy_video_latent, timestep)
+            unet_inputs.append(unet_input)
+        return torch.stack(unet_inputs)
+
+    def pred_original_samples(self, noise_preds, timesteps, noisy_video_latents):
+        pred_original_samples = []
+        for noise_pred, timestep, noisy_video_latent in zip(
+            noise_preds, timesteps, noisy_video_latents
+        ):
+            self.scheduler._step_index = None
+            pred_original_samples.append(
+                self.scheduler.step(
+                    noise_pred, timestep, noisy_video_latent
+                ).pred_original_sample
+            )
+        return torch.stack(pred_original_samples)
 
 
 def get_pipeline(model_id: str) -> StableVideoDiffusionPipeline:

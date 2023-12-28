@@ -330,7 +330,7 @@ class ControlNetSpatioTemporalModel(ModelMixin, ConfigMixin):
             )
             self.down_blocks.append(down_block)
 
-            for _ in range(layers_per_block):
+            for _ in range(layers_per_block[i]):
                 controlnet_block = nn.Conv2d(
                     output_channel, output_channel, kernel_size=1
                 )
@@ -570,6 +570,8 @@ class ControlNetSpatioTemporalModel(ModelMixin, ConfigMixin):
         encoder_hidden_states = encoder_hidden_states.repeat_interleave(
             num_frames, dim=0
         )
+        # controlnet_cond: [batch, frames, channels, height, width] -> [batch * frames, channels, height, width]
+        controlnet_cond = controlnet_cond.flatten(0, 1)
 
         # 2. pre-process
         sample = self.conv_in(sample)
