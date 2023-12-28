@@ -19,4 +19,5 @@
 /src
 /output
 /.vscode
+/wandb
 /__pycache__
