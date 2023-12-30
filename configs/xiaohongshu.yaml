@@ -1,7 +1,8 @@
 fs:
   output_dir: "outputs"
   log_path: "worklog.log"
-  model_dir: "models"
+  exp_name: "20231228_first_try"
+  model_dir: "s3://ljj/linbo/video/stable_video_diffusion/controlnet/"
   tensorboard_dir: "tensorboard"
 
 model:
@@ -12,18 +13,18 @@ model:
 data:
   root_dirs:
     - "s3://data-transfer-tos-shanghai-818/midjourney/jmh/Video/wds/xiaohongshu_webdataset_20231212"
-  num_workers: 0
+  num_workers: 4
   size: 512
   frame_stride: 2
 
-  num_frames: 24
+  num_frames: 14
   vae_scale_factor: 8
 
 train:
   resume: true
   seed: 1234
   num_iteration: 10000
-  batch_size: 4
+  batch_size: 1
   optimizer:
     beta1: 0.9
     beta2: 0.999
@@ -34,4 +35,4 @@ train:
 monitor:
   log_interval: 100
   save_interval: 100
-  latest_interval: 10
+  latest_interval: 1

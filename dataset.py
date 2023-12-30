@@ -15,8 +15,8 @@ from typing import List, Dict, Tuple
 from torch import Tensor
 from omegaconf import DictConfig
 
-URL_PATTERN = "pipe: aws --endpoint-url={} s3 cp {} -"
-ENDPOINT_URL = "http://tos-s3-cn-shanghai.ivolces.com"
+URL_PATTERN = "pipe:aws --endpoint-url={} s3 cp {} -"
+ENDPOINT_URL = "http://oss.i.shaipower.com"
 IMAGE_MEAN = [0.48145466, 0.4578275, 0.40821073]
 IMAGE_STD = [0.26862954, 0.26130258, 0.27577711]
 
@@ -319,7 +319,10 @@ def get_dataloader(config: DictConfig) -> wds.WebLoader:
         wds.ResampledShards(urls),
         wds.shuffle(10),
         wds.split_by_node,
-        wds.tarfile_to_samples(),
+        wds.cached_tarfile_to_samples(
+            cache_dir=config.data.cache_dir,
+            cache_size=config.data.cache_size_in_gb * 1024 * 1024 * 1024,
+        ),
         wds.shuffle(10),
         wds.decode(wds.torch_video),
         wds.select(data_filter),

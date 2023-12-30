@@ -18,11 +18,20 @@ class Wholebody:
             os.path.dirname(os.path.abspath(__file__)), "models", "dw-ll_ucoco_384.onnx"
         )
 
+        sess_opt = ort.SessionOptions()
+        sess_opt.inter_op_num_threads = 1
+        sess_opt.intra_op_num_threads = 1
+        sess_opt.use_deterministic_compute = True
+
         self.session_det = ort.InferenceSession(
-            path_or_bytes=onnx_det, providers=providers
+            path_or_bytes=onnx_det,
+            sess_options=sess_opt,
+            providers=providers,
         )
         self.session_pose = ort.InferenceSession(
-            path_or_bytes=onnx_pose, providers=providers
+            path_or_bytes=onnx_pose,
+            sess_options=sess_opt,
+            providers=providers,
         )
 
     def __call__(self, oriImg):

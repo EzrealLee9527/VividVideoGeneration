@@ -134,9 +134,9 @@ tensorboard-data-server
 timm
 tokenizers
 tomli
-torch @https://download.pytorch.org/whl/cu118/torch-2.1.2%2Bcu118-cp310-cp310-linux_x86_64.whl
+torch # @https://download.pytorch.org/whl/cu118/torch-2.1.2%2Bcu118-cp310-cp310-linux_x86_64.whl
 torchmetrics
-torchvision @https://download.pytorch.org/whl/cu118/torchvision-0.16.2%2Bcu118-cp310-cp310-linux_x86_64.whl
+torchvision # @https://download.pytorch.org/whl/cu118/torchvision-0.16.2%2Bcu118-cp310-cp310-linux_x86_64.whl
 tornado
 tqdm
 traitlets

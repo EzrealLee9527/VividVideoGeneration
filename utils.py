@@ -17,6 +17,11 @@ from omegaconf import DictConfig
 from lightning import Fabric
 
 
+LOGGING_FORMAT = (
+    "%(asctime)s - %(levelname)s - %(filename)s - %(funcName)s - %(message)s"
+)
+
+
 class Singleton(type):
     _instances = {}
 
@@ -34,40 +39,32 @@ class HyperParams(metaclass=Singleton):
     @classmethod
     def load_config(cls, config: str) -> None:
         cfg = OmegaConf.load(config)
-        cfg.fs.log_path = os.path.join(cfg.fs.output_dir, cfg.fs.log_path)
-        cfg.fs.model_dir = os.path.join(cfg.fs.output_dir, cfg.fs.model_dir)
+        cfg.fs.exp_dir = os.path.join(cfg.fs.output_dir, cfg.fs.exp_name)
+        cfg.fs.log_path = os.path.join(cfg.fs.exp_dir, cfg.fs.log_path)
+        cfg.fs.model_dir = os.path.join(cfg.fs.model_dir, cfg.fs.exp_name)
         cls._instances[cls] = cfg
 
 
-class LoggerHelper:
-    @staticmethod
-    def get_logger(name):
-        logger = logging.getLogger(name)
-        return logger
-
-    @staticmethod
-    def config_logger(logger, log_path, local_rank):
+class LoggerHelper(metaclass=Singleton):
+    @classmethod
+    def init_logger(cls, log_path):
+        logger = logging.getLogger("train_logger")
         logger.setLevel(logging.INFO)
-
-        formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
-
+        formatter = logging.Formatter(LOGGING_FORMAT)
         stream_handler = logging.StreamHandler()
-        if local_rank == 0:
-            stream_handler.setLevel(logging.INFO)
-        else:
-            stream_handler.setLevel(logging.ERROR)
+        stream_handler.setLevel(logging.INFO)
         stream_handler.setFormatter(formatter)
         logger.addHandler(stream_handler)
-
         file_handler = logging.FileHandler(filename=log_path, mode="a")
-        if local_rank == 0:
-            file_handler.setLevel(logging.INFO)
-        else:
-            file_handler.setLevel(logging.ERROR)
+        file_handler.setLevel(logging.INFO)
         file_handler.setFormatter(formatter)
         logger.addHandler(file_handler)
+        cls._instances[cls] = logger
 
-        return logger
+    @classmethod
+    def disable_in_other_ranks(cls):
+        logger = cls.instance()
+        logger.setLevel(logging.ERROR)
 
     @staticmethod
     def dict2str(dict_obj: Dict[str, float]) -> str:
@@ -139,17 +136,21 @@ class TrainHelper:
             self.ema = EMAModule(module)
         self.clock = Clock()
 
-    def save_checkpoint(
+    def save_state(
         self,
         checkpoint: str,
         module: Module,
         optimizer: Optimizer,
         lr_scheduler: LRScheduler,
     ) -> None:
-        logging.info(f"save checkpoint to {checkpoint}")
+        logger = LoggerHelper.instance()
+        logger.info(f"save checkpoint to {checkpoint}")
         local_filename = os.path.basename(checkpoint)
-
-        state = {"module": module, "optimizer": optimizer, "lr_scheduler": lr_scheduler}
+        state = {
+            "model": module,
+            "optimizer": optimizer,
+            "lr_scheduler": lr_scheduler,
+        }
         self.fabric.save(local_filename, state)
 
         self.fabric.barrier()
@@ -160,25 +161,36 @@ class TrainHelper:
             megfile.smart_sync(local_filename, checkpoint)
             megfile.smart_remove(local_filename)
 
-    def loal_checkpoint(
+        del state
+
+    def load_state(
         self,
         checkpoint: str,
         module: Module,
         optimizer: Optimizer,
         lr_scheduler: LRScheduler,
     ) -> None:
-        logging.info(f"load checkpoint from {checkpoint}")
+        logger = LoggerHelper.instance()
+        logger.info(f"load checkpoint from {checkpoint}")
+        if not megfile.smart_exists(checkpoint):
+            logger.info(f"{checkpoint} not exist")
+            return
+
         local_filename = os.path.basename(checkpoint)
 
         if not megfile.smart_exists(checkpoint):
-            logging.info(f"checkpoint {checkpoint} not exist")
+            logger.info(f"checkpoint {checkpoint} not exist")
             return
 
         if self.fabric.is_global_zero:
             megfile.smart_sync(checkpoint, local_filename)
 
         self.fabric.barrier()
-        state = {"module": module, "optimizer": optimizer, "lr_scheduler": lr_scheduler}
+        state = {
+            "model": module,
+            "optimizer": optimizer,
+            "lr_scheduler": lr_scheduler,
+        }
         remainder = self.fabric.load(local_filename, state)
 
         self.clock.load_state_dict(torch.load(os.path.join(local_filename, "clock")))
@@ -188,6 +200,34 @@ class TrainHelper:
         self.fabric.barrier()
         if self.fabric.is_global_zero:
             megfile.smart_remove(local_filename)
+
+        del state
+
+    def save_model_only(self, module, checkpoint):
+        logger = LoggerHelper.instance()
+        logger.info(f"save model to {checkpoint}")
+
+        state_dict = {}
+        for name, param in module.named_parameters():
+            param = safe_get_full_fp32_param(param)
+            state_dict[name] = param
+
+        if self.fabric.is_global_zero:
+            with megfile.smart_open(checkpoint, "wb") as f:
+                torch.save(state_dict, f)
+        del state_dict
+
+    def load_model_only(self, module, checkpoint):
+        logger = LoggerHelper.instance()
+        logger.info(f"load model from {checkpoint}")
+
+        with megfile.smart_open(checkpoint, "rb") as f:
+            state_dict = torch.load(f)
+
+        self.fabric.barrier()
+        for name, param in module.named_parameters():
+            safe_set_full_fp32_param(param, state_dict[name])
+        del state_dict
 
     def process_bar(self, desc: str, total: int = None) -> tqdm:
         return tqdm(desc=desc, total=total, disable=not self.fabric.is_global_zero)

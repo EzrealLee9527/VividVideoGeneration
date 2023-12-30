@@ -1,7 +1,8 @@
 fs:
   output_dir: "outputs"
   log_path: "worklog.log"
-  model_dir: "models"
+  exp_name: "20231228_first_try"
+  model_dir: "s3://ljj/linbo/video/stable_video_diffusion/controlnet/"
   tensorboard_dir: "tensorboard"
 
 model:
@@ -11,11 +12,12 @@ model:
 
 data:
   root_dirs:
-    - "s3://data-transfer-tos-shanghai-818/midjourney/jmh/Video/wds/CelebV_webdataset_20231211_videoblip"
-  num_workers: 0
+    - "s3://ljj/Datasets/Videos/processed/CelebV_webdataset_20231211_videoblip"
+  num_workers: 8
   size: 512
   frame_stride: 2
-
+  cache_dir: "/data/cache"
+  cache_size_in_gb: 500
   num_frames: 14
   vae_scale_factor: 8
 
@@ -33,5 +35,5 @@ train:
 
 monitor:
   log_interval: 100
-  save_interval: 100
-  latest_interval: 10
+  save_interval: 1000
+  latest_interval: 100

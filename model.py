@@ -109,7 +109,7 @@ class StableVideoDiffusion(nn.Module):
             noise_preds, timesteps, noisy_video_latents
         )
         loss = F.mse_loss(pred_original_samples.float(), video_latents.float())
-        return 
+        return loss
 
     def configure_optimizers(self) -> Tuple[Optimizer, LRScheduler]:
         optimizer = optim.AdamW(
