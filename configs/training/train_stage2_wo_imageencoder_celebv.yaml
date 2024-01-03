@@ -1,0 +1,99 @@
+image_finetune: false
+output_dir: "outputs"
+pretrained_model_path: '/huggingface00/hub/models--runwayml--stable-diffusion-v1-5/snapshots/1d0c4ebf6ff58a5caecab40fa1406526bca4b5b9'
+pretrained_vae_path: "/models00/pretrained_models/sd-vae-ft-mse"
+# image_encoder_path: "/work00/IP-Adapter/IP-Adapter/models/image_encoder"
+image_encoder_path: ""
+# ip_ckpt: "/work00/IP-Adapter/IP-Adapter/models/ip-adapter-full-face_sd15.bin"
+pretrained_appearance_encoder_path: "/models00/pretrained_models/MagicAnimate/appearance_encoder"
+pretrained_controlnet_path: "/models00/pretrained_models/MagicAnimate/densepose_controlnet"
+motion_module: "/models00/pretrained_models/MagicAnimate/temporal_attention/temporal_attention.ckpt"
+inference_config: "configs/inference/magic_inference.yaml"
+pretrained_unet_path: ""
+
+# stage1 trained
+# appearance_controlnet_motion_checkpoint_path: "outputs/train_stage1_wo_imageencoder_celebv-2023-12-22T16-03-41/checkpoints/checkpoint-steps5500.ckpt"
+# 训了10000steps了，断掉继续训
+appearance_controlnet_motion_checkpoint_path: "outputs/train_stage1_wo_imageencoder_celebv-2023-12-23T16-43-09/checkpoints/checkpoint-steps4000.ckpt"
+
+unet_additional_kwargs:
+  unet_use_cross_frame_attention: false
+  unet_use_temporal_attention: false
+  use_motion_module: true # stage2
+  motion_module_resolutions:
+  - 1
+  - 2
+  - 4
+  - 8
+  motion_module_mid_block: false
+  motion_module_decoder_only: false
+  motion_module_type: Vanilla
+  motion_module_kwargs:
+    num_attention_heads: 8
+    num_transformer_block: 1
+    attention_block_types:
+    - Temporal_Self
+    - Temporal_Self
+    temporal_position_encoding: true
+    temporal_position_encoding_max_len: 24
+    temporal_attention_dim_div: 1
+
+  # Addition for image embeddings
+  use_image_condition            : false
+
+
+noise_scheduler_kwargs:
+  num_train_timesteps: 1000
+  beta_start:          0.00085
+  beta_end:            0.012
+  beta_schedule:       "scaled_linear" # 这部分animatediff和magic不一样？
+  steps_offset:        1
+  clip_sample:         false
+
+data_module:          'animatediff.data.dataset_wds'
+data_class:           'S3VideosIterableDataset'
+train_data:
+  data_dirs:          ['s3://data-transfer-tos-shanghai-818/midjourney/jmh/Video/wds/CelebV_webdataset_20231211',]
+  resolution:         512
+  frame_stride:       1
+  video_length:       16
+  shuffle:            true
+  resampled:          true
+  dataset_length:     1000000
+
+validation_data:
+  prompt_videos:
+    - "/work00/magic_animate_unofficial/data/celebv/10876-2-7eMjYXRcm-0_12_0.mp4"
+    - "/work00/magic_animate_unofficial/data/celebv/10894-8-7ebsTST4bSw_1_0.mp4"
+  num_inference_steps: 25
+  guidance_scale: 7.5
+  val_video_length: 16
+  sample_size: [512, 512]
+  frame_stride:       1
+
+# stage12
+trainable_modules:
+  # - "appearance_encoder"
+  # - "controlnet"
+  - "motion_module"
+
+
+unet_checkpoint_path: ""
+
+learning_rate:    1.e-5
+train_batch_size: 1
+num_workers: 2
+
+max_train_epoch:      100
+max_train_steps:      -1
+checkpointing_epochs: -1
+checkpointing_steps:  5000
+
+validation_steps:       200
+validation_steps_tuple: [2, 100]
+
+global_seed: 42
+mixed_precision_training: true
+enable_xformers_memory_efficient_attention: True
+
+is_debug: False

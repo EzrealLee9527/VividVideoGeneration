@@ -1,0 +1,81 @@
+image_finetune: false
+output_dir: "outputs"
+pretrained_model_path: "runwayml/stable-diffusion-v1-5"
+image_encoder_path: "/work00/IP-Adapter/IP-Adapter/models/image_encoder"
+pretrained_appearance_encoder_path: "/models00/pretrained_models/MagicAnimate/appearance_encoder"
+pretrained_controlnet_path: "/models00/pretrained_models/MagicAnimate/densepose_controlnet"
+
+unet_additional_kwargs:
+  unet_use_cross_frame_attention: false
+  unet_use_temporal_attention: false
+  use_motion_module: false # stage1
+  motion_module_resolutions:
+  - 1
+  - 2
+  - 4
+  - 8
+  motion_module_mid_block: false
+  motion_module_decoder_only: false
+  motion_module_type: Vanilla
+  motion_module_kwargs:
+    num_attention_heads: 8
+    num_transformer_block: 1
+    attention_block_types:
+    - Temporal_Self
+    - Temporal_Self
+    temporal_position_encoding: true
+    temporal_position_encoding_max_len: 24
+    temporal_attention_dim_div: 1
+
+  # Addition for image embeddings
+  use_image_condition            : true
+
+
+noise_scheduler_kwargs:
+  num_train_timesteps: 1000
+  beta_start:          0.00085
+  beta_end:            0.012
+  beta_schedule:       "scaled_linear"
+  steps_offset:        1
+  clip_sample:         false
+
+train_data:
+  json_path:     "/work00/magic_animate_unofficial/fashion_dataset.json"
+  sample_size: [768, 512]
+  sample_stride: 1
+  sample_n_frames: 2
+
+validation_data:
+  prompt_videos:
+    - "/work00/magic_animate_unofficial/data/fashion_dataset/81FyMPk-WIS.mp4"
+    - "/work00/magic_animate_unofficial/data/fashion_dataset/91+20mY7UJS.mp4"
+  num_inference_steps: 25
+  guidance_scale: 8.
+  val_video_length: 8
+  sample_size: [768, 512]
+
+# stage1
+trainable_modules:
+  - "appearance_encoder"
+  - "controlnet"
+
+
+unet_checkpoint_path: ""
+
+learning_rate:    1.e-5
+train_batch_size: 1
+num_workers: 8
+
+max_train_epoch:      -1
+max_train_steps:      100000
+checkpointing_epochs: -1
+checkpointing_steps:  5000
+
+validation_steps:       5000
+validation_steps_tuple: [2, 100, 500, 1000, 2000]
+
+global_seed: 42
+mixed_precision_training: true
+enable_xformers_memory_efficient_attention: True
+
+is_debug: False
