@@ -771,8 +771,8 @@ def main():
             "s3://data-transfer-tos-shanghai-818/midjourney/jmh/Video/wds/xiaohongshu_webdataset_20231212",
         ],
         video_length   = args.num_frames,
-        resolution     = [args.width, args.height],
-        frame_stride   = 2,
+        resolution     = [args.height, args.width],
+        frame_stride   = 4,
         dataset_length = 100000,
         shuffle        = True,
         resampled      = True,
@@ -942,6 +942,7 @@ def main():
                 pixel_values = batch["pixel_values"].to(weight_dtype).to(
                     accelerator.device, non_blocking=True
                 )
+                # value should be between [-1,1]
                 latents = tensor_to_vae_latent(pixel_values, vae)
                 conditional_latents = latents[:, 0, :, :, :]
                 conditional_latents = conditional_latents / vae.config.scaling_factor
@@ -961,9 +962,9 @@ def main():
                 noisy_latents = latents + noise * sigmas
                 inp_noisy_latents = noisy_latents / ((sigmas**2 + 1) ** 0.5)
 
-                # Get the text embedding for conditioning.
+                # Get the text embedding for conditioning. value should be between [0,1]
                 encoder_hidden_states = encode_image(
-                    pixel_values[:, 0, :, :, :].float())
+                    pixel_values[:, 0, :, :, :].float()*2.0+1.0)
 
                 added_time_ids = _get_add_time_ids(
                     7,

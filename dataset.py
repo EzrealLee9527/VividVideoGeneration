@@ -12,6 +12,7 @@ import traceback
 from typing import List
 import torchvision.transforms.functional as F
 import megfile
+import torchvision.transforms as transforms
 
 
 # def gopen_megfile(url, mode="rb", bufsize=8192, **kw):
@@ -43,7 +44,7 @@ class S3VideosIterableDataset(IterableDataset):
         self,  
         data_dirs,
         video_length=16,
-        resolution=[512, 512],
+        resolution=[512, 512], # h,w
         frame_stride=1,
         dataset_length=100000,
         is_image=False,
@@ -62,6 +63,14 @@ class S3VideosIterableDataset(IterableDataset):
         self.resolution       = resolution
         self.is_image         = is_image
         self.dataset_length   = int(dataset_length)
+
+        # assert resolution[0] == resolution[1], "the patch width must be the same with its height."
+        self.pixel_transforms = transforms.Compose([
+            transforms.RandomHorizontalFlip(),
+            transforms.Resize(resolution[1]),
+            transforms.CenterCrop(resolution),
+            transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5], inplace=True),
+        ])
 
 
     def get_tarfilepath_list(self, data_dirs):
@@ -193,13 +202,14 @@ class S3VideosIterableDataset(IterableDataset):
                 traceback.print_exc()
                 continue
             
-            # hardcore here, direct reisze to h,w=320,512
-            frames = F.resize(frames, size=(self.resolution[0],self.resolution[1]), antialias=True)
-            # frames = (frames / 255.0 - 0.5) * 2
-            frames = frames/255.  # 
+            # # hardcore here, direct reisze to h,w=320,512
+            # frames = F.resize(frames, size=(self.resolution[0],self.resolution[1]), antialias=True)
+            # # frames = (frames / 255.0 - 0.5) * 2
+            # frames = frames/255.  # 
 
-            # frames = self.center_crop(frames)
-
+            frames = frames/255. 
+            frames = self.pixel_transforms(frames)
+            
             if self.is_image:
                 frames = frames[0]
 
@@ -270,11 +280,10 @@ def get_tarfile_name_list(bucket, object_dir):
     return tarfile_name_list
 
 
-if __name__ == "__main__":
-
-    
+if __name__ == "__main__":    
     import resource
     from tqdm import tqdm
+    from PIL import Image
 
     dataset = S3VideosIterableDataset(
         ["s3://data-transfer-tos-shanghai-818/midjourney/jmh/Video/wds/CelebV_webdataset_20231211",],
@@ -292,7 +301,12 @@ if __name__ == "__main__":
     ).with_length(len(dataset))
     # pbar = tqdm()
     for data in tqdm(dataloader):
-        # pbar.update(1)
+        
+        img = data["pixel_values"][0,0,...].numpy() # chw
+        img = img.transpose((1,2,0))
+        img = np.clip((img*2+1)*255., 0, 255).astype(np.uint8)
+        img_pil = Image.fromarray(img)
+        img_pil.save("data_debug.png")
         import pdb; pdb.set_trace()
         # print(f"RAM PEAK: {resource.getrusage(resource.RUSAGE_SELF).ru_maxrss/(1024**3):.4f}")
         pass
