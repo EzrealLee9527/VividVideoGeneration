@@ -1,6 +1,8 @@
 # project
 models
 outputs
+test
+MASTER_ADDR
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

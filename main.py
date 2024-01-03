@@ -28,7 +28,7 @@ def train(
     logger = LoggerHelper.instance()
 
     pbar = train_helper.process_bar("train", total=cfg.train.num_iteration)
-    pbar.update(train_helper.clock.step - 1)
+    pbar.update(train_helper.clock.step)
 
     model.controlnet.train()
     for idx, batch in enumerate(dataloader):
@@ -39,7 +39,6 @@ def train(
         added_time_ids = batch["added_time_ids"].to(fabric.device)
         controlnet_cond = batch["controlnet_cond"].to(fabric.device)
 
-        model.set_timesteps(fabric.device)
         loss = model(
             clip_input,
             vae_image_input,
@@ -108,19 +107,18 @@ def main():
             name=cfg.fs.tensorboard_dir,
         ),
     )
-    fabric.launch()
-    fabric.seed_everything(cfg.train.seed + fabric.local_rank)
+    fabric.seed_everything(cfg.train.seed + fabric.global_rank)
 
     cv2.setNumThreads(0)
 
     if fabric.is_global_zero:
         os.makedirs(cfg.fs.exp_dir, exist_ok=True)
-    fabric.barrier()
 
+    fabric.barrier()
     LoggerHelper.init_logger(log_path=cfg.fs.log_path)
     if not fabric.is_global_zero:
         LoggerHelper.disable_in_other_ranks()
-        builtins.print = lambda x: None
+        builtins.print = lambda *args: None
     logger = LoggerHelper.instance()
 
     # init pipeline
@@ -135,6 +133,7 @@ def main():
     dataloader = get_dataloader(cfg)
     # setup model and optimizer
     model, optimizer = fabric.setup(model, optimizer)
+    model.set_timesteps(fabric.device, fabric._precision._desired_dtype)
 
     if cfg.train.resume:
         checkpoint = os.path.join(cfg.fs.model_dir, "latest")

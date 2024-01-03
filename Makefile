@@ -2,25 +2,26 @@ CHARGED_GROUP ?= monet_video
 CPU ?= 192
 GPU ?= 8
 MEM_IN_GB ?= 768
-CONFIG ?= 
+NUM_NODES ?= 1
+CONFIG ?=
 
 override MEM = $$((${MEM_IN_GB}*1024))
+override RLAUNCH_CMD = rlaunch --charged-group ${CHARGED_GROUP} --cpu ${CPU} --gpu ${GPU} --memory ${MEM} --replica ${NUM_NODES} --preemptible no --private-machine yes
+override DIST_TRAIN_CMD = sh train_dist.sh ${CONFIG} ${GPU}
+override TRAIN_CMD = sh train.sh ${CONFIG} ${GPU}
 
-override TRAIN_RLAUNCH = rlaunch --charged-group ${CHARGED_GROUP} --cpu ${CPU} --gpu ${GPU} --memory ${MEM} --preemptible no --private-machine yes
-
-override TRAIN_COMMAND = python3 -u main.py -c ${CONFIG}
-
-# rlaunch
 train:
-	${TRAIN_RLAUNCH} -- ${TRAIN_COMMAND}
+	${RLAUNCH_CMD} -- ${TRAIN_CMD}
 
-# local
+train_dist:
+	${RLAUNCH_CMD} -- ${DIST_TRAIN_CMD}
+
 train_local:
-	${TRAIN_COMMAND}
+	${TRAIN_CMD}
 
 check:
-	${TRAIN_RLAUNCH} --predict-only
+	${RLAUNCH_CMD} --predict-only
 
 debug:
-	${TRAIN_RLAUNCH} -- zsh
+	rlaunch --charged-group ${CHARGED_GROUP} --cpu ${CPU} --gpu ${GPU} --memory ${MEM} --preemptible no --private-machine yes -- zsh
 

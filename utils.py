@@ -100,13 +100,13 @@ class EMAModule:
 
 class Clock:
     def __init__(self) -> None:
-        self._step = 1
+        self._step = 0
         self._tic = 0
 
     def update(self, n_step=1) -> None:
         self._step += n_step
 
-    def reset(self, step=1) -> None:
+    def reset(self, step=0) -> None:
         self._step = step
 
     def tick(self):
@@ -153,7 +153,6 @@ class TrainHelper:
         }
         self.fabric.save(local_filename, state)
 
-        self.fabric.barrier()
         if self.fabric.is_global_zero:
             torch.save(self.clock.state_dict(), os.path.join(local_filename, "clock"))
             if self.use_ema:
@@ -185,7 +184,6 @@ class TrainHelper:
         if self.fabric.is_global_zero:
             megfile.smart_sync(checkpoint, local_filename)
 
-        self.fabric.barrier()
         state = {
             "model": module,
             "optimizer": optimizer,
@@ -196,8 +194,8 @@ class TrainHelper:
         self.clock.load_state_dict(torch.load(os.path.join(local_filename, "clock")))
         if self.use_ema:
             self.ema.load_state_dict(torch.load(os.path.join(local_filename, "ema")))
-
         self.fabric.barrier()
+
         if self.fabric.is_global_zero:
             megfile.smart_remove(local_filename)
 

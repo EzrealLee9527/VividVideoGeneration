@@ -7,7 +7,7 @@ from transformers import CLIPVisionModelWithProjection
 from diffusers import StableVideoDiffusionPipeline
 
 # type hint
-from typing import Tuple, Dict
+from typing import Tuple
 from omegaconf import DictConfig
 from diffusers import (
     AutoencoderKLTemporalDecoder,
@@ -77,10 +77,12 @@ class StableVideoDiffusion(nn.Module):
         video_latents = self._vae_encode_video(vae_video_input)
 
         batch_size = video_latents.size(0)
-        timesteps = torch.randint(0, self.num_train_timesteps, size=(batch_size,))
-        timesteps = self.scheduler.timesteps[timesteps]
+        timesteps = torch.randint(
+            0, self.num_train_timesteps, size=(batch_size,), device=self.sigmas.device
+        )
+        # timesteps = self.scheduler.timesteps[timesteps]
         noise = torch.randn_like(video_latents)
-        noisy_video_latents = self.scheduler.add_noise(video_latents, noise, timesteps)
+        noisy_video_latents = self._add_noise(video_latents, noise, timesteps)
 
         unet_inputs = self._scale_model_input(noisy_video_latents, timesteps)
         unet_inputs = torch.cat([unet_inputs, image_latents], dim=2)
@@ -128,8 +130,9 @@ class StableVideoDiffusion(nn.Module):
         )
         return optimizer, lr_scheduler
 
-    def set_timesteps(self, device):
+    def set_timesteps(self, device, dtype):
         self.scheduler.set_timesteps(self.num_train_timesteps, device=device)
+        self.sigmas = self.scheduler.sigmas.to(dtype)
 
     @torch.no_grad()
     def _clip_encode_image(self, image: torch.Tensor) -> torch.Tensor:
@@ -156,26 +159,63 @@ class StableVideoDiffusion(nn.Module):
         return video_latents
 
     @torch.no_grad()
-    def _scale_model_input(self, noisy_video_latents, timesteps):
-        unet_inputs = []
-        for noisy_video_latent, timestep in zip(noisy_video_latents, timesteps):
-            self.scheduler._step_index = None
-            unet_input = self.scheduler.scale_model_input(noisy_video_latent, timestep)
-            unet_inputs.append(unet_input)
-        return torch.stack(unet_inputs)
+    def _add_noise(self, original_samples, noise, timesteps):
+        sigma = self.sigmas[timesteps].flatten()
+        while len(sigma.shape) < len(original_samples.shape):
+            sigma = sigma.unsqueeze(-1)
+        noisy_samples = original_samples + noise * sigma
+        noisy_samples
+        return noisy_samples
 
-    def pred_original_samples(self, noise_preds, timesteps, noisy_video_latents):
-        pred_original_samples = []
-        for noise_pred, timestep, noisy_video_latent in zip(
-            noise_preds, timesteps, noisy_video_latents
-        ):
-            self.scheduler._step_index = None
-            pred_original_samples.append(
-                self.scheduler.step(
-                    noise_pred, timestep, noisy_video_latent
-                ).pred_original_sample
-            )
-        return torch.stack(pred_original_samples)
+    @torch.no_grad()
+    def _scale_model_input(self, noisy_video_latents, timesteps):
+        sigma = self.sigmas[timesteps]
+        noisy_video_latents /= (sigma**2 + 1) ** 0.5
+        return noisy_video_latents
+
+        # unet_inputs = []
+        # for noisy_video_latent, timestep in zip(noisy_video_latents, timesteps):
+        #     self.scheduler._step_index = None
+        #     unet_input = self.scheduler.scale_model_input(noisy_video_latent, timestep)
+        #     unet_inputs.append(unet_input)
+        # return torch.stack(unet_inputs)
+
+    def pred_original_samples(
+        self,
+        noise_preds,
+        timesteps,
+        noisy_video_latents,
+        s_churn: float = 0.0,
+        s_tmin: float = 0.0,
+        s_tmax: float = float("inf"),
+        s_noise: float = 1.0,
+    ):
+        sigma = self.sigmas[timesteps]
+        gamma = (
+            min(s_churn / (len(self.sigmas) - 1), 2**0.5 - 1)
+            if s_tmin <= sigma <= s_tmax
+            else 0.0
+        )
+        noise = torch.randn_like(noise_preds)
+        eps = noise * s_noise
+        sigma_hat = sigma * (gamma + 1)
+        if gamma > 0:
+            noisy_video_latents += eps * (sigma_hat**2 - sigma**2) ** 0.5
+        pred_original_sample = noise_preds * (-sigma / (sigma**2 + 1) ** 0.5) + (
+            noisy_video_latents / (sigma**2 + 1)
+        )
+        return pred_original_sample
+        # pred_original_samples = []
+        # for noise_pred, timestep, noisy_video_latent in zip(
+        #     noise_preds, timesteps, noisy_video_latents
+        # ):
+        #     self.scheduler._step_index = None
+        #     pred_original_samples.append(
+        #         self.scheduler.step(
+        #             noise_pred, timestep, noisy_video_latent
+        #         ).pred_original_sample
+        #     )
+        # return torch.stack(pred_original_samples)
 
 
 def get_pipeline(model_id: str) -> StableVideoDiffusionPipeline:
