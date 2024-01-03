@@ -18,7 +18,7 @@ def setup_pipeline(args):
 
         with megfile.smart_open(args.unet_path, "rb") as rbf:
             state_dict = torch.load(rbf)
-            import pdb; pdb.set_trace()
+            # import pdb; pdb.set_trace()
             pipe.unet.load_state_dict(state_dict)
             # pipe.unet = pipe.unet.eval()
     pipe.enable_model_cpu_offload()
@@ -53,7 +53,6 @@ def run(args):
         duration=500,
         loop=0
     )
-
 
 if __name__ == "__main__":
     import argparse
@@ -98,5 +97,4 @@ if __name__ == "__main__":
     )
 
     args = parser.parse_args()
-
     run(args)

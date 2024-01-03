@@ -646,7 +646,6 @@ def main():
     # Freeze vae and image_encoder
     vae.requires_grad_(False)
     image_encoder.requires_grad_(False)
-    unet.requires_grad_(False)
 
     # For mixed precision training we cast the text_encoder and vae weights to half-precision
     # as these models are only used for inference, keeping weights in full precision is not required.
@@ -713,8 +712,8 @@ def main():
                 model.load_state_dict(load_model.state_dict())
                 del load_model
 
-        # accelerator.register_save_state_pre_hook(save_model_hook)
-        # accelerator.register_load_state_pre_hook(load_model_hook)
+        accelerator.register_save_state_pre_hook(save_model_hook)
+        accelerator.register_load_state_pre_hook(load_model_hook)
 
     if args.gradient_checkpointing:
         unet.enable_gradient_checkpointing()
@@ -1067,9 +1066,17 @@ def main():
                 train_loss = 0.0
 
                 # # here, 
-                # with FSDP.state_dict_type(unet, StateDictType.FULL_STATE_DICT,):
-                #     unshard_unet_state_dict = unet.state_dict()
-
+                # with FSDP.summon_full_params(unet, rank0_only=True, writeback=False):
+                # # with FSDP.state_dict_type(unet, StateDictType.FULL_STATE_DICT,):
+                #     # unshard_unet_state_dict = unet.state_dict()
+                    
+                #     if accelerator.is_main_process:
+                #         w = unet.mid_block.attentions[0].temporal_transformer_blocks[0].ff_in.net[2].weight
+                #         print(f"------------->Touch_Raw:{w.dtype},{w.shape}",w.mean())
+                #         print(w[0,:100])
+                #         print(f"------------->Touch_Raw:{w.dtype},{w.shape}",w.mean())
+                
+                
                 if accelerator.is_main_process or accelerator.distributed_type == DistributedType.FSDP:
                     # save checkpoints!
                     if global_step % args.checkpointing_steps == 0:
@@ -1107,6 +1114,8 @@ def main():
                             args.output_dir, f"checkpoint-{global_step}")
                         accelerator.save_state(save_path)
                         logger.info(f"Saved state to {save_path}")
+                
+
                     
                     # sample images!
                     if (
@@ -1201,7 +1210,8 @@ def main():
                         if accelerator.is_main_process:
                             del pipeline, _unet
                         torch.cuda.empty_cache()
-
+                        
+            
             logs = {"step_loss": loss.detach().item(
             ), "lr": lr_scheduler.get_last_lr()[0]}
             progress_bar.set_postfix(**logs)
