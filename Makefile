@@ -24,4 +24,3 @@ check:
 
 debug:
 	rlaunch --charged-group ${CHARGED_GROUP} --cpu ${CPU} --gpu ${GPU} --memory ${MEM} --preemptible no --private-machine yes -- zsh
-

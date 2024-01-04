@@ -1,9 +1,10 @@
 fs:
   output_dir: "outputs"
   log_path: "worklog.log"
-  exp_name: "20231231_dist_train"
-  model_dir: "s3://ljj/linbo/video/stable_video_diffusion/controlnet/"
   tensorboard_dir: "tensorboard"
+  bucket_name: "s3://ljj"
+  user: "linbo"
+  proj_name: "video/stable_video_diffusion/controlnet"
 
 model:
   model_id: "stabilityai/stable-video-diffusion-img2vid"

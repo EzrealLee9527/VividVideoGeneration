@@ -39,9 +39,12 @@ class HyperParams(metaclass=Singleton):
     @classmethod
     def load_config(cls, config: str) -> None:
         cfg = OmegaConf.load(config)
+        cfg.fs.exp_name = os.path.splitext(os.path.basename(config))[0]
         cfg.fs.exp_dir = os.path.join(cfg.fs.output_dir, cfg.fs.exp_name)
         cfg.fs.log_path = os.path.join(cfg.fs.exp_dir, cfg.fs.log_path)
-        cfg.fs.model_dir = os.path.join(cfg.fs.model_dir, cfg.fs.exp_name)
+        cfg.fs.model_dir = os.path.join(
+            cfg.fs.bucket_name, cfg.fs.user, cfg.fs.proj_name, cfg.fs.exp_name
+        )
         cls._instances[cls] = cfg
 
 
