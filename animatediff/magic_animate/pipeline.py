@@ -279,6 +279,9 @@ class AnimationPipeline(DiffusionPipeline):
             # to avoid doing two forward passes
             text_embeddings = torch.cat([uncond_embeddings, text_embeddings])
 
+            # LLZ HACK
+            text_embeddings = torch.zeros_like(text_embeddings)
+
         return text_embeddings
 
     def decode_latents(self, latents, rank, decoder_consistency=None):

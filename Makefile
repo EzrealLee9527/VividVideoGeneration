@@ -22,7 +22,7 @@ torchrun --nproc_per_node=8 \
 # 在其他节点上：
 torchrun --nproc_per_node=8 \
          --nnodes=4 \
-         --node_rank=3 \
+         --node_rank=1 \
          --master_addr="192.18.54.154" \
          --master_port=12345 \
          train.py --config configs/training/train_stage_1_face_concat.yaml
