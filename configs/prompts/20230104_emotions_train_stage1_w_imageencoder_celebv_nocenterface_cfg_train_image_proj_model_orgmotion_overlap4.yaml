@@ -1,5 +1,5 @@
 use_dwpose: true
-dwpose_only_face: true
+dwpose_only_face: false
 use_face_det: false
 froce_text_embedding_zero: false
 
@@ -9,12 +9,12 @@ pretrained_vae_path: "/data/models/pretrained_models/sd-vae-ft-mse"
 pretrained_appearance_encoder_path: "/data/models/pretrained_models/MagicAnimate/appearance_encoder"
 pretrained_controlnet_path: "/data/models/pretrained_models/MagicAnimate/densepose_controlnet"
 pretrained_unet_path: ""
-# image_encoder_path: "/data/work/IP-Adapter/IP-Adapter/models/image_encoder"
-image_encoder_path: ""
-appearance_controlnet_motion_checkpoint_path: "/data/work/animate_based_ap_ctrl/outputs/train_stage1_w_imageencoder_celebv_centerface_cfg-2024-01-02T22-41-47/checkpoints/checkpoint-steps5000.ckpt"
-motion_module: ""
+image_encoder_path: "/data/work/IP-Adapter/IP-Adapter/models/image_encoder"
+# image_encoder_path: ""
+appearance_controlnet_motion_checkpoint_path: "/data/work/animate_based_ap_ctrl/outputs/train_stage1_w_imageencoder_celebv_nocenterface_cfg_train_image_proj_model-2024-01-05T10-48-09/checkpoints/checkpoint-steps1500.ckpt"
+# motion_module: ""
 # 如果指定motion_module，appearance_controlnet_motion_checkpoint_path中的motion会被覆盖
-# motion_module: "/data/models/pretrained_models/MagicAnimate/temporal_attention/temporal_attention.ckpt"
+motion_module: "/data/models/pretrained_models/MagicAnimate/temporal_attention/temporal_attention.ckpt"
 
 savename: null
 
@@ -27,7 +27,7 @@ guidance_scale: 2
 context:
   context_frames: 16
   context_stride: 1
-  context_overlap: 0
+  context_overlap: 4
 
 source_image:
     - "data/templates/pexels_crop/pexels-cottonbro-7322219_2160p.mp4"
@@ -69,7 +69,7 @@ save_individual_videos: false
 unet_additional_kwargs:
   unet_use_cross_frame_attention: false
   unet_use_temporal_attention: false
-  use_motion_module: false
+  use_motion_module: true
   motion_module_resolutions:
   - 1
   - 2
@@ -88,7 +88,7 @@ unet_additional_kwargs:
     temporal_position_encoding_max_len: 24
     temporal_attention_dim_div: 1
   # Addition for image embeddings
-  use_image_condition            : false
+  use_image_condition            : true
 
 noise_scheduler_kwargs:
   beta_start: 0.00085

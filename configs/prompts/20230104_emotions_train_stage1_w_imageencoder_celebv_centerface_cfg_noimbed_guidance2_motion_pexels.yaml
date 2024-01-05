@@ -1,7 +1,7 @@
 use_dwpose: true
 dwpose_only_face: true
 use_face_det: false
-froce_text_embedding_zero: false
+froce_text_embedding_zero: true
 
 # pretrained_model_path: "runwayml/stable-diffusion-v1-5"
 pretrained_model_path: '/data/huggingface/hub/models--runwayml--stable-diffusion-v1-5/snapshots/1d0c4ebf6ff58a5caecab40fa1406526bca4b5b9'
@@ -12,9 +12,9 @@ pretrained_unet_path: ""
 # image_encoder_path: "/data/work/IP-Adapter/IP-Adapter/models/image_encoder"
 image_encoder_path: ""
 appearance_controlnet_motion_checkpoint_path: "/data/work/animate_based_ap_ctrl/outputs/train_stage1_w_imageencoder_celebv_centerface_cfg-2024-01-02T22-41-47/checkpoints/checkpoint-steps5000.ckpt"
-motion_module: ""
+# motion_module: ""
 # 如果指定motion_module，appearance_controlnet_motion_checkpoint_path中的motion会被覆盖
-# motion_module: "/data/models/pretrained_models/MagicAnimate/temporal_attention/temporal_attention.ckpt"
+motion_module: "/data/models/pretrained_models/MagicAnimate/temporal_attention/temporal_attention.ckpt"
 
 savename: null
 
@@ -27,7 +27,7 @@ guidance_scale: 2
 context:
   context_frames: 16
   context_stride: 1
-  context_overlap: 0
+  context_overlap: 4
 
 source_image:
     - "data/templates/pexels_crop/pexels-cottonbro-7322219_2160p.mp4"
@@ -56,7 +56,7 @@ video_path:
 inference_config: "configs/inference/magic_inference.yaml"
 size: [512, 512]
 # 长度一致
-L:    48
+L:    96
 S:    1
 I:    0
 clip: 0
@@ -69,7 +69,7 @@ save_individual_videos: false
 unet_additional_kwargs:
   unet_use_cross_frame_attention: false
   unet_use_temporal_attention: false
-  use_motion_module: false
+  use_motion_module: true
   motion_module_resolutions:
   - 1
   - 2

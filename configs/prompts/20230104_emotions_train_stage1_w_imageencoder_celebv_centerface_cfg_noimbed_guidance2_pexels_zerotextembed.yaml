@@ -1,7 +1,7 @@
 use_dwpose: true
 dwpose_only_face: true
 use_face_det: false
-froce_text_embedding_zero: false
+froce_text_embedding_zero: true
 
 # pretrained_model_path: "runwayml/stable-diffusion-v1-5"
 pretrained_model_path: '/data/huggingface/hub/models--runwayml--stable-diffusion-v1-5/snapshots/1d0c4ebf6ff58a5caecab40fa1406526bca4b5b9'

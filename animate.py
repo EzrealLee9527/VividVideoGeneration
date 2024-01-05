@@ -65,6 +65,15 @@ class MagicAnimate(torch.nn.Module):
             self.unet = UNet3DConditionModel.from_pretrained_2d(config['pretrained_model_path'], subfolder="unet",
                                                                 unet_additional_kwargs=unet_additional_kwargs)
 
+        ########################LLZ TODO#############################
+        if "ip_ckpt" in config.keys() and config['ip_ckpt'] != "":
+            image_proj_state_dict = torch.load(config["ip_ckpt"], map_location="cpu")["image_proj"]
+            image_proj_state_dict = {f'image_proj_model.{k}':v for k,v in image_proj_state_dict.items()}
+            m, u = self.unet.load_state_dict(image_proj_state_dict, strict=False)
+            print('image_proj_state_dict keys', len(list(image_proj_state_dict.keys())))
+            print('load pretrained image_proj',len(m),len(u))
+
+
         # if 'pretrained_appearance_encoder_path' in config.keys() and config['pretrained_appearance_encoder_path'] != '':
         #     self.appearance_encoder = AppearanceEncoderModel.from_pretrained(config['pretrained_appearance_encoder_path'],
         #                                                                      subfolder="appearance_encoder").to(self.device) 
@@ -104,7 +113,7 @@ class MagicAnimate(torch.nn.Module):
             
             appearance_encoder_state_dict = {}
             controlnet_state_dict = {}
-            motion_state_dict = {}
+            unet_state_dict = {}
             for name, param in org_state_dict.items():
                 if "appearance_encoder." in name:
                     if name.startswith('module.appearance_encoder.'):
@@ -114,21 +123,21 @@ class MagicAnimate(torch.nn.Module):
                     if name.startswith('module.controlnet.'):
                         name = name.split('module.controlnet.')[-1]
                     controlnet_state_dict[name] = param
-                if "motion_modules." in name:
+                if "unet." in name:
                     if name.startswith('module.unet.'):
                         name = name.split('module.unet.')[-1]
-                    motion_state_dict[name] = param
+                    unet_state_dict[name] = param
             print('appearance_encoder_state_dict', len(list(appearance_encoder_state_dict.keys())))
             print('controlnet_state_dict', len(list(controlnet_state_dict.keys())))
-            print('motion_state_dict', len(list(motion_state_dict.keys())))
+            print('unet_state_dict', len(list(unet_state_dict.keys())))
             m, u = self.appearance_encoder.load_state_dict(appearance_encoder_state_dict, strict=False)
             print(f"appearance_encoder missing keys: {len(m)}, unexpected keys: {len(u)}")
             assert len(u) == 0
             m, u = self.controlnet.load_state_dict(controlnet_state_dict, strict=False)
             print(f"controlnet missing keys: {len(m)}, unexpected keys: {len(u)}")
             assert len(u) == 0
-            m, u = self.unet.load_state_dict(motion_state_dict, strict=False)
-            print(f"motion_modules missing keys: {len(m)}, unexpected keys: {len(u)}")
+            m, u = self.unet.load_state_dict(unet_state_dict, strict=False)
+            print(f"unet missing keys: {len(m)}, unexpected keys: {len(u)}")
             assert len(u) == 0
         ###########################################
 
@@ -188,7 +197,7 @@ class MagicAnimate(torch.nn.Module):
             self.L = config['validation_data']['val_video_length']
         print("Initialization Done!")
 
-    def infer(self, source_image, image_prompts, motion_sequence, random_seed, step, guidance_scale, context, size=(512, 768)):
+    def infer(self, source_image, image_prompts, motion_sequence, random_seed, step, guidance_scale, context, size=(512, 768),froce_text_embedding_zero=False):
         prompt = n_prompt = ""
         random_seed = int(random_seed)
         step = int(step)
@@ -250,6 +259,7 @@ class MagicAnimate(torch.nn.Module):
             context_frames = context_frames,
             context_stride = context_stride,
             context_overlap = context_overlap,
+            froce_text_embedding_zero = froce_text_embedding_zero,
         ).videos
 
         # TODO: save batch个视频
@@ -273,7 +283,7 @@ class MagicAnimate(torch.nn.Module):
 
         return samples_per_video
 
-    def forward(self, init_latents, image_prompts, timestep, source_image, motion_sequence, guidance_scale, random_seed):
+    def forward(self, init_latents, image_prompts, timestep, source_image, motion_sequence, guidance_scale, random_seed,froce_text_embedding_zero=False):
         """
         :param init_latents: the most important input during training
         :param timestep: another important input during training
@@ -302,11 +312,13 @@ class MagicAnimate(torch.nn.Module):
 
         # # project from (batch_size, 257, 1280) to (batch_size, 16, 768)
         if image_prompts is not None:
-            image_prompts = self.unet.image_proj_model(image_prompts)
+            image_prompts_clone = image_prompts.clone().detach()
+            image_prompts_clone.requires_grad_(True)
+            image_prompts_clone = self.unet.image_proj_model(image_prompts_clone)
 
         noise_pred = self.pipeline.train(
             prompt,
-            prompt_embeddings=image_prompts,
+            prompt_embeddings=image_prompts_clone,
             negative_prompt=n_prompt,
             timestep=timestep,
             width=W,
@@ -320,6 +332,7 @@ class MagicAnimate(torch.nn.Module):
             context_frames = control.shape[1],
             context_batch_size = control.shape[1],
             guidance_scale = guidance_scale,
+            froce_text_embedding_zero = froce_text_embedding_zero,
         )
 
         return noise_pred

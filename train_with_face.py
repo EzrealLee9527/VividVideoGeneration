@@ -39,8 +39,6 @@ from transformers import CLIPTextModel, CLIPTokenizer, CLIPVisionModelWithProjec
 
 # from animatediff.data.dataset import WebVid10M, PexelsDataset
 from animatediff.utils.util import save_videos_grid, pad_image
-# from controlnet_aux import DWposeDetector
-from controlnet_aux_lib import DWposeDetector
 from accelerate import Accelerator
 from einops import repeat
 from animate import MagicAnimate
@@ -114,7 +112,10 @@ def main(
         global_seed: int = 42,
         is_debug: bool = False,
 
-        
+        dwpose_only_face = False,
+        froce_text_embedding_zero = False,
+
+        ip_ckpt=None,
 
         
 ):
@@ -167,6 +168,10 @@ def main(
     pose_config = '/data/models/controlnet_aux/src/controlnet_aux/dwpose/dwpose_config/dwpose-l_384x288.py'
     pose_ckpt = '/data/models/controlnet_aux/dw-ll_ucoco_384.pth'
 
+    if dwpose_only_face == True:
+        from controlnet_aux_lib import DWposeDetector
+    else:
+        from controlnet_aux import DWposeDetector
     dwpose_model = DWposeDetector(
         det_config=det_config,
         det_ckpt=det_ckpt,
@@ -506,7 +511,9 @@ def main(
                                guidance_scale=1.0,
                                source_image=pixel_values_ref_img, 
                                motion_sequence=pixel_values_pose,
-                               random_seed=seed)
+                               random_seed=seed,
+                               froce_text_embedding_zero=froce_text_embedding_zero
+                               )
             loss = F.mse_loss(model_pred.float(), target.float(), reduction="mean")
 
             # use accelerator
@@ -565,13 +572,13 @@ def main(
                 prompts = validation_data['prompt_videos']
                 val_video_length = validation_data['val_video_length']
 
+                
+                sample_size = validation_data['sample_size']
+                guidance_scale = validation_data['guidance_scale']
                 for idx, prompt in enumerate(prompts):
-
-                    batch_size = 1  # FIXME
-                    sample_size = validation_data['sample_size']
                     # TODO
                     # video_data = PexelsDataset(json_path=[prompt],
-                    #                            sample_size=sample_size,  # for fashion dataset
+                    #                            sample_size=sample_size, 
                     #                            is_test=True,
                     #                            sample_n_frames=val_video_length,
                     #                            sample_stride=validation_data['frame_stride'])
@@ -598,9 +605,10 @@ def main(
                         motion_sequence=pixel_values_pose[:1],
                         random_seed=seed,
                         step=validation_data['num_inference_steps'],
-                        guidance_scale=validation_data['guidance_scale'],
+                        guidance_scale=guidance_scale[idx],
                         context=context,
-                        size=(sample_size[1], sample_size[0])
+                        size=(sample_size[1], sample_size[0]),
+                        froce_text_embedding_zero=config['froce_text_embedding_zero']
                     )
                     # save_videos_grid(sample, f"{output_dir}/samples/sample-{global_step}/{idx}.gif")
                     samples.append(sample)

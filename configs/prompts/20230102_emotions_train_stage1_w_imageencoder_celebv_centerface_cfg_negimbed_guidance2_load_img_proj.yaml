@@ -1,6 +1,6 @@
 use_dwpose: true
 dwpose_only_face: true
-use_face_det: false
+use_face_det: true
 froce_text_embedding_zero: false
 
 # pretrained_model_path: "runwayml/stable-diffusion-v1-5"
@@ -9,8 +9,8 @@ pretrained_vae_path: "/data/models/pretrained_models/sd-vae-ft-mse"
 pretrained_appearance_encoder_path: "/data/models/pretrained_models/MagicAnimate/appearance_encoder"
 pretrained_controlnet_path: "/data/models/pretrained_models/MagicAnimate/densepose_controlnet"
 pretrained_unet_path: ""
-# image_encoder_path: "/data/work/IP-Adapter/IP-Adapter/models/image_encoder"
-image_encoder_path: ""
+image_encoder_path: "/data/work/IP-Adapter/IP-Adapter/models/image_encoder"
+
 appearance_controlnet_motion_checkpoint_path: "/data/work/animate_based_ap_ctrl/outputs/train_stage1_w_imageencoder_celebv_centerface_cfg-2024-01-02T22-41-47/checkpoints/checkpoint-steps5000.ckpt"
 motion_module: ""
 # 如果指定motion_module，appearance_controlnet_motion_checkpoint_path中的motion会被覆盖
@@ -25,38 +25,41 @@ steps:          25
 guidance_scale: 2
 
 context:
-  context_frames: 16
+  context_frames: 8
   context_stride: 1
-  context_overlap: 0
+  context_overlap: 4
 
 source_image:
-    - "data/templates/pexels_crop/pexels-cottonbro-7322219_2160p.mp4"
-    - "data/templates/pexels_crop/pexels-karolina-grabowska-5981354_2160p.mp4"
-    - "data/templates/pexels_crop/pexels-karolina-grabowska-6031698_2160p.mp4"
-    - "data/templates/pexels_crop/pexels-mikhail-nilov-7626703_1080p.mp4"
-    - "data/templates/pexels_crop/pexels-pavel-danilyuk-8627836_1080p.mp4"
-    - "data/templates/pexels_crop/pexels-rodnae-productions-8183472_1080p.mp4"
-    - "data/templates/pexels_crop/production_id_3762907_2160p.mp4"
-    - "data/templates/pexels_crop/production_id_4058073_2160p.mp4"
-    - "data/templates/pexels_crop/production_id_5205798_1080p.mp4"
-
+    # - "/data/datasets/collected_emotions_gif/unzip/Frown/Frown_1.gif"
+    # - "/data/datasets/collected_emotions_gif/unzip/Gape/11.gif"
+    # - "/data/datasets/collected_emotions_gif/unzip/girl_smile_gif/asia_girl_smile_2.gif"
+    # - "/data/datasets/collected_emotions_gif/unzip/girl_smile_gif/asia_girl_smile_18.gif"
+    # - "/data/datasets/collected_emotions_gif/unzip/Pout/pout_4.gif"
+    # - "/data/datasets/collected_emotions_gif/unzip/Pout/pout_9.gif"
+    # - "/data/datasets/collected_emotions_gif/unzip/Raise_eyebrows/1.gif"
+    - "/data/datasets/collected_emotions_gif/unzip/Raise_eyebrows/2.gif"
+    - "/data/datasets/collected_emotions_gif/unzip/smile/smile_2.gif"
+    - "/data/datasets/collected_emotions_gif/unzip/wink/wink_4.gif"
+    - "/data/datasets/collected_emotions_gif/unzip/wink/wink_89.gif"
 
 video_path:
-    - "data/templates/pexels_crop/pexels-cottonbro-7322219_2160p.mp4"
-    - "data/templates/pexels_crop/pexels-karolina-grabowska-5981354_2160p.mp4"
-    - "data/templates/pexels_crop/pexels-karolina-grabowska-6031698_2160p.mp4"
-    - "data/templates/pexels_crop/pexels-mikhail-nilov-7626703_1080p.mp4"
-    - "data/templates/pexels_crop/pexels-pavel-danilyuk-8627836_1080p.mp4"
-    - "data/templates/pexels_crop/pexels-rodnae-productions-8183472_1080p.mp4"
-    - "data/templates/pexels_crop/production_id_3762907_2160p.mp4"
-    - "data/templates/pexels_crop/production_id_4058073_2160p.mp4"
-    - "data/templates/pexels_crop/production_id_5205798_1080p.mp4"
+    # - "/data/datasets/collected_emotions_gif/unzip/Frown/Frown_1.gif"
+    # - "/data/datasets/collected_emotions_gif/unzip/Gape/11.gif"
+    # - "/data/datasets/collected_emotions_gif/unzip/girl_smile_gif/asia_girl_smile_2.gif"
+    # - "/data/datasets/collected_emotions_gif/unzip/girl_smile_gif/asia_girl_smile_18.gif"
+    # - "/data/datasets/collected_emotions_gif/unzip/Pout/pout_4.gif"
+    # - "/data/datasets/collected_emotions_gif/unzip/Pout/pout_9.gif"
+    # - "/data/datasets/collected_emotions_gif/unzip/Raise_eyebrows/1.gif"
+    - "/data/datasets/collected_emotions_gif/unzip/Raise_eyebrows/2.gif"
+    - "/data/datasets/collected_emotions_gif/unzip/smile/smile_2.gif"
+    - "/data/datasets/collected_emotions_gif/unzip/wink/wink_4.gif"
+    - "/data/datasets/collected_emotions_gif/unzip/wink/wink_89.gif"
 
 
 inference_config: "configs/inference/magic_inference.yaml"
 size: [512, 512]
 # 长度一致
-L:    48
+L:    8
 S:    1
 I:    0
 clip: 0
@@ -88,7 +91,7 @@ unet_additional_kwargs:
     temporal_position_encoding_max_len: 24
     temporal_attention_dim_div: 1
   # Addition for image embeddings
-  use_image_condition            : false
+  use_image_condition            : true
 
 noise_scheduler_kwargs:
   beta_start: 0.00085

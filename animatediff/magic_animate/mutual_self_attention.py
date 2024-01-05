@@ -251,12 +251,15 @@ class ReferenceAttentionControl():
                 if MODE == "read":
                     if not is_image:
                         self.bank = [rearrange(d.unsqueeze(1).repeat(1, video_length, 1, 1), "b t l c -> (b t) l c")[:hidden_states.shape[0]] for d in self.bank]
-                    modify_norm_hidden_states = torch.cat(
-                        [norm_hidden_states] + self.bank, dim=1)
-                    hidden_states_uc = self.attn1(modify_norm_hidden_states,
-                                                  encoder_hidden_states=modify_norm_hidden_states,
-                                                  attention_mask=attention_mask)[:, :hidden_states.shape[-2], :] + hidden_states
-
+                    # LLZ: animate anyone
+                    # modify_norm_hidden_states = torch.cat(
+                    #     [norm_hidden_states] + self.bank, dim=1)
+                    # hidden_states_uc = self.attn1(modify_norm_hidden_states,
+                    #                               encoder_hidden_states=modify_norm_hidden_states,
+                    #                               attention_mask=attention_mask)[:, :hidden_states.shape[-2], :] + hidden_states
+                    hidden_states_uc = self.attn1(norm_hidden_states, 
+                                                encoder_hidden_states=torch.cat([norm_hidden_states] + self.bank, dim=1),
+                                                attention_mask=attention_mask) + hidden_states
                     hidden_states_c = hidden_states_uc.clone()
                     _uc_mask = uc_mask.clone()
                     if do_classifier_free_guidance:

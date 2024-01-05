@@ -42,7 +42,7 @@ from animatediff.magic_animate.unet_3d_blocks import (
     get_up_block,
 )
 from .resnet import InflatedConv3d
-from .resampler import Resampler
+from .resampler import Resampler, MLPProjModel
 
 logger = logging.get_logger(__name__)  # pylint: disable=invalid-name
 
@@ -198,15 +198,9 @@ class UNet3DConditionModel(ModelMixin, ConfigMixin):
         self.use_image_condition = False
         if use_image_condition:
             self.use_image_condition = True
-            self.image_proj_model = Resampler(
-                dim=cross_attention_dim,
-                depth=4,
-                dim_head=64,
-                heads=12,
-                num_queries=64,
-                embedding_dim=1280,
-                output_dim=cross_attention_dim,
-                ff_mult=4,
+            self.image_proj_model = MLPProjModel(
+                cross_attention_dim=cross_attention_dim,
+                clip_embeddings_dim=1280,
             )
 
         self.down_blocks = nn.ModuleList([])

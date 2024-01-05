@@ -74,6 +74,7 @@ def main(args):
     config = OmegaConf.load(args.config)
 
     if 'dwpose_only_face' in config.keys() and config['dwpose_only_face'] == True:
+        print('dwpose_only_face!!!!!!!!!!!!!!!!!!!!!!!')
         from controlnet_aux_lib import DWposeDetector
     else:
         from controlnet_aux import DWposeDetector
@@ -153,19 +154,22 @@ def main(args):
 
         if test_video.endswith('.mp4') or test_video.endswith('.gif'):
             print('test_video', test_video)
-            control = VideoReader(test_video).read()
+            control = VideoReader(test_video).read()[:config.L]
             print('control', control.shape)
 
             img_for_face_det = torch.tensor(control[0]).to(torch.uint8).unsqueeze(0).permute(0, 3, 1, 2)
-            with torch.inference_mode():
-                faces = face_detector(img_for_face_det)
-                # import pdb;pdb.set_trace()
-                if 'image_ids' not in faces.keys() or faces['image_ids'].numel() == 0:
-                    face_rect = None
-                else:
-                    face_rect = faces['rects'][0].numpy()
-                # import cv2
-                # cv2.imwrite('face_rect.png', control[0][int(face_rect[1]):int(face_rect[3]),int(face_rect[0]):int(face_rect[2]),:])   
+            if config.use_face_det:
+                with torch.inference_mode():
+                    faces = face_detector(img_for_face_det)
+                    # import pdb;pdb.set_trace()
+                    if 'image_ids' not in faces.keys() or faces['image_ids'].numel() == 0:
+                        face_rect = None
+                    else:
+                        face_rect = faces['rects'][0].numpy()
+                    # import cv2
+                    # cv2.imwrite('face_rect.png', control[0][int(face_rect[1]):int(face_rect[3]),int(face_rect[0]):int(face_rect[2]),:])   
+            else:
+                face_rect = None
 
             if control[0].shape[:2] != size:
                 print('size', size)
@@ -216,12 +220,15 @@ def main(args):
         else:
             source_image = Image.open(source_image)
         img_for_face_det = torch.tensor(np.array(source_image)).to(torch.uint8).unsqueeze(0).permute(0, 3, 1, 2)
-        with torch.inference_mode():
-            faces = face_detector(img_for_face_det)
-            if 'image_ids' not in faces.keys() or faces['image_ids'].numel() == 0:
-                face_rect = None
-            else:
-                face_rect = faces['rects'][0].numpy()
+        if config.use_face_det:
+            with torch.inference_mode():
+                faces = face_detector(img_for_face_det)
+                if 'image_ids' not in faces.keys() or faces['image_ids'].numel() == 0:
+                    face_rect = None
+                else:
+                    face_rect = faces['rects'][0].numpy()
+        else:
+            face_rect = None
         source_image_pil = crop_and_resize(source_image, size, crop_rect=face_rect)
         source_image = np.array(source_image_pil)
 
@@ -278,6 +285,7 @@ def main(args):
             random_seed=random_seed,
             context=config.context,
             size=config.size,
+            froce_text_embedding_zero=config.froce_text_embedding_zero
         )
 
         if args.rank == 0:

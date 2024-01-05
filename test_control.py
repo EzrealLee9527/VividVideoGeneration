@@ -43,7 +43,7 @@ from tqdm.auto import tqdm
 from einops import rearrange
 import torch
 import numpy as np
-from controlnet_aux_lib import DWposeDetector
+from controlnet_aux_lib import DWposeDetector, SamDetector
 import webdataset as wds
 from animatediff.data.dataset_wds import S3VideosIterableDataset
 
@@ -62,6 +62,8 @@ dwpose_model = DWposeDetector(
     pose_ckpt=pose_ckpt,
     device=local_rank
 )
+
+sam_model = SamDetector('vit_t')
 
 dataset = S3VideosIterableDataset(
     ['s3://ljj/Datasets/Videos/processed/CelebV_webdataset_20231211',],

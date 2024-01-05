@@ -278,10 +278,6 @@ class AnimationPipeline(DiffusionPipeline):
             # Here we concatenate the unconditional and text embeddings into a single batch
             # to avoid doing two forward passes
             text_embeddings = torch.cat([uncond_embeddings, text_embeddings])
-
-            # LLZ HACK
-            text_embeddings = torch.zeros_like(text_embeddings)
-
         return text_embeddings
 
     def decode_latents(self, latents, rank, decoder_consistency=None):
@@ -604,6 +600,7 @@ class AnimationPipeline(DiffusionPipeline):
             reference_control_reader=None,
             source_image: str = None,
             decoder_consistency=None,
+            froce_text_embedding_zero=False,
             **kwargs,
     ):
         """
@@ -664,6 +661,8 @@ class AnimationPipeline(DiffusionPipeline):
             text_embeddings = torch.cat(
                 [prompt_embeddings] * context_batch_size)
         print('text_embeddings', text_embeddings.shape)
+        if froce_text_embedding_zero:
+            text_embeddings = torch.zeros_like(text_embeddings)
         reference_control_writer = ReferenceAttentionControl(appearance_encoder,
                                                              do_classifier_free_guidance=do_classifier_free_guidance,
                                                              mode='write',
@@ -943,6 +942,7 @@ class AnimationPipeline(DiffusionPipeline):
             decoder_consistency=None,
             context_frames: int = 16,
             context_batch_size: int = 1,
+            froce_text_embedding_zero = False,
             **kwargs,
     ):
         """
@@ -991,7 +991,8 @@ class AnimationPipeline(DiffusionPipeline):
         else:
             text_embeddings = prompt_embeddings
             # text_embeddings = torch.cat([prompt_embeddings] * context_batch_size)
-
+        if froce_text_embedding_zero:
+            text_embeddings = torch.zeros_like(text_embeddings)
         """
         LLZ TODO
         context_frames: int = 16,

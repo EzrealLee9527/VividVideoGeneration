@@ -157,7 +157,27 @@ def masked_mean(t, *, dim, mask=None):
 
     return masked_t.sum(dim=dim) / denom.clamp(min=1e-5)
 
-
+# IPAdapterFull
+# image_proj_model = MLPProjModel(
+#             cross_attention_dim=self.pipe.unet.config.cross_attention_dim,
+#             clip_embeddings_dim=self.image_encoder.config.hidden_size,
+#         ).to(self.device, dtype=torch.float16)
+class MLPProjModel(torch.nn.Module):
+    """SD model with image prompt"""
+    def __init__(self, cross_attention_dim=1024, clip_embeddings_dim=1024):
+        super().__init__()
+        
+        self.proj = torch.nn.Sequential(
+            torch.nn.Linear(clip_embeddings_dim, clip_embeddings_dim),
+            torch.nn.GELU(),
+            torch.nn.Linear(clip_embeddings_dim, cross_attention_dim),
+            torch.nn.LayerNorm(cross_attention_dim)
+        )
+        
+    def forward(self, image_embeds):
+        clip_extra_context_tokens = self.proj(image_embeds)
+        return clip_extra_context_tokens
+    
 if __name__ == "__main__":
     cross_attention_dim = 768
     image_proj_model = Resampler(

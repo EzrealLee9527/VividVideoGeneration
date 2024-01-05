@@ -25,8 +25,8 @@ def draw_pose(pose, H, W):
     
     canvas = np.zeros(shape=(H, W, 3), dtype=np.uint8)
     # hack
-    canvas = util.draw_bodypose(canvas, candidate, subset)
-    canvas = util.draw_handpose(canvas, hands)
+    # canvas = util.draw_bodypose(canvas, candidate, subset)
+    # canvas = util.draw_handpose(canvas, hands)
     canvas = util.draw_facepose(canvas, faces)
 
     return canvas

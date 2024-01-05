@@ -15,7 +15,6 @@ mim install "mmpose>=1.1.0"
 
 ## Training example
 
-
 ```bash
 rlaunch -P 4 --charged-group=monet_video --gpu=8 --cpu=32 --memory=1024000 --private-machine=yes -- bash run.sh configs/accelerate.yaml configs/training/train_stage1_celebv_centerface_zerotextembedding.yaml 32 train_with_face.py
 ```

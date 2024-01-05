@@ -1,0 +1,110 @@
+dwpose_only_face: false
+froce_text_embedding_zero: True
+
+image_finetune: false
+output_dir: "outputs"
+pretrained_model_path: '/data/huggingface/hub/models--runwayml--stable-diffusion-v1-5/snapshots/1d0c4ebf6ff58a5caecab40fa1406526bca4b5b9'
+pretrained_vae_path: "/data/models/pretrained_models/sd-vae-ft-mse"
+# image_encoder_path: "/data/work/IP-Adapter/IP-Adapter/models/image_encoder"
+image_encoder_path: ""
+# ip_ckpt: "/data/work/IP-Adapter/IP-Adapter/models/ip-adapter-full-face_sd15.bin"
+pretrained_appearance_encoder_path: "/data/models/pretrained_models/MagicAnimate/appearance_encoder"
+pretrained_controlnet_path: "/data/models/pretrained_models/MagicAnimate/densepose_controlnet"
+motion_module: "/data/models/pretrained_models/MagicAnimate/temporal_attention/temporal_attention.ckpt"
+inference_config: "configs/inference/magic_inference.yaml"
+pretrained_unet_path: ""
+
+# stage1 trained
+appearance_controlnet_motion_checkpoint_path: ""
+# appearance_controlnet_motion_checkpoint_path: "/data/work/animate_based_ap_stage2/outputs/train_stage1_w_imageencoder_celebv-2023-12-31T00-01-25/checkpoints/checkpoint-steps2500.ckpt"
+
+unet_additional_kwargs:
+  unet_use_cross_frame_attention: false
+  unet_use_temporal_attention: false
+  use_motion_module: false # stage1
+  motion_module_resolutions:
+  - 1
+  - 2
+  - 4
+  - 8
+  motion_module_mid_block: false
+  motion_module_decoder_only: false
+  motion_module_type: Vanilla
+  motion_module_kwargs:
+    num_attention_heads: 8
+    num_transformer_block: 1
+    attention_block_types:
+    - Temporal_Self
+    - Temporal_Self
+    temporal_position_encoding: true
+    temporal_position_encoding_max_len: 24
+    temporal_attention_dim_div: 1
+
+  # Addition for image embeddings
+  use_image_condition            : false
+
+
+noise_scheduler_kwargs:
+  num_train_timesteps: 1000
+  beta_start:          0.00085
+  beta_end:            0.012
+  beta_schedule:       "scaled_linear" # 这部分animatediff和magic不一样？
+  steps_offset:        1
+  clip_sample:         false
+
+data_module:          'animatediff.data.dataset_wds'
+data_class:           'S3VideosIterableDataset'
+train_data:
+  data_dirs:          ['s3://ljj/Datasets/Videos/processed/CelebV_webdataset_20231211',
+                      # 's3://ljj/Datasets/Videos/processed/hdvila100m_20231216',
+                      # 's3://ljj/Datasets/Videos/processed/pexels_20231217',
+                      # 's3://ljj/Datasets/Videos/processed/xiaohongshu_webdataset_20231212',
+                      ]
+  resolution:         [512, 512]
+  frame_stride:       1
+  video_length:       1
+  shuffle:            true
+  resampled:          true
+  dataset_length:     1000000
+  endpoint_url:       "http://oss.i.shaipower.com:80"
+
+validation_data:
+  prompt_videos:
+    - "/data/work/animate_based_ap/data/celebv/10876-2-7eMjYXRcm-0_12_0.mp4"
+    # - "/data/work/animate_based_ap/data/celebv/10894-8-7ebsTST4bSw_1_0.mp4"
+  num_inference_steps: 25
+  guidance_scale: 7.5
+  val_video_length: 1
+  sample_size: [512, 512]
+  frame_stride:       1
+context:
+  context_frames: 1
+  context_stride: 1
+  context_overlap: 0
+
+# stage1 TODO: image_encoder部分？
+trainable_modules:
+  - "appearance_encoder"
+  - "controlnet"
+  # - "motion_module"
+
+
+unet_checkpoint_path: ""
+
+learning_rate:    1.e-5
+train_batch_size: 8
+num_workers: 4
+
+max_train_epoch:      100
+max_train_steps:      -1
+checkpointing_epochs: -1
+checkpointing_steps:  500
+
+validation_steps:       200
+validation_steps_tuple: [2, 25, 50, 75, 100]
+
+global_seed: 42
+mixed_precision_training: true
+enable_xformers_memory_efficient_attention: True
+
+is_debug: False
