@@ -2,6 +2,7 @@ import os
 import argparse
 import cv2
 import builtins
+import torch
 import lightning as L
 from lightning.fabric.loggers import TensorBoardLogger
 
@@ -14,6 +15,41 @@ from torch.nn import Module
 from torch.optim import Optimizer
 from torch.optim.lr_scheduler import LRScheduler
 from webdataset import WebLoader
+
+
+def load_pretrain(fabric, model):
+    state_dict_file = "state_dict.pt"
+    if fabric.is_global_zero:
+        cfg = HP.instance()
+        logger = LoggerHelper.instance()
+        import megfile
+        from importlib.util import spec_from_file_location, module_from_spec
+
+        local_dir = os.path.basename(cfg.model.pretrain_weight)
+        script = "zero_to_fp32.py"
+
+        if megfile.smart_exists(cfg.model.pretrain_weight):
+            logger.info(f"load pretrain weight from {cfg.model.pretrain_weight}")
+            megfile.smart_sync(cfg.model.pretrain_weight, local_dir)
+            spec = spec_from_file_location("zero", os.path.join(local_dir, script))
+            m = module_from_spec(spec)
+            spec.loader.exec_module(m)
+            func = getattr(m, "convert_zero_checkpoint_to_fp32_state_dict")
+            func(local_dir, state_dict_file)
+    fabric.barrier()
+
+    if os.path.exists(state_dict_file):
+        controlnet_weight = {}
+        state_dict = torch.load(state_dict_file, map_location="cpu")
+        for name in state_dict:
+            if "controlnet" in name:
+                controlnet_weight[name.replace("controlnet.", "")] = state_dict[name]
+        model.controlnet.load_state_dict(controlnet_weight)
+
+        fabric.barrier()
+        if fabric.is_global_zero:
+            megfile.smart_remove(local_dir)
+            megfile.smart_remove(state_dict_file)
 
 
 def train(
@@ -125,6 +161,8 @@ def main():
     pipeline = get_pipeline(cfg.model.model_id)
     # init model
     model = get_model(pipeline, cfg)
+    # load pretrain weight
+    load_pretrain(fabric, model)
     # init train helper
     train_helper = TrainHelper(fabric, model, cfg)
     # init optimizer and scheduler

@@ -173,17 +173,12 @@ class TrainHelper:
         lr_scheduler: LRScheduler,
     ) -> None:
         logger = LoggerHelper.instance()
-        logger.info(f"load checkpoint from {checkpoint}")
         if not megfile.smart_exists(checkpoint):
             logger.info(f"{checkpoint} not exist")
             return
 
+        logger.info(f"load checkpoint from {checkpoint}")
         local_filename = os.path.basename(checkpoint)
-
-        if not megfile.smart_exists(checkpoint):
-            logger.info(f"checkpoint {checkpoint} not exist")
-            return
-
         if self.fabric.is_global_zero:
             megfile.smart_sync(checkpoint, local_filename)
 

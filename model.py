@@ -161,8 +161,7 @@ class StableVideoDiffusion(nn.Module):
     @torch.no_grad()
     def _add_noise(self, original_samples, noise, timesteps):
         sigma = self.sigmas[timesteps].flatten()
-        while len(sigma.shape) < len(original_samples.shape):
-            sigma = sigma.unsqueeze(-1)
+        sigma = einops.repeat(sigma, "b -> b 1 1 1 1")
         noisy_samples = original_samples + noise * sigma
         noisy_samples
         return noisy_samples
@@ -170,15 +169,9 @@ class StableVideoDiffusion(nn.Module):
     @torch.no_grad()
     def _scale_model_input(self, noisy_video_latents, timesteps):
         sigma = self.sigmas[timesteps]
+        sigma = einops.rearrange(sigma, "b -> b 1 1 1 1")
         noisy_video_latents /= (sigma**2 + 1) ** 0.5
         return noisy_video_latents
-
-        # unet_inputs = []
-        # for noisy_video_latent, timestep in zip(noisy_video_latents, timesteps):
-        #     self.scheduler._step_index = None
-        #     unet_input = self.scheduler.scale_model_input(noisy_video_latent, timestep)
-        #     unet_inputs.append(unet_input)
-        # return torch.stack(unet_inputs)
 
     def pred_original_samples(
         self,
@@ -186,18 +179,13 @@ class StableVideoDiffusion(nn.Module):
         timesteps,
         noisy_video_latents,
         s_churn: float = 0.0,
-        s_tmin: float = 0.0,
-        s_tmax: float = float("inf"),
         s_noise: float = 1.0,
     ):
         sigma = self.sigmas[timesteps]
-        gamma = (
-            min(s_churn / (len(self.sigmas) - 1), 2**0.5 - 1)
-            if s_tmin <= sigma <= s_tmax
-            else 0.0
-        )
+        gamma = min(s_churn / (len(self.sigmas) - 1), 2**0.5 - 1)
         noise = torch.randn_like(noise_preds)
         eps = noise * s_noise
+        sigma = einops.rearrange(sigma, "b -> b 1 1 1 1")
         sigma_hat = sigma * (gamma + 1)
         if gamma > 0:
             noisy_video_latents += eps * (sigma_hat**2 - sigma**2) ** 0.5
@@ -205,17 +193,6 @@ class StableVideoDiffusion(nn.Module):
             noisy_video_latents / (sigma**2 + 1)
         )
         return pred_original_sample
-        # pred_original_samples = []
-        # for noise_pred, timestep, noisy_video_latent in zip(
-        #     noise_preds, timesteps, noisy_video_latents
-        # ):
-        #     self.scheduler._step_index = None
-        #     pred_original_samples.append(
-        #         self.scheduler.step(
-        #             noise_pred, timestep, noisy_video_latent
-        #         ).pred_original_sample
-        #     )
-        # return torch.stack(pred_original_samples)
 
 
 def get_pipeline(model_id: str) -> StableVideoDiffusionPipeline:

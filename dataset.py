@@ -6,7 +6,7 @@ from torchvision.transforms.functional import InterpolationMode
 import webdataset as wds
 import torch
 from torch.nn import Module
-from torchvision.transforms import Compose, Resize, CenterCrop, Normalize
+from torchvision.transforms import Compose, Resize, CenterCrop, RandomCrop, Normalize
 from copy import deepcopy
 from dwpose import DWposeDetector
 
@@ -214,6 +214,14 @@ class ClipCenterCrop(CenterCrop):
         return video, info
 
 
+class ClipRandomCrop(RandomCrop):
+    @torch.no_grad()
+    def forward(self, x: Tuple[Tensor, Dict]) -> Tuple[Tensor, Dict]:
+        video, info = x
+        video = super().forward(video)
+        return video, info
+
+
 class ParseCondition(Module):
     def __init__(self) -> None:
         super().__init__()
@@ -270,7 +278,8 @@ def _get_transforms(config: DictConfig) -> Compose:
             FilterData(video_idx=0),
             ToChannelFirst(),
             ClipResize(config.data.size),
-            ClipCenterCrop(config.data.size),
+            ClipRandomCrop(config.data.size),
+            # ClipCenterCrop(config.data.size),
             RandomClip(config.data.num_frames, config.data.frame_stride),
             ParseCondition(),
             ClipNormalize(),
