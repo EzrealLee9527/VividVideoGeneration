@@ -211,7 +211,7 @@ def main(args):
         pixel_values_pose = pixel_values_pose.to(device, dtype=weight_type)
         pixel_values_pose = ((pixel_values_pose / 255.0) - 0.5) * 2
 
-        offset = pixel_values_pose.shape[1] % config.L
+        offset = pixel_values_pose.shape[1] % config.context['context_frames']
         if offset > 0:
             pixel_values_pose = pixel_values_pose[:, :-offset, ...]
 
@@ -273,8 +273,7 @@ def main(args):
 
         print('source_image', source_image.max(), source_image.min())
         # pixel_values_pose = (pixel_values_pose + 1.0)/2.0
-        print('pixel_values_pose', pixel_values_pose.max(),
-              pixel_values_pose.min())
+        print('pixel_values_pose', pixel_values_pose.max(),pixel_values_pose.min())
         print('image_prompt_embeddings', image_prompt_embeddings)
         samples_per_video = pipeline.infer(
             source_image=source_image,

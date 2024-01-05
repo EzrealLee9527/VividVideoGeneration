@@ -35,7 +35,7 @@ source_image:
     - "data/templates/pexels_crop/pexels-karolina-grabowska-6031698_2160p.mp4"
     - "data/templates/pexels_crop/pexels-mikhail-nilov-7626703_1080p.mp4"
     - "data/templates/pexels_crop/pexels-pavel-danilyuk-8627836_1080p.mp4"
-    - "data/templates/pexels_crop/pexels-rodnae-productions-8183472_1080p.mp4"
+    - "data/templateanimate_based_ap_ctrl/configs/prompts/20230104_emotions_train_stage1_w_imageencoder_celebv_nocenterface_cfg_train_image_proj_model_orgmotion_overlap4.yamls/pexels_crop/pexels-rodnae-productions-8183472_1080p.mp4"
     - "data/templates/pexels_crop/production_id_3762907_2160p.mp4"
     - "data/templates/pexels_crop/production_id_4058073_2160p.mp4"
     - "data/templates/pexels_crop/production_id_5205798_1080p.mp4"
@@ -56,7 +56,7 @@ video_path:
 inference_config: "configs/inference/magic_inference.yaml"
 size: [512, 512]
 # 长度一致
-L:    320
+L:    32
 S:    1
 I:    0
 clip: 0
