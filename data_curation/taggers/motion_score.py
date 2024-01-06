@@ -34,8 +34,8 @@ def get_global_motion_score(video_path, optflow_fps=1, optflow_shortest_px=16)->
             optflow_inp_frames.append(frame_gray)
         
         flow = cv2.calcOpticalFlowFarneback(
-            optflow_inp_frames[0], 
-            optflow_inp_frames[1], 
+            optflow_inp_frames[-2], 
+            optflow_inp_frames[-1], 
             None, 
             0.5, # pyr_scale: 金字塔缩放的长度，如果为0.5，则是经典的金字塔图像，即下一层是前一层的一半；
             3,   # levels: 包含初始图像的层级， levels=1则没有创建额外的层，只使用原始的图像

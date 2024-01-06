@@ -7,14 +7,13 @@ import functools
 from copy import deepcopy
 from data_fetcher import generate_hash_from_paths
 from contextlib import contextmanager
-from tag_modules.motion_score import get_global_motion_score
 from utils import volces_get_worker_cnt_worldsize
 from filter_human_videos_and_detect_clip import filter_single_video
 from taggers.motion_score import get_global_motion_score
 from taggers.aesthetics_score import get_aesthetic_score
 
 WORKER_CNT,WORLDSIZE = volces_get_worker_cnt_worldsize()
-TMP_DIR = '/data/users/weisiyuan/tmp'
+TMP_DIR = '/data/tmp'
 SCRIPT_PATH = os.path.abspath(__file__)
 @contextmanager
 def sync_oss_file2local_tmp_dir(remote_file,local_file = None):
