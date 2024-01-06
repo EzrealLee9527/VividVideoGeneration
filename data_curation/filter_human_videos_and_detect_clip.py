@@ -26,8 +26,8 @@ CONTENT_DET_TH = int(os.environ.get('CONTENT_DET_TH',20))
 
 @lru_cache()
 def get_text_det_models():
-    refine_net = load_refinenet_model(cuda=True, weight_path="/data/users/weisiyuan/cache/craft/craft_refiner_CTW1500.pth")
-    craft_net = load_craftnet_model(cuda=True, weight_path="/data/users/weisiyuan/cache/craft/craft_mlt_25k.pth")
+    refine_net = load_refinenet_model(cuda=True, weight_path="/data/cache/craft/craft_refiner_CTW1500.pth")
+    craft_net = load_craftnet_model(cuda=True, weight_path="/data/cache/craft/craft_mlt_25k.pth")
     return refine_net,craft_net
 
 def get_text_ratio(frame,refine_net,craft_net):

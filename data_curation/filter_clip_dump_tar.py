@@ -10,6 +10,9 @@ from contextlib import contextmanager
 from tag_modules.motion_score import get_global_motion_score
 from utils import volces_get_worker_cnt_worldsize
 from filter_human_videos_and_detect_clip import filter_single_video
+from taggers.motion_score import get_global_motion_score
+from taggers.aesthetics_score import get_aesthetic_score
+
 WORKER_CNT,WORLDSIZE = volces_get_worker_cnt_worldsize()
 TMP_DIR = '/data/users/weisiyuan/tmp'
 SCRIPT_PATH = os.path.abspath(__file__)
@@ -107,7 +110,7 @@ def ffmpeg_crop_video(input_file, start_time, duration,output_file = None, outpu
         '-t', str(duration),     # 裁剪持续时间
         '-i', input_file,        # 输入文件
         '-c:v', 'copy',            # 复制编码格式以减少编码时间
-        '-an',                   # 禁止音频输出
+        # '-an',                   # 禁止音频输出
         # '-s', f'200x200',       # 设置新的分辨率
         
         '-f', output_format,     # 输出格式
@@ -195,6 +198,7 @@ def get_resize_shape(shape,args):
         
         scale = min_short_side_size /min(shape)
         shape = [ int(i * scale) for i in shape]
+    shape = tuple([ int(i//2*2) for i in list(shape)])
     return shape
 
 def main(args):
@@ -217,7 +221,7 @@ def main(args):
     
     
     # decide the mode of fetching video files
-    filetypes = ['mp4','mkv']
+    filetypes = ['mp4','mkv','avi']
     if not args.from_tar:
         from data_fetcher import fetch_videos
         fetcher = fetch_videos(inpath,filetypes)
@@ -239,6 +243,7 @@ def main(args):
         video_fhash = generate_hash_from_paths(video_file,SCRIPT_PATH)
         # process the video files in video tar files & vanilla video files
         with smart_file_handler(video_file) as local_video_file:
+            
             clips_metas = filter_single_video(local_video_file)
             if clips_metas is None:
                 #  no valid clips containing human faces
@@ -251,10 +256,8 @@ def main(args):
             }
             ori_shape = video_meta['ori_shape']
             def clip_gen():
-            
                 # the clip meta is from the processing of last data curation step
                 for _,(frame_offsets, clip_meta) in enumerate(zip(frame_offset_list, clip_meta_list)):
-                    
                     # skip videos with multi face
                     if clip_meta['n_face'] > max_face_num:
                         pass
@@ -306,7 +309,14 @@ def main(args):
                     
             for clip_idx ,(local_video_file, item_meta) in enumerate(clip_gen()):
                 
+                # NOTE: add extra tags
+                item_meta['motion_score'] = get_global_motion_score(tmp_clip_file)
+                item_meta['aesthestic_score'] = get_aesthetic_score(tmp_clip_file)
                 
+                if item_meta['motion_score'] < args.motion_th:
+                    continue
+                if item_meta['aesthestic_score'] < args.aesthestic_th:
+                    continue
                 member_name = f'{video_idx}-{clip_idx}-{video_fname}'
                 tmp_clip_file = os.path.join(
                     TMP_DIR,f'{member_name}.mp4'
@@ -321,8 +331,9 @@ def main(args):
                     local_video_file,item_meta['start_time'],item_meta['duration'],output_file = tmp_clip_file,trg_shape = trg_shape
                 ) #TODO: resize 
                 
-                # NOTE: add extra tags
-                # motion_score = get_global_motion_score(tmp_clip_file)
+                
+                
+                
                 
                 dump_json(item_meta, tmp_meta_file)
                 
@@ -335,7 +346,7 @@ def main(args):
                 os.remove(tmp_clip_file)
                 os.remove(tmp_meta_file)
 
-                
+    tar_writer.close()      
             
 if __name__ == "__main__":
     import argparse
@@ -361,6 +372,25 @@ if __name__ == "__main__":
         "--from_tar",
         action='store_true',
         default=False,
+    )
+    parser.add_argument(
+        "--from_clip_tar",
+        action='store_true',
+        default=False,
+    )
+    parser.add_argument(
+        "-a",
+        "--aesthestic_th",
+        type=float,
+        default= 5,
+        help=' 美学得分阈值'
+    )
+    parser.add_argument(
+        "-m",
+        "--motion_th",
+        type=float,
+        default= 0,
+        help=' motion得分阈值'
     )
     
     
