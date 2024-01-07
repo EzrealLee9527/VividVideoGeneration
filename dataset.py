@@ -112,7 +112,7 @@ class S3VideosIterableDataset(IterableDataset):
 
 
     def get_random_clip_indices(self, n_frames:int) -> List[int]:
-        all_indices = np.linspace(0, n_frames, self.frame_stride, dtype=int).tolist()
+        all_indices = list(range(0, n_frames, self.frame_stride))
         if len(all_indices) < self.video_length:
             frame_stride = n_frames // self.video_length
             assert (frame_stride != 0)

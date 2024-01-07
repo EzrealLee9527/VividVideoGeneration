@@ -964,7 +964,7 @@ def main():
 
                 # Get the text embedding for conditioning. value should be between [0,1]
                 encoder_hidden_states = encode_image(
-                    pixel_values[:, 0, :, :, :].float()*2.0+1.0)
+                    pixel_values[:, 0, :, :, :].float()*0.5 + 0.5)
 
                 added_time_ids = _get_add_time_ids(
                     7,

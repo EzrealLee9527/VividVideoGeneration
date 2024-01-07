@@ -2,7 +2,7 @@
 export MODEL_NAME="/data/users/jingminhao/.cache/huggingface/hub/models--stabilityai--stable-video-diffusion-img2vid/snapshots/0f2d55c1e358d608120344d3ea9c35fb5f2c31b3"
 ABSOLUTE_DIRNAME=`pwd`
 # EXPNAME=`basename $ABSOLUTE_DIRNAME`
-EXPNAME=SVD_I2V_DEEPSPEED
+EXPNAME=SVD_I2V_DEEPSPEED_FIXBUG
 
 while1(){
   while true;do
