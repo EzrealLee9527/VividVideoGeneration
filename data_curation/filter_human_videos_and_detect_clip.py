@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 from face_detection.insight_face_model import FaceAnalysis
 from utils import volces_get_worker_cnt_worldsize
 import os
+import torch
 import sys
 from tqdm import tqdm
 import traceback
@@ -23,11 +24,12 @@ from craft_text_detector import (
 
 DEBUG = os.environ.get('DEBUG')
 CONTENT_DET_TH = int(os.environ.get('CONTENT_DET_TH',20))
-
+DOWNSCALE = int(os.environ.get('DOWNSCALE',1))
+AUTO_DOWNSCALE = bool(os.environ.get('AUTO_DOWNSCALE'))
 @lru_cache()
 def get_text_det_models():
-    refine_net = load_refinenet_model(cuda=True, weight_path="/data/cache/craft/craft_refiner_CTW1500.pth")
-    craft_net = load_craftnet_model(cuda=True, weight_path="/data/cache/craft/craft_mlt_25k.pth")
+    refine_net = load_refinenet_model(cuda=torch.cuda.is_available(), weight_path="/data/cache/craft_refiner_CTW1500.pth")
+    craft_net = load_craftnet_model(cuda=torch.cuda.is_available(), weight_path="/data/cache/craft_mlt_25k.pth")
     return refine_net,craft_net
 
 def get_text_ratio(frame,refine_net,craft_net):
@@ -42,7 +44,7 @@ def get_text_ratio(frame,refine_net,craft_net):
         text_threshold=0.7,
         link_threshold=0.4,
         low_text=0.4,
-        cuda=True,
+        cuda=torch.cuda.is_available(),
         long_size=1280
     )
     if len(prediction_result["boxes"]):
@@ -65,6 +67,8 @@ def split_video_into_scenes(video_path,outf_template, threshold=27.0):
 # Open our video, create a scene manager, and add a detector.
     video = open_video(video_path)
     scene_manager = SceneManager()
+    # scene_manager.downscale(DOWNSCALE)
+    scene_manager.auto_downscale(AUTO_DOWNSCALE)
     scene_manager.add_detector(
         ContentDetector(threshold=CONTENT_DET_TH,min_scene_len=15))
     scene_manager.add_detector(

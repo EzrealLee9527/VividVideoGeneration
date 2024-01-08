@@ -277,7 +277,16 @@ def fetch_miaoji_duitang():
             
             
 
+__BLACK_LIST = [
+    "熊世界","纪录",'Discovery',"History","IMAX及其他",'宇宙星辰太空地球'
+]
 
+
+def filter_black_list(path):
+    for kw in __BLACK_LIST:
+        if kw in path:
+            return False
+    return True
          
 def fetch_videos(rootdir,filetypes = ['mp4']):
     
@@ -290,6 +299,8 @@ def fetch_videos(rootdir,filetypes = ['mp4']):
         video_files += cache_glob_func(
             os.path.join(rootdir,f'*.{ftype}')
         )
+    video_files = list(filter(filter_black_list, video_files))
+    print(f'Video files : {len(video_files)}')
     return video_files
     
 # default celebV

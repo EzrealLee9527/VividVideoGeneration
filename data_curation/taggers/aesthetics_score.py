@@ -9,9 +9,19 @@ import jsonlines
 from tqdm import tqdm
 import os
 import numpy as np
+from functools import lru_cache
 
+@lru_cache()
+def get_aesth_model_processers():
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+    pretrained = "shunk031/aesthetics-predictor-v1-vit-large-patch14"
+    model = AestheticsPredictorV1.from_pretrained(pretrained)
+    processor = CLIPProcessor.from_pretrained(pretrained)
+    return model ,processor
 
-def get_aesthetic_score(video_path, model, processor, device)-> float:
+def get_aesthetic_score(video_path,)-> float:
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+    model,processor = get_aesth_model_processers()
     cap = cv2.VideoCapture(video_path)
     frame_height = cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
     frame_width = cap.get(cv2.CAP_PROP_FRAME_WIDTH)

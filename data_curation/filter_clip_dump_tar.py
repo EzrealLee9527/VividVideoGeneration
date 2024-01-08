@@ -11,7 +11,7 @@ from utils import volces_get_worker_cnt_worldsize
 from filter_human_videos_and_detect_clip import filter_single_video
 from taggers.motion_score import get_global_motion_score
 from taggers.aesthetics_score import get_aesthetic_score
-
+import time
 WORKER_CNT,WORLDSIZE = volces_get_worker_cnt_worldsize()
 TMP_DIR = '/data/tmp'
 SCRIPT_PATH = os.path.abspath(__file__)
@@ -21,7 +21,10 @@ def sync_oss_file2local_tmp_dir(remote_file,local_file = None):
         file_type = remote_file.rsplit(".",1)[-1]
         fhash = generate_hash_from_paths(remote_file,SCRIPT_PATH)
         local_file = os.path.join(TMP_DIR,f'{fhash}.{file_type}')
+        
+    st = time.time()
     megfile.smart_copy(remote_file,local_file)
+    print(f'Sync time : {time.time() -st :.2f}')
     try:
         yield local_file
     finally:
@@ -200,6 +203,9 @@ def get_resize_shape(shape,args):
     shape = tuple([ int(i//2*2) for i in list(shape)])
     return shape
 
+
+
+# NOTE: 需要在本地同步file, 最大并行处理数目本地存储上限/视视频文件的平均size决定
 def main(args):
     
     worker_cnt,worldsize = volces_get_worker_cnt_worldsize()
@@ -241,8 +247,11 @@ def main(args):
         # print(f'{job_idx}-{video_idx}')
         video_fhash = generate_hash_from_paths(video_file,SCRIPT_PATH)
         # process the video files in video tar files & vanilla video files
+        print(
+                f'processing {video_file}'
+            )
         with smart_file_handler(video_file) as local_video_file:
-            
+            print(f'Sync to {local_video_file}')
             clips_metas = filter_single_video(local_video_file)
             if clips_metas is None:
                 #  no valid clips containing human faces
@@ -308,15 +317,8 @@ def main(args):
                     
             for clip_idx ,(local_video_file, item_meta) in enumerate(clip_gen()):
                 
-                # NOTE: add extra tags
-                item_meta['motion_score'] = get_global_motion_score(tmp_clip_file)
-                item_meta['aesthestic_score'] = get_aesthetic_score(tmp_clip_file)
                 
-                if item_meta['motion_score'] < args.motion_th:
-                    continue
-                if item_meta['aesthestic_score'] < args.aesthestic_th:
-                    continue
-                member_name = f'{video_idx}-{clip_idx}-{video_fname}'
+                member_name = f'{video_idx}-{clip_idx}-{video_fhash}'
                 tmp_clip_file = os.path.join(
                     TMP_DIR,f'{member_name}.mp4'
                 )
@@ -331,7 +333,14 @@ def main(args):
                 ) #TODO: resize 
                 
                 
+                # NOTE: add extra tags
+                item_meta['motion_score'] = get_global_motion_score(tmp_clip_file)
+                item_meta['aesthestic_score'] = get_aesthetic_score(tmp_clip_file)
                 
+                if item_meta['motion_score'] < args.motion_th:
+                    continue
+                if item_meta['aesthestic_score'] < args.aesthestic_th:
+                    continue
                 
                 
                 dump_json(item_meta, tmp_meta_file)
