@@ -129,10 +129,8 @@ class StableVideoDiffusion(nn.Module):
             eta_min=self.config.train.optimizer.min_lr,
         )
         if hasattr(self.config.train.optimizer, "schedule"):
-            if self.config.train.optimizer.scheduler == "constant":
-                lr_scheduler = optim.lr_scheduler.LambdaLR(
-                    optimizer, lambda x: self.config.train.optimizer.lr
-                )
+            if self.config.train.optimizer.schedule == "constant":
+                lr_scheduler = optim.lr_scheduler.LambdaLR(optimizer, lambda x: 1)
         return optimizer, lr_scheduler
 
     def set_timesteps(self, device, dtype):
