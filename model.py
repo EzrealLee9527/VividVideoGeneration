@@ -128,6 +128,11 @@ class StableVideoDiffusion(nn.Module):
             T_max=self.config.train.num_iteration,
             eta_min=self.config.train.optimizer.min_lr,
         )
+        if hasattr(self.config.train.optimizer, "schedule"):
+            if self.config.train.optimizer.scheduler == "constant":
+                lr_scheduler = optim.lr_scheduler.LambdaLR(
+                    optimizer, lambda x: self.config.train.optimizer.lr
+                )
         return optimizer, lr_scheduler
 
     def set_timesteps(self, device, dtype):

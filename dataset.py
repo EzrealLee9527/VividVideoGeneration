@@ -1,4 +1,5 @@
 import os
+import math
 import einops
 import megfile
 import random
@@ -241,6 +242,19 @@ class ParseCondition(Module):
         return video, info
 
 
+class ConditionJitter(Module):
+    def __init__(self, size, min_ratio: float = 0.5) -> None:
+        super().__init__()
+        padding = round(size - math.sqrt(min_ratio * (size**2)))
+        self.random_crop = RandomCrop(size, padding=padding)
+
+    @torch.no_grad()
+    def forward(self, x: Tuple[Tensor, Dict]) -> Tuple[Tensor, Dict]:
+        video, info = x
+        info["controlnet_cond"] = self.random_crop(info["controlnet_cond"])
+        return video, info
+
+
 class ClipNormalize(Module):
     def __init__(self):
         super().__init__()
@@ -272,16 +286,27 @@ class ClipNormalize(Module):
         return info
 
 
+class Identity(Module):
+    @torch.no_grad()
+    def forward(self, x: Tuple[Tensor, Dict]) -> Tuple[Tensor, Dict]:
+        return x
+
+
 def _get_transforms(config: DictConfig) -> Compose:
+    use_condition_jitter = False
+    if hasattr(config.data, "use_condition_jitter"):
+        use_condition_jitter = config.data.use_condition_jitter
     transforms = Compose(
         [
             FilterData(video_idx=0),
             ToChannelFirst(),
             ClipResize(config.data.size),
             ClipRandomCrop(config.data.size),
-            # ClipCenterCrop(config.data.size),
             RandomClip(config.data.num_frames, config.data.frame_stride),
             ParseCondition(),
+            ConditionJitter(config.data.size, config.data.condition_jitter_min_ratio)
+            if use_condition_jitter
+            else Identity(),
             ClipNormalize(),
         ]
     )

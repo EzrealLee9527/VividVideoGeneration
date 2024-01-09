@@ -155,7 +155,6 @@ def main():
     if not fabric.is_global_zero:
         LoggerHelper.disable_in_other_ranks()
         builtins.print = lambda *args: None
-    logger = LoggerHelper.instance()
 
     # init pipeline
     pipeline = get_pipeline(cfg.model.model_id)

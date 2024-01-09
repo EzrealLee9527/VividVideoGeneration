@@ -4,7 +4,9 @@ export NCCL_IB_DISABLE=0
 export NCCL_IB_CUDA_SUPPORT=1
 export NCCL_IB_GID_INDEX=3
 export NCCL_IB_TC=106
-export NCCL_IB_HCA=mlx5_0  # Removed additional equals sign here
+NCCL_IB_HCA=$(pushd /sys/class/infiniband/ > /dev/null; for i in mlx5_*; do cat $i/ports/1/gid_attrs/types/* 2>/dev/null | grep v >/dev/null && echo $i ; done; popd > /dev/null)
+export NCCL_IB_HCA=$(echo $NCCL_IB_HCA | tr ' ' ',')
+export NCCL_NET_GDR_READ=1
 export NCCL_TREE_THRESHOLD=0
 
 CONFIG=$1
