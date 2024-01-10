@@ -35,16 +35,18 @@ from diffusers.utils.import_utils import is_xformers_available
 
 import transformers
 from transformers import CLIPTextModel, CLIPTokenizer, CLIPVisionModelWithProjection, CLIPImageProcessor
+# from ip_adapter import IPAdapterFull
+
 # from animatediff.data.dataset import WebVid10M, PexelsDataset
 from animatediff.utils.util import save_videos_grid, pad_image
-# from controlnet_aux import controlDetector
 from accelerate import Accelerator
 from einops import repeat
 from animate import MagicAnimate
-# from controlnet_aux import DWposeDetector
-
 from animatediff.magic_animate.controlnet import ControlNetModel
 import importlib
+from animatediff.data.dataset import WebVid10M, PexelsDataset
+import webdataset as wds
+from animatediff.data.dataset_wds import S3VideosIterableDataset
 
 def main(
 
@@ -62,10 +64,18 @@ def main(
         output_dir: str,
         pretrained_model_path: str,
         pretrained_appearance_encoder_path: str,
+        pretrained_controlnet_path: str,
+        pretrained_vae_path: str,
+        motion_module: str,
+        appearance_controlnet_motion_checkpoint_path: str,
+        pretrained_unet_path: str,
+        inference_config: str,
 
+        data_module: str,
         data_class: str,
         train_data: Dict,
         validation_data: Dict,
+        context: Dict,
         cfg_random_null_text: bool = True,
         cfg_random_null_text_ratio: float = 0.1,
 
@@ -103,8 +113,14 @@ def main(
         global_seed: int = 42,
         is_debug: bool = False,
 
-        pretrained_controlnet_path: str = None,
+        dwpose_only_face = False,
+        froce_text_embedding_zero = False,
+
+        ip_ckpt=None,
+
+        
 ):
+    weight_type = torch.float16
     # Accelerate
     accelerator = Accelerator(
         gradient_accumulation_steps=1,
@@ -144,33 +160,43 @@ def main(
 
     # Load scheduler, tokenizer and models.
     noise_scheduler = DDIMScheduler(**OmegaConf.to_container(noise_scheduler_kwargs))
+    local_rank = accelerator.device
 
     # load dwpose detector, see controlnet_aux: https://github.com/patrickvonplaten/controlnet_aux
     # specify configs, ckpts and device, or it will be downloaded automatically and use cpu by default
-    # det_config = '/yolox_l_8xb8-300e_coco.py'
-    # det_ckpt = '/yolox_l_8x8_300e_coco_20211126_140236-d3bd2b23.pth'
-    # pose_config = '/dwpose-l_384x288.py'
-    # pose_ckpt = '/dw-ll_ucoco_384.pth'
+    det_config = '/data/models/controlnet_aux/src/controlnet_aux/dwpose/yolox_config/yolox_l_8xb8-300e_coco.py'
+    det_ckpt = '/data/models/controlnet_aux/yolox_l_8x8_300e_coco_20211126_140236-d3bd2b23.pth'
+    pose_config = '/data/models/controlnet_aux/src/controlnet_aux/dwpose/dwpose_config/dwpose-l_384x288.py'
+    pose_ckpt = '/data/models/controlnet_aux/dw-ll_ucoco_384.pth'
 
-    # dwpose_model = DWposeDetector(
-    #     det_config=det_config,
-    #     det_ckpt=det_ckpt,
-    #     pose_config=pose_config,
-    #     pose_ckpt=pose_ckpt,
-    #     device=local_rank
-    # )
-
-    local_rank = accelerator.device
+    if dwpose_only_face == True:
+        from controlnet_aux_lib import DWposeDetector
+    else:
+        from controlnet_aux import DWposeDetector
+    dwpose_model = DWposeDetector(
+        det_config=det_config,
+        det_ckpt=det_ckpt,
+        pose_config=pose_config,
+        pose_ckpt=pose_ckpt,
+        device=local_rank
+    )
 
     # -------- magic_animate --------#
-    model = MagicAnimate(train_batch_size=train_batch_size,
+    model = MagicAnimate(config=config,
+                         train_batch_size=train_batch_size,
                          device=local_rank,
                          unet_additional_kwargs=OmegaConf.to_container(unet_additional_kwargs))
 
     # ----- load image encoder ----- #
-    image_encoder = CLIPVisionModelWithProjection.from_pretrained(image_encoder_path)
-    image_encoder.requires_grad_(False)
-    image_processor = CLIPImageProcessor()
+    """
+    使用IP-adapter，主要包含image_encoder，clip_image_processor和image_proj_model
+    image_proj_model在Resampler里定义
+    """
+    if image_encoder_path != "":
+        image_encoder = CLIPVisionModelWithProjection.from_pretrained(image_encoder_path)
+        image_encoder.requires_grad_(False)
+        image_processor = CLIPImageProcessor()
+        image_encoder.to(local_rank, dtype=weight_type)
 
     # Set trainable parameters
     model.requires_grad_(False)
@@ -181,6 +207,7 @@ def main(
                 break
 
     trainable_params = list(filter(lambda p: p.requires_grad, model.parameters()))
+    print('trainable_params', len(trainable_params))
     # with open('model.txt', 'w') as fp:
     #     for item in list(model.state_dict().keys()):
     #         fp.write("%s\n" % item)
@@ -207,32 +234,47 @@ def main(
     model.appearance_encoder.enable_xformers_memory_efficient_attention()
     model.controlnet.enable_xformers_memory_efficient_attention()
 
-    weight_type = torch.float16
+    
     model.to(local_rank, dtype=weight_type)
-    image_encoder.to(local_rank, dtype=weight_type)
+    
 
     # Get the training dataset
-    dataset_cls = getattr(importlib.import_module('animatediff.data.datasets_emoca', package=None), data_class)
+    dataset_cls = getattr(importlib.import_module(data_module, package=None), data_class)
     train_dataset = dataset_cls(**train_data, is_image=image_finetune)
+    #
+    # train_dataset = PexelsDataset(**train_data)
 
-    distributed_sampler = DistributedSampler(
-        train_dataset,
-        num_replicas=accelerator.num_processes,
-        rank=accelerator.process_index,
-        shuffle=True,
-        seed=global_seed,
-    )
+    # distributed_sampler = DistributedSampler(
+    #     train_dataset,
+    #     num_replicas=accelerator.num_processes,
+    #     rank=accelerator.process_index,
+    #     shuffle=True,
+    #     seed=global_seed,
+    # )
 
-    # DataLoaders creation:
-    train_dataloader = torch.utils.data.DataLoader(
-        train_dataset,
-        batch_size=train_batch_size,
-        shuffle=False,
-        sampler=distributed_sampler,
-        num_workers=num_workers,
-        pin_memory=True,
-        drop_last=True,
-    )
+    # # DataLoaders creation:
+    # train_dataloader = torch.utils.data.DataLoader(
+    #     train_dataset,
+    #     batch_size=train_batch_size,
+    #     shuffle=False,
+    #     sampler=distributed_sampler,
+    #     num_workers=num_workers,
+    #     pin_memory=True,
+    #     drop_last=True,
+    # )
+    def worker_init_fn(_):
+        worker_info = torch.utils.data.get_worker_info()
+        dataset = worker_info.dataset
+        worker_id = worker_info.id
+        return np.random.seed(np.random.get_state()[1][0] + worker_id)
+
+    train_dataloader = wds.WebLoader(
+                train_dataset, 
+                batch_size=train_batch_size,
+                shuffle=False,
+                num_workers=num_workers, 
+                worker_init_fn=None,
+            ).with_length(len(train_dataset))
 
     # Get the training iteration
     if max_train_steps == -1:
@@ -283,7 +325,8 @@ def main(
     model, optimizer = accelerator.prepare(model, optimizer)
 
     for epoch in range(first_epoch, num_train_epochs):
-        train_dataloader.sampler.set_epoch(epoch)
+        # TODO: check webdataset在多卡的随机性问题
+        # train_dataloader.sampler.set_epoch(epoch)
         model.train()
 
         for step, batch in enumerate(train_dataloader):
@@ -328,15 +371,66 @@ def main(
             # (this is the forward diffusion process)
             noisy_latents = noise_scheduler.add_noise(latents, noise, timesteps)
 
-            # >>>>>>>>>>>> Get the image embedding for conditioning >>>>>>>>>>>>#
+
+            """
+            pixel_values: torch.Size([1, 14, 3, 512, 512])
+            pixel_values_pose: torch.Size([1, 14, 3, 512, 512])
+            clip_ref_image: torch.Size([1, 1, 3, 224, 224])
+            pixel_values_ref_img: torch.Size([1, 3, 512, 512])
+            drop_image_embeds: torch.Size([1])
+
+            noisy_latents: torch.Size([1, 4, 8, 64, 64])
+            encoder_hidden_states: torch.Size([1, 257, 1280])
+            np.array(ref_pil_images[0]): (512, 512, 3)
+            control_conditions: (8, 512, 512, 3)
+            """
+
+            # >>>>>>>>>>>> get control conditions >>>>>>>>>>>> #
+            # TODO： dwpose去掉
+            # pixel_values_pose = batch["pixel_values_pose"].to(local_rank, dtype=weight_type)
+            # with torch.no_grad():
+            #     pixel_values_pose = rearrange(pixel_values_pose, "b f c h w -> b f h w c")
+            with torch.inference_mode():
+                video_values = rearrange(pixel_values, "b c h w -> b h w c")
+                image_np = (video_values * 0.5 + 0.5) * 255
+                image_np = image_np.cpu().numpy().astype(np.uint8)
+                num_frames = image_np.shape[0]
+
+                dwpose_conditions = []
+                for frame_id in range(num_frames):
+                    pil_image = Image.fromarray(image_np[frame_id])
+                    dwpose_image = dwpose_model(pil_image, output_type='np', image_resolution=pixel_values.shape[-1])
+                    dwpose_conditions.append(dwpose_image)
+
+                    # debug
+                    # if accelerator.is_main_process:
+                    #     img = Image.fromarray(dwpose_image)
+                    #     img.save(f"pose_{frame_id}.jpg")
+
+                pixel_values_pose = torch.Tensor(np.array(dwpose_conditions))
+                pixel_values_pose = rearrange(pixel_values_pose, "(b f) h w c -> b f h w c", b=train_batch_size)
+                pixel_values_pose = pixel_values_pose.to(local_rank, dtype=weight_type)
+                pixel_values_pose = ((pixel_values_pose / 255.0) - 0.5) * 2
+            # print('pixel_values_pose', pixel_values_pose.shape, pixel_values_pose.max(), pixel_values_pose.min())
+
+            # >>>>>>>>>>>> get reference image conditions >>>>>>>>>>>> #
+            # b c h w
+            pixel_values_ref_img = batch["pixel_values_ref_img"].to(local_rank, dtype=weight_type)
             with torch.no_grad():
+                pixel_values_ref_img = rearrange(pixel_values_ref_img, "b c h w -> b h w c")
+
+            # >>>>>>>>>>>> Get the image embedding for conditioning >>>>>>>>>>>>#
+            # encoder_hidden_states = torch.zeros(10, 257, 1280).to(local_rank, dtype=weight_type)
+            # encoder_hidden_states_val = torch.zeros(20, 257, 1280).to(local_rank, dtype=weight_type)
+            # encoder_hidden_states = torch.zeros(train_batch_size, 16, 768).to(local_rank, dtype=weight_type)
+            # encoder_hidden_states_val = torch.zeros(train_batch_size*2, 16, 768).to(local_rank, dtype=weight_type)
+            with torch.inference_mode():
                 ref_pil_images = []
                 encoder_hidden_states = []
+                encoder_hidden_states_val = []
 
-                for batch_id in range(batch['pixel_values'].shape[0]):
-                    # get one frame randomly
-                    frame_idx = random.randint(0, video_length - 1)
-                    image_np = batch['pixel_values'][batch_id, frame_idx].permute(1, 2, 0).numpy()
+                for batch_id in range(pixel_values_ref_img.shape[0]):
+                    image_np = pixel_values_ref_img[batch_id].cpu().numpy()
                     image_np = (image_np * 0.5 + 0.5) * 255
                     ref_pil_image = Image.fromarray(image_np.astype(np.uint8))
                     ref_pil_images.append(ref_pil_image)
@@ -345,43 +439,51 @@ def main(
                     # if accelerator.is_main_process:
                     #     ref_pil_images[0].save("ref_img.jpg")
 
-                    # get fine-grained embeddings
-                    ref_pil_image_pad = pad_image(ref_pil_image)
-                    clip_image = image_processor(images=ref_pil_image_pad, return_tensors="pt").pixel_values
-                    image_emb = image_encoder(clip_image.to(local_rank, dtype=weight_type),
-                                              output_hidden_states=True).hidden_states[-2]
-                    encoder_hidden_states.append(image_emb)
+                    if image_encoder_path != "":
+                        # get fine-grained embeddings
+                        ref_pil_image_pad = pad_image(ref_pil_image)
+                        clip_image = image_processor(images=ref_pil_image_pad, return_tensors="pt").pixel_values
+                        image_emb = image_encoder(clip_image.to(local_rank, dtype=weight_type),
+                                                output_hidden_states=True).hidden_states[-2]
+                        encoder_hidden_states.append(image_emb)
+                        
+                        # negative image embeddings
+                        image_np_neg = np.zeros_like(image_np)
+                        ref_pil_image_neg = Image.fromarray(image_np_neg.astype(np.uint8))
+                        ref_pil_image_pad = pad_image(ref_pil_image_neg)
+                        clip_image_neg = image_processor(images=ref_pil_image_pad, return_tensors="pt").pixel_values
+                        image_emb_neg = image_encoder(clip_image_neg.to(local_rank, dtype=weight_type),
+                                                        output_hidden_states=True).hidden_states[-2]
 
-                encoder_hidden_states = torch.cat(encoder_hidden_states)
+                        image_emb = torch.cat([image_emb_neg, image_emb])
+
+                        encoder_hidden_states_val.append(image_emb)
+                    
+
+                if image_encoder_path != "":
+                    encoder_hidden_states = torch.cat(encoder_hidden_states)
+                    encoder_hidden_states_val = torch.cat(encoder_hidden_states_val)
+                    # <<<<<<<<<<< Drop the image embedding for cfg train <<<<<<<<<<<<<#
+                    drop_image_embeds = batch["drop_image_embeds"].to(local_rank)
+                    mask = drop_image_embeds > 0
+                    mask = mask.unsqueeze(1).unsqueeze(2).expand_as(encoder_hidden_states)
+                    encoder_hidden_states[mask] = 0
+                else:
+                    encoder_hidden_states = None
+                    encoder_hidden_states_val = None
+
+                
+                # print('encoder_hidden_states', encoder_hidden_states.shape)
+                # print('encoder_hidden_states_val', encoder_hidden_states_val.shape)
+            # project from (batch_size, 257, 1280) to (batch_size, 16, 768)
+        
+            # encoder_hidden_states = model.unet.image_proj_model(encoder_hidden_states)
+            # encoder_hidden_states_val = model.unet.image_proj_model(encoder_hidden_states_val)
+
+            
 
             # <<<<<<<<<<< Get the image embedding for conditioning <<<<<<<<<<<<<#
-
-            # >>>>>>>>>>>> get control conditions >>>>>>>>>>>> #
-            with torch.inference_mode():
-                # video_values = rearrange(pixel_values, "b c h w -> b h w c")
-                # image_np = (video_values * 0.5 + 0.5) * 255
-                # image_np = image_np.cpu().numpy().astype(np.uint8)
-                # num_frames = image_np.shape[0]
-
-                # control_conditions = []
-                # for frame_id in range(num_frames):
-                #     pil_image = Image.fromarray(image_np[frame_id])
-                #     control_image = dwpose_model(pil_image, output_type='np', image_resolution=pixel_values.shape[-1])
-                #     control_conditions.append(control_image)
-
-                #     # debug
-                #     # if accelerator.is_main_process:
-                #     #     img = Image.fromarray(control_image)
-                #     #     img.save(f"pose_{frame_id}.jpg")
-
-                # control_conditions = np.array(control_conditions)
-
-                render_detail = batch["shape_detail_imgs"].to(local_rank, dtype=weight_type)
-                render = batch["shape_imgs"].to(local_rank, dtype=weight_type)
-                control_conditions = torch.concat((render,render,render), dim=2)
-                control_conditions = rearrange(control_conditions, "b f c h w -> (b f) h w c")
-                control_conditions = (control_conditions.cpu().numpy() * 0.5 + 0.5) * 255
-
+            
             # Get the target for loss depending on the prediction type
             if noise_scheduler.config.prediction_type == "epsilon":
                 target = noise
@@ -391,33 +493,49 @@ def main(
                 raise ValueError(f"Unknown prediction type {noise_scheduler.config.prediction_type}")
 
             # Predict the noise residual and compute loss
+            # import pdb;pdb.set_trace()
+            # for x in [noisy_latents, encoder_hidden_states, np.array(ref_pil_images[0]), control_conditions]:
+            #     print(x.shape)
+            """
+            noisy_latents: torch.Size([1, 4, 8, 64, 64])
+            encoder_hidden_states: torch.Size([1, 257, 1280])
+            np.array(ref_pil_images[0]): (512, 512, 3)
+            control_conditions: (8, 512, 512, 3)
+            """
+
+            """
+            TODO：pose改成b f h w c格式 待会适配下， ref_pil_images改成了b h w c格式
+            """
             model_pred = model(init_latents=noisy_latents,
                                image_prompts=encoder_hidden_states,
                                timestep=timesteps,
-                               source_image=np.array(ref_pil_images[0]),  # FIXME: only support train_batch_size=1
-                               motion_sequence=control_conditions,
-                               random_seed=seed)
+                               guidance_scale=1.0,
+                               source_image=pixel_values_ref_img, 
+                               motion_sequence=pixel_values_pose,
+                               random_seed=seed,
+                               froce_text_embedding_zero=froce_text_embedding_zero
+                               )
             loss = F.mse_loss(model_pred.float(), target.float(), reduction="mean")
 
             # use accelerator
-            # accelerator.backward(loss, retain_graph=True)
-            # accelerator.clip_grad_norm_(trainable_params, 1.0)
-            # optimizer.step()
+            accelerator.backward(loss, retain_graph=True)
+            accelerator.clip_grad_norm_(trainable_params, 1.0)
+            optimizer.step()
 
-            if mixed_precision_training:
-                scaler.scale(loss).backward(retain_graph=True)
-                """ >>> gradient clipping >>> """
-                scaler.unscale_(optimizer)
-                accelerator.clip_grad_norm_(trainable_params, max_grad_norm)
-                """ <<< gradient clipping <<< """
-                scaler.step(optimizer)
-                scaler.update()
-            else:
-                loss.backward()
-                """ >>> gradient clipping >>> """
-                accelerator.clip_grad_norm_(trainable_params, max_grad_norm)
-                """ <<< gradient clipping <<< """
-                optimizer.step()
+            # if mixed_precision_training:
+            #     scaler.scale(loss).backward(retain_graph=True)
+            #     """ >>> gradient clipping >>> """
+            #     scaler.unscale_(optimizer)
+            #     torch.nn.utils.clip_grad_norm_(trainable_params, max_grad_norm)
+            #     """ <<< gradient clipping <<< """
+            #     scaler.step(optimizer)
+            #     scaler.update()
+            # else:
+            #     loss.backward()
+            #     """ >>> gradient clipping >>> """
+            #     accelerator.clip_grad_norm_(trainable_params, max_grad_norm)
+            #     """ <<< gradient clipping <<< """
+            #     optimizer.step()
 
             optimizer.zero_grad()
 
@@ -443,100 +561,93 @@ def main(
                 if step == len(train_dataloader) - 1:
                     torch.save(state_dict, os.path.join(save_path, f"checkpoint-epoch-{epoch + 1}.ckpt"))
                 else:
-                    torch.save(state_dict, os.path.join(save_path, f"checkpoint.ckpt"))
+                    torch.save(state_dict, os.path.join(save_path, f"checkpoint-steps{global_step}.ckpt"))
                 logging.info(f"Saved state to {save_path} (global_step: {global_step})")
 
             # Periodically validation
             if is_main_process and (global_step % validation_steps == 0 or global_step in validation_steps_tuple):
-                samples = []
+                config.random_seed = []
+                sample_size = validation_data['sample_size']
+                guidance_scale = validation_data['guidance_scale']
+                eval_dataset = S3VideosIterableDataset(**config.validation_data['dataset'])
 
-                generator = torch.Generator(device=latents.device)
-                generator.manual_seed(global_seed)
-                prompts = validation_data['prompt_videos']
-                val_video_length = validation_data['val_video_length']
-
-                for idx, prompt in enumerate(prompts):
-
-                    batch_size = 1  # FIXME
-                    sample_size = (512, 512)
-                    # TODO
-                    # video_data = dataset_cls(json_path=[prompt],
-                    #                            sample_size=sample_size,  # for fashion dataset
-                    #                            is_test=True,
-                    #                            sample_n_frames=val_video_length,
-                    #                            sample_stride=1)
-                    video_data = train_dataset
-
-                    pixel_values_val = []
-                    for bsz_idx in range(batch_size):
-                        pixels = video_data[bsz_idx]['pixel_values']
-                        pixel_values_val.append(pixels.unsqueeze(0))
-
-                    pixel_values_val = torch.cat(pixel_values_val, dim=0)
-
-                    # get pose conditions
+                for idx, batch in tqdm(enumerate(eval_dataset)):
+                    if idx > int(config.max_count):
+                        break
+                    # >>>>>>>>>>>> get control conditions >>>>>>>>>>>> #
                     with torch.inference_mode():
-                        # video_values = rearrange(pixel_values_val, "b f c h w -> (b f) h w c")
-                        # image_np = (video_values * 0.5 + 0.5) * 255
-                        # image_np = image_np.cpu().numpy().astype(np.uint8)
-                        # num_frames = image_np.shape[0]
+                        pixel_values = batch["pixel_values"]
+                        pixel_values = rearrange(pixel_values, "b f c h w -> (b f) h w c")
+                        image_np = (pixel_values * 0.5 + 0.5) * 255
+                        image_np = image_np.cpu().numpy().astype(np.uint8)
+                        num_frames = image_np.shape[0]
 
-                        # control_conditions = []
-                        # for frame_id in range(num_frames):
-                        #     pil_image = Image.fromarray(image_np[frame_id])
-                        #     # control_image = dwpose_model(pil_image, output_type='np',
-                        #     #                             image_resolution=pixel_values_val.shape[-1])
-                        #     control_conditions.append(control_image)
-                        # control_conditions = np.array(control_conditions)
+                        dwpose_conditions = []
+                        for frame_id in range(num_frames):
+                            pil_image = Image.fromarray(image_np[frame_id])
+                            dwpose_image = dwpose_model(pil_image, output_type='np')
+                            dwpose_conditions.append(dwpose_image)
+                        pixel_values_pose = torch.Tensor(np.array(dwpose_conditions)).to(local_rank, dtype=weight_type)
+                        pixel_values_pose = rearrange(pixel_values_pose, "(b f) h w c -> b f h w c", b=1)
+                        pixel_values_pose = ((pixel_values_pose / 255.0) - 0.5) * 2
 
-                        render_detail = video_data[0]["shape_detail_imgs"].to(local_rank, dtype=weight_type)
-                        render = video_data[0]["shape_imgs"].to(local_rank, dtype=weight_type)
-                        control_conditions = torch.concat((render,render,render), dim=1)
-                        control_conditions = rearrange(control_conditions, "f c h w -> f h w c")
-                        control_conditions = (control_conditions.cpu().numpy() * 0.5 + 0.5) * 255
-
-                    # get reference image
-                    ref_pil_images_val = []
-                    encoder_hidden_states_val = []
+                    # >>>>>>>>>>>> get reference image conditions >>>>>>>>>>>> #
+                    pixel_values_ref_img = pixel_values[:1,...].to(local_rank, dtype=weight_type)
+                    # >>>>>>>>>>>> Get the image embedding for conditioning >>>>>>>>>>>>#
                     with torch.inference_mode():
-                        for batch_id in range(pixel_values_val.shape[0]):
-                            # get one frame randomly
-                            frame_idx = random.randint(0, val_video_length - 1)
-                            image_np = pixel_values_val[batch_id, frame_idx].permute(1, 2, 0).numpy()
+                        ref_pil_images = []
+                        encoder_hidden_states_val = []
+
+                        for batch_id in range(pixel_values_ref_img.shape[0]):
+                            image_np = pixel_values_ref_img[batch_id].cpu().numpy()
                             image_np = (image_np * 0.5 + 0.5) * 255
                             ref_pil_image = Image.fromarray(image_np.astype(np.uint8))
-                            ref_pil_images_val.append(ref_pil_image)
+                            ref_pil_images.append(ref_pil_image)
+                            if config.image_encoder_path != "":
+                                # get fine-grained embeddings
+                                ref_pil_image_pad = pad_image(ref_pil_image)
+                                clip_image = image_processor(images=ref_pil_image_pad, return_tensors="pt").pixel_values
+                                image_emb = image_encoder(clip_image.to(local_rank, dtype=weight_type),
+                                                        output_hidden_states=True).hidden_states[-2]
+                                
+                                # negative image embeddings
+                                image_np_neg = np.zeros_like(image_np)
+                                ref_pil_image_neg = Image.fromarray(image_np_neg.astype(np.uint8))
+                                ref_pil_image_pad = pad_image(ref_pil_image_neg)
+                                clip_image_neg = image_processor(images=ref_pil_image_pad, return_tensors="pt").pixel_values
+                                image_emb_neg = image_encoder(clip_image_neg.to(local_rank, dtype=weight_type),
+                                                                output_hidden_states=True).hidden_states[-2]
 
-                            # get fine-grained embeddings
-                            ref_pil_image_pad = pad_image(ref_pil_image)
-                            clip_image = image_processor(images=ref_pil_image_pad, return_tensors="pt").pixel_values
-                            image_emb = image_encoder(clip_image.to(local_rank, dtype=weight_type),
-                                                      output_hidden_states=True).hidden_states[-2]
+                                image_emb = torch.cat([image_emb_neg, image_emb])
 
-                            # negative image embeddings
-                            image_np_neg = np.zeros_like(image_np)
-                            ref_pil_image_neg = Image.fromarray(image_np_neg.astype(np.uint8))
-                            ref_pil_image_pad = pad_image(ref_pil_image_neg)
-                            clip_image_neg = image_processor(images=ref_pil_image_pad, return_tensors="pt").pixel_values
-                            image_emb_neg = image_encoder(clip_image_neg.to(local_rank, dtype=weight_type),
-                                                          output_hidden_states=True).hidden_states[-2]
+                                encoder_hidden_states_val.append(image_emb)
+                            
 
-                            image_emb = torch.cat([image_emb_neg, image_emb])
+                        if config.image_encoder_path != "":
+                            encoder_hidden_states_val = torch.cat(encoder_hidden_states_val)
+                        else:
+                            encoder_hidden_states_val = None
 
-                            encoder_hidden_states_val.append(image_emb)
+                    generator = torch.Generator(device=torch.device("cuda:0"))
+                    generator.manual_seed(torch.initial_seed())
 
-                        encoder_hidden_states_val = torch.cat(encoder_hidden_states_val)
-
+                    print('source_image', pixel_values_ref_img.max(), pixel_values_ref_img.min())
+                    # pixel_values_pose = (pixel_values_pose + 1.0)/2.0
+                    print('pixel_values_pose', pixel_values_pose.max(),pixel_values_pose.min())
+                    if encoder_hidden_states_val is not None:
+                        encoder_hidden_states_val = encoder_hidden_states_val[:2]
                     sample = model.infer(
-                        source_image=np.array(ref_pil_images_val[0]),
+                        source_image=pixel_values_ref_img[:1],
                         image_prompts=encoder_hidden_states_val,
-                        motion_sequence=control_conditions,
+                        motion_sequence=pixel_values_pose[:1],
                         random_seed=seed,
                         step=validation_data['num_inference_steps'],
-                        guidance_scale=validation_data['guidance_scale'],
-                        size=(sample_size[1], sample_size[0])
+                        guidance_scale=guidance_scale[idx],
+                        context=context,
+                        size=(sample_size[1], sample_size[0]),
+                        froce_text_embedding_zero=config['froce_text_embedding_zero']
                     )
-                    save_videos_grid(sample, f"{output_dir}/samples/sample-{global_step}/{idx}.gif")
+                    # save_videos_grid(sample, f"{output_dir}/samples/sample-{global_step}/{idx}.gif")
                     samples.append(sample)
 
                 samples = torch.concat(samples)

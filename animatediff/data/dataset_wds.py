@@ -200,11 +200,7 @@ class S3VideosIterableDataset(IterableDataset):
         all_indices = list(range(0, n_frames, self.frame_stride))
         # all_indices = np.linspace(0, n_frames - 1, self.frame_stride, dtype=int).tolist()
         # print('all_indices', all_indices)
-        if len(all_indices) < self.video_length:
-            frame_stride = n_frames // self.video_length
-            assert (frame_stride != 0)
-            all_indices = list(range(0, n_frames, frame_stride))
-        
+        assert len(all_indices) >= self.video_length        
         rand_idx = random.randint(0, len(all_indices) - self.video_length)
         clip_indices = all_indices[rand_idx:rand_idx+self.video_length]
         # print('clip_indices:', clip_indices)
@@ -359,8 +355,6 @@ class S3VideosIterableDataset(IterableDataset):
                     assert faces['image_ids'].numel() > 0
                     face_rect = faces['rects'][0].numpy()
                     ref_img = np.array(crop_and_resize(Image.fromarray(ref_img), target_size=None, crop_rect=face_rect))
-
-            assert ref_img.mean() > 10
                 
 
             # clip_ref_image = torch.zeros(pixel_values.shape[0], 1, 3, 224, 224)
@@ -572,18 +566,18 @@ if __name__ == "__main__":
     import resource
     from tqdm import tqdm
     import cv2
-    TEST_TYPE = 'test'
+    TEST_TYPE = 'train'
     if TEST_TYPE == 'train':
         dataset = S3VideosIterableDataset(
             [
-                's3://ljj/Datasets/Videos/processed/CelebV_webdataset_20231211',
+                # 's3://ljj/Datasets/Videos/processed/CelebV_webdataset_20231211',
             #  's3://ljj/Datasets/Videos/processed/hdvila100m_20231216',
-            #  's3://ljj/Datasets/Videos/processed/pexels_20231217',
+             's3://ljj/Datasets/Videos/processed/pexels_20231217',
             #  's3://ljj/Datasets/Videos/processed/xiaohongshu_webdataset_20231212',
             ],
             video_length = 16,
             resolution = 512,
-            frame_stride = 1,
+            frame_stride = 2,
         )
         dataloader = wds.WebLoader(
             dataset, 

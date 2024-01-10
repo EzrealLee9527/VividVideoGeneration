@@ -138,7 +138,7 @@ class MagicAnimate(torch.nn.Module):
             assert len(u) == 0
             m, u = self.unet.load_state_dict(unet_state_dict, strict=False)
             print(f"unet missing keys: {len(m)}, unexpected keys: {len(u)}")
-            assert len(u) == 0
+            assert len(u) == 0, f"unexpected keys:{u}"
         ###########################################
 
         # 1. unet ckpt
@@ -311,10 +311,14 @@ class MagicAnimate(torch.nn.Module):
         generator.manual_seed(torch.initial_seed())
 
         # # project from (batch_size, 257, 1280) to (batch_size, 16, 768)
+        
         if image_prompts is not None:
             image_prompts_clone = image_prompts.clone().detach()
             image_prompts_clone.requires_grad_(True)
             image_prompts_clone = self.unet.image_proj_model(image_prompts_clone)
+        else:
+            image_prompts_clone = None
+
 
         noise_pred = self.pipeline.train(
             prompt,

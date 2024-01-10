@@ -46,6 +46,9 @@ import numpy as np
 from controlnet_aux_lib import DWposeDetector, SamDetector
 import webdataset as wds
 from animatediff.data.dataset_wds import S3VideosIterableDataset
+from mobile_sam import sam_model_registry, SamAutomaticMaskGenerator, SamPredictor
+
+
 
 det_config = '/data/models/controlnet_aux/src/controlnet_aux/dwpose/yolox_config/yolox_l_8xb8-300e_coco.py'
 det_ckpt = '/data/models/controlnet_aux/yolox_l_8x8_300e_coco_20211126_140236-d3bd2b23.pth'
@@ -63,7 +66,17 @@ dwpose_model = DWposeDetector(
     device=local_rank
 )
 
-sam_model = SamDetector('vit_t')
+model_type = "vit_t"
+sam_checkpoint = "./weights/mobile_sam.pt"
+
+device = "cuda" if torch.cuda.is_available() else "cpu"
+
+mobile_sam = sam_model_registry[model_type](checkpoint=sam_checkpoint)
+mobile_sam.to(device=device)
+mobile_sam.eval()
+
+predictor = SamPredictor(mobile_sam)
+
 
 dataset = S3VideosIterableDataset(
     ['s3://ljj/Datasets/Videos/processed/CelebV_webdataset_20231211',],
@@ -103,6 +116,9 @@ for idx,batch in tqdm(enumerate(dataloader)):
             # if accelerator.is_main_process:
             #     img = Image.fromarray(dwpose_image)
             #     img.save(f"pose_{frame_id}.jpg")
+
+            predictor.set_image(image_np[frame_id])
+            masks, _, _ = predictor.predict(<input_prompts>)
 
         pixel_values_pose = torch.Tensor(np.array(dwpose_conditions))
         pixel_values_pose = rearrange(pixel_values_pose, "(b f) h w c -> b c f h w", b=1)

@@ -1,14 +1,18 @@
-# extensions
+.DS_Store
+*pyc
+__pycache__
 *.egg-info
-*.py[cod]
 
-# envs
-.pt13
-.pt2
+results
+*.ckpt
 
-# directories
-/checkpoints
-/dist
-/outputs
-/build
-/src
+*.pt
+*.pth
+.ipynb_checkpoints
+
+logs
+
+outputs
+outputs_hs
+debug
+__pycache__

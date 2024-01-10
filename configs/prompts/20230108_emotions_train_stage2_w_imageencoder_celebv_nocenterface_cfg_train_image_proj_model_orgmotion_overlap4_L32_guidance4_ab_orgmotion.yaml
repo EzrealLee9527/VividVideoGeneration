@@ -1,0 +1,97 @@
+use_dwpose: true
+dwpose_only_face: false
+use_face_det: false
+froce_text_embedding_zero: false
+
+# pretrained_model_path: "runwayml/stable-diffusion-v1-5"
+pretrained_model_path: '/data/huggingface/hub/models--runwayml--stable-diffusion-v1-5/snapshots/1d0c4ebf6ff58a5caecab40fa1406526bca4b5b9'
+pretrained_vae_path: "/data/models/pretrained_models/sd-vae-ft-mse"
+pretrained_appearance_encoder_path: "/data/models/pretrained_models/MagicAnimate/appearance_encoder"
+pretrained_controlnet_path: "/data/models/pretrained_models/MagicAnimate/densepose_controlnet"
+pretrained_unet_path: ""
+image_encoder_path: "/data/work/IP-Adapter/IP-Adapter/models/image_encoder"
+# image_encoder_path: ""
+appearance_controlnet_motion_checkpoint_path: "outputs/train_stage2_w_imageencoder_celebv_nocenterface_cfg_train_image_proj_model-2024-01-05T17-38-00/checkpoints/checkpoint-steps20000.ckpt"
+# motion_module: ""
+# 如果指定motion_module，appearance_controlnet_motion_checkpoint_path中的motion会被覆盖
+motion_module: "/data/models/pretrained_models/MagicAnimate/temporal_attention/temporal_attention.ckpt"
+
+savename: null
+
+fusion_blocks: "midup"
+
+seed:           [1]
+steps:          25
+guidance_scale: 4
+
+context:
+  context_frames: 8
+  context_stride: 1
+  context_overlap: 4
+
+source_image:
+    # - "data/templates/pexels_crop/pexels-cottonbro-7322219_2160p.mp4"
+    # - "data/templates/pexels_crop/pexels-karolina-grabowska-5981354_2160p.mp4"
+    # - "data/templates/pexels_crop/pexels-karolina-grabowska-6031698_2160p.mp4"
+    # - "data/templates/pexels_crop/pexels-mikhail-nilov-7626703_1080p.mp4"
+    # - "data/templates/pexels_crop/pexels-pavel-danilyuk-8627836_1080p.mp4"
+    # - "data/templates/pexels_crop/pexels-rodnae-productions-8183472_1080p.mp4"
+    # - "data/templates/pexels_crop/production_id_3762907_2160p.mp4"
+    - "data/templates/pexels_crop/production_id_4058073_2160p.mp4"
+    - "data/templates/pexels_crop/production_id_5205798_1080p.mp4"
+
+
+video_path:
+    # - "data/templates/pexels_crop/pexels-cottonbro-7322219_2160p.mp4"
+    # - "data/templates/pexels_crop/pexels-karolina-grabowska-5981354_2160p.mp4"
+    # - "data/templates/pexels_crop/pexels-karolina-grabowska-6031698_2160p.mp4"
+    # - "data/templates/pexels_crop/pexels-mikhail-nilov-7626703_1080p.mp4"
+    # - "data/templates/pexels_crop/pexels-pavel-danilyuk-8627836_1080p.mp4"
+    # - "data/templates/pexels_crop/pexels-rodnae-productions-8183472_1080p.mp4"
+    # - "data/templates/pexels_crop/production_id_3762907_2160p.mp4"
+    
+    - "data/templates/pexels_crop/production_id_5205798_1080p.mp4"
+    - "data/templates/pexels_crop/production_id_4058073_2160p.mp4"
+
+
+inference_config: "configs/inference/magic_inference.yaml"
+size: [512, 512]
+# 长度一致
+L:    32
+S:    1
+I:    0
+clip: 0
+offset: 0
+max_length: null
+video_type: "condition"
+invert_video: false
+save_individual_videos: false
+
+unet_additional_kwargs:
+  unet_use_cross_frame_attention: false
+  unet_use_temporal_attention: false
+  use_motion_module: true
+  motion_module_resolutions:
+  - 1
+  - 2
+  - 4
+  - 8
+  motion_module_mid_block: false
+  motion_module_decoder_only: false
+  motion_module_type: Vanilla
+  motion_module_kwargs:
+    num_attention_heads: 8
+    num_transformer_block: 1
+    attention_block_types:
+    - Temporal_Self
+    - Temporal_Self
+    temporal_position_encoding: true
+    temporal_position_encoding_max_len: 24
+    temporal_attention_dim_div: 1
+  # Addition for image embeddings
+  use_image_condition            : true
+
+noise_scheduler_kwargs:
+  beta_start: 0.00085
+  beta_end: 0.012
+  beta_schedule: "linear"

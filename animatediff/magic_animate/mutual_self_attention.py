@@ -252,14 +252,25 @@ class ReferenceAttentionControl():
                     if not is_image:
                         self.bank = [rearrange(d.unsqueeze(1).repeat(1, video_length, 1, 1), "b t l c -> (b t) l c")[:hidden_states.shape[0]] for d in self.bank]
                     # LLZ: animate anyone
-                    # modify_norm_hidden_states = torch.cat(
-                    #     [norm_hidden_states] + self.bank, dim=1)
-                    # hidden_states_uc = self.attn1(modify_norm_hidden_states,
-                    #                               encoder_hidden_states=modify_norm_hidden_states,
-                    #                               attention_mask=attention_mask)[:, :hidden_states.shape[-2], :] + hidden_states
-                    hidden_states_uc = self.attn1(norm_hidden_states, 
-                                                encoder_hidden_states=torch.cat([norm_hidden_states] + self.bank, dim=1),
-                                                attention_mask=attention_mask) + hidden_states
+                    modify_norm_hidden_states = torch.cat(
+                        [norm_hidden_states] + self.bank, dim=1)
+                    hidden_states_uc = self.attn1(modify_norm_hidden_states,
+                                                  encoder_hidden_states=modify_norm_hidden_states,
+                                                  attention_mask=attention_mask)[:, :hidden_states.shape[-2], :] + hidden_states
+                    # LLZ: magic animate
+                    # hidden_states_uc = self.attn1(norm_hidden_states, 
+                    #                             encoder_hidden_states=torch.cat([norm_hidden_states] + self.bank, dim=1),
+                    #                             attention_mask=attention_mask) + hidden_states
+                    # LLZ: 为了避免背景污染 
+                        # 直接相加
+                        # 背景相加 和前景做attn
+                        # hidden_states相加 encoder_hidden_states用concat
+                    # conditioning_scale = 0.5
+                    # modify_norm_hidden_states = norm_hidden_states + self.bank[0] * conditioning_scale
+                    # hidden_states_uc = self.attn1(modify_norm_hidden_states, 
+                    #                             encoder_hidden_states=torch.cat([norm_hidden_states] + self.bank, dim=1),
+                    #                             attention_mask=attention_mask) + hidden_states
+                    
                     hidden_states_c = hidden_states_uc.clone()
                     _uc_mask = uc_mask.clone()
                     if do_classifier_free_guidance:

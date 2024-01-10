@@ -1,28 +1,27 @@
-dwpose_only_face: false
-froce_text_embedding_zero: false
+dwpose_only_face: true
+froce_text_embedding_zero: true
 
 image_finetune: false
 output_dir: "outputs"
 pretrained_model_path: '/data/huggingface/hub/models--runwayml--stable-diffusion-v1-5/snapshots/1d0c4ebf6ff58a5caecab40fa1406526bca4b5b9'
 pretrained_vae_path: "/data/models/pretrained_models/sd-vae-ft-mse"
-image_encoder_path: "/data/work/IP-Adapter/IP-Adapter/models/image_encoder"
-# image_encoder_path: ""
+# image_encoder_path: "/data/work/IP-Adapter/IP-Adapter/models/image_encoder"
+image_encoder_path: ""
 ip_ckpt: "/data/work/IP-Adapter/IP-Adapter/models/ip-adapter-full-face_sd15.bin"
 pretrained_appearance_encoder_path: "/data/models/pretrained_models/MagicAnimate/appearance_encoder"
 pretrained_controlnet_path: "/data/models/pretrained_models/MagicAnimate/densepose_controlnet"
-# motion_module: "/data/models/pretrained_models/MagicAnimate/temporal_attention/temporal_attention.ckpt"
-motion_module: ""
+motion_module: "/data/models/pretrained_models/MagicAnimate/temporal_attention/temporal_attention.ckpt"
 inference_config: "configs/inference/magic_inference.yaml"
 pretrained_unet_path: ""
 
 # stage1 trained
-# appearance_controlnet_motion_checkpoint_path: ""
-appearance_controlnet_motion_checkpoint_path: "/data/work/animate_based_ap_ctrl/outputs/train_stage1_w_imageencoder_celebv_nocenterface_cfg_train_image_proj_model-2024-01-05T10-48-09/checkpoints/checkpoint-steps12500.ckpt"
+appearance_controlnet_motion_checkpoint_path: ""
+# appearance_controlnet_motion_checkpoint_path: "/data/work/animate_based_ap_stage2/outputs/train_stage1_w_imageencoder_celebv-2023-12-31T00-01-25/checkpoints/checkpoint-steps2500.ckpt"
 
 unet_additional_kwargs:
   unet_use_cross_frame_attention: false
   unet_use_temporal_attention: false
-  use_motion_module: true # stage2
+  use_motion_module: false # stage1
   motion_module_resolutions:
   - 1
   - 2
@@ -42,7 +41,7 @@ unet_additional_kwargs:
     temporal_attention_dim_div: 1
 
   # Addition for image embeddings
-  use_image_condition            : true
+  use_image_condition            : false
 
 
 noise_scheduler_kwargs:
@@ -63,7 +62,7 @@ train_data:
                       ]
   resolution:         [512, 512]
   frame_stride:       1
-  video_length:       8
+  video_length:       1
   shuffle:            true
   resampled:          true
   dataset_length:     1000000
@@ -73,31 +72,33 @@ validation_data:
   prompt_videos:
     - "/data/work/animate_based_ap/data/celebv/10876-2-7eMjYXRcm-0_12_0.mp4"
     - "/data/work/animate_based_ap/data/celebv/10894-8-7ebsTST4bSw_1_0.mp4"
+    - ""
   num_inference_steps: 25
   guidance_scale: 
     - 7.5
+    - 4
     - 2
-  val_video_length: 8
+  val_video_length: 1
   sample_size: [512, 512]
   frame_stride:       1
 context:
-  context_frames: 8
+  context_frames: 1
   context_stride: 1
   context_overlap: 0
 
 # stage1 TODO: image_encoder部分？
 trainable_modules:
-  # - "appearance_encoder"
-  # - "controlnet"
-  # - "image_proj_model"
-  - "motion_module"
+  - "appearance_encoder"
+  - "controlnet"
+  - "image_proj_model"
+  # - "motion_module"
 
 
 unet_checkpoint_path: ""
 
-learning_rate:    1.e-4
-train_batch_size: 1
-num_workers: 2
+learning_rate:    1.e-5
+train_batch_size: 8
+num_workers: 4
 
 max_train_epoch:      100
 max_train_steps:      -1

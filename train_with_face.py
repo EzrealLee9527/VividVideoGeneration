@@ -46,6 +46,7 @@ from animatediff.magic_animate.controlnet import ControlNetModel
 import importlib
 from animatediff.data.dataset import WebVid10M, PexelsDataset
 import webdataset as wds
+from animatediff.data.dataset_wds import S3VideosIterableDataset
 
 def main(
 
@@ -577,14 +578,9 @@ def main(
                 guidance_scale = validation_data['guidance_scale']
                 for idx, prompt in enumerate(prompts):
                     # TODO
-                    # video_data = PexelsDataset(json_path=[prompt],
-                    #                            sample_size=sample_size, 
-                    #                            is_test=True,
-                    #                            sample_n_frames=val_video_length,
-                    #                            sample_stride=validation_data['frame_stride'])
-                    # video_data = train_dataset
-
-
+                    
+                    # print('eval data:', config.eval_data)
+                    # eval_dataset = S3VideosIterableDataset(**config.validation_data['dataset'])
                     # get pose conditions
 
 

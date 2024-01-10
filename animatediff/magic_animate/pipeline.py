@@ -811,6 +811,14 @@ class AnimationPipeline(DiffusionPipeline):
                     conditioning_scale=controlnet_conditioning_scale,
                     return_dict=False,
                 )
+                # down_block_res_samples, mid_block_res_sample = self.controlnet(
+                #     controlnet_latent_input,
+                #     t.repeat(latents.shape[2]),
+                #     encoder_hidden_states=controlnet_text_embeddings_c,
+                #     controlnet_cond=controlnet_cond_images,
+                #     conditioning_scale=controlnet_conditioning_scale,
+                #     return_dict=False,
+                # )
 
                 for j, k in enumerate(np.concatenate(np.array(context))):
                     controlnet_res_samples_cache_dict[k] = (
