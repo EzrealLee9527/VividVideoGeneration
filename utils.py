@@ -47,6 +47,10 @@ class HyperParams(metaclass=Singleton):
         )
         cls._instances[cls] = cfg
 
+    @classmethod
+    def pretty_format(cls, config) -> str:
+        return OmegaConf.to_yaml(config)
+
 
 class LoggerHelper(metaclass=Singleton):
     @classmethod

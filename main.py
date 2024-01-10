@@ -18,9 +18,11 @@ from webdataset import WebLoader
 
 
 def load_pretrain(fabric, model):
+    cfg = HP.instance()
+    if not hasattr(cfg.model, "pretrain_weight"):
+        return
     state_dict_file = "state_dict.pt"
     if fabric.is_global_zero:
-        cfg = HP.instance()
         logger = LoggerHelper.instance()
         import megfile
         from importlib.util import spec_from_file_location, module_from_spec
@@ -156,6 +158,7 @@ def main():
         LoggerHelper.disable_in_other_ranks()
         builtins.print = lambda *args: None
 
+    print(HP.pretty_format(cfg))
     # init pipeline
     pipeline = get_pipeline(cfg.model.model_id)
     # init model

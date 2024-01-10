@@ -6,18 +6,18 @@ export NCCL_IB_GID_INDEX=3
 export NCCL_IB_TC=106
 export NCCL_NET_GDR_READ=1
 export NCCL_TREE_THRESHOLD=0
-NCCL_IB_HCA=""
-for ibdev in /sys/class/infiniband/*; do
-  if [ -d "$ibdev" ]; then
-    dev_name=$(basename "$ibdev")
-    if [ -z "$NCCL_IB_HCA" ]; then
-      NCCL_IB_HCA="$dev_name"
-    else
-      NCCL_IB_HCA="$NCCL_IB_HCA,$dev_name"
-    fi
-  fi
-done
-export NCCL_IB_HCA
+# NCCL_IB_HCA=""
+# for ibdev in /sys/class/infiniband/*; do
+#   if [ -d "$ibdev" ]; then
+#     dev_name=$(basename "$ibdev")
+#     if [ -z "$NCCL_IB_HCA" ]; then
+#       NCCL_IB_HCA="$dev_name"
+#     else
+#       NCCL_IB_HCA="$NCCL_IB_HCA,$dev_name"
+#     fi
+#   fi
+# done
+export NCCL_IB_HCA="mlx5_0,mlx5_1,mlx5_2"
 
 CONFIG=$1
 DEVICES=$2
