@@ -134,7 +134,7 @@ def main():
         help="hyper-parameters of training stage, should be a yaml file",
     )
     args = parser.parse_args()
-    HP.load_config(args.config)
+    HP.load(args.config)
     cfg = HP.instance()
 
     fabric = L.Fabric(
@@ -150,6 +150,7 @@ def main():
 
     if fabric.is_global_zero:
         os.makedirs(cfg.fs.exp_dir, exist_ok=True)
+        HP.save(os.path.join(cfg.fs.exp_dir, "hyperparams.yaml"))
         fabric.logger.log_hyperparams(cfg)
 
     fabric.barrier()
@@ -158,7 +159,6 @@ def main():
         LoggerHelper.disable_in_other_ranks()
         builtins.print = lambda *args: None
 
-    print(HP.pretty_format(cfg))
     # init pipeline
     pipeline = get_pipeline(cfg.model.model_id)
     # init model

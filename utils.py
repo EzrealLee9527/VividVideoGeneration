@@ -37,7 +37,7 @@ class Singleton(type):
 
 class HyperParams(metaclass=Singleton):
     @classmethod
-    def load_config(cls, config: str) -> None:
+    def load(cls, config: str) -> None:
         cfg = OmegaConf.load(config)
         cfg.fs.exp_name = os.path.splitext(os.path.basename(config))[0]
         cfg.fs.exp_dir = os.path.join(cfg.fs.output_dir, cfg.fs.exp_name)
@@ -48,8 +48,12 @@ class HyperParams(metaclass=Singleton):
         cls._instances[cls] = cfg
 
     @classmethod
-    def pretty_format(cls, config) -> str:
-        return OmegaConf.to_yaml(config)
+    def save(cls, path: str) -> None:
+        OmegaConf.save(cls._instances[cls], path)
+
+    @classmethod
+    def pretty_format(cls) -> str:
+        return OmegaConf.to_yaml(cls._instances[cls])
 
 
 class LoggerHelper(metaclass=Singleton):
