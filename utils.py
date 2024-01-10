@@ -182,6 +182,7 @@ class TrainHelper:
         if self.fabric.is_global_zero:
             megfile.smart_sync(checkpoint, local_filename)
 
+        self.fabric.barrier()
         state = {
             "model": module,
             "optimizer": optimizer,

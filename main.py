@@ -139,8 +139,7 @@ def main():
         strategy="deepspeed_stage_3",
         precision="16-mixed",
         loggers=TensorBoardLogger(
-            root_dir=cfg.fs.exp_dir,
-            name=cfg.fs.tensorboard_dir,
+            root_dir=cfg.fs.exp_dir, name=cfg.fs.tensorboard_dir, version="train_event"
         ),
     )
     fabric.seed_everything(cfg.train.seed + fabric.global_rank)
@@ -149,6 +148,7 @@ def main():
 
     if fabric.is_global_zero:
         os.makedirs(cfg.fs.exp_dir, exist_ok=True)
+        fabric.logger.log_hyperparams(cfg)
 
     fabric.barrier()
     LoggerHelper.init_logger(log_path=cfg.fs.log_path)
