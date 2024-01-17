@@ -3,8 +3,8 @@ import math
 import einops
 import megfile
 import random
-from torchvision.transforms.functional import InterpolationMode
 import webdataset as wds
+import numpy as np
 import torch
 from torch.nn import Module
 from torchvision.transforms import Compose, Resize, CenterCrop, RandomCrop, Normalize
@@ -137,9 +137,10 @@ def _gaussian_blur2d(input, kernel_size, sigma):
 
 
 class FilterData(Module):
-    def __init__(self, video_idx: int) -> None:
+    def __init__(self, noise_mean, noise_std) -> None:
         super().__init__()
-        self.video_idx = video_idx
+        self.noise_mean = noise_mean
+        self.noise_std = noise_std
 
     @torch.no_grad()
     def forward(self, x: Tuple[Tensor, Dict]) -> Tuple[Tensor, Dict]:
@@ -147,12 +148,12 @@ class FilterData(Module):
         fps = data[2]["video_fps"]
         motion = json["tag"]["motionscore"]
         motion_bucket_id = motion * 255 if motion != -1 else -1
-        noise_aug_strength = 0.0
+        noise_aug_strength = np.exp(np.random.normal(self.noise_mean, self.noise_std))
         info = {}
         info["added_time_ids"] = torch.tensor(
             [fps, motion_bucket_id, noise_aug_strength]
         )
-        return data[self.video_idx], info
+        return data[0], info
 
 
 class ToChannelFirst(Module):
@@ -191,15 +192,6 @@ class RandomClip(Module):
 
 
 class ClipResize(Resize):
-    def __init__(
-        self,
-        size,
-        interpolation=InterpolationMode.BILINEAR,
-        max_size=None,
-        antialias=True,
-    ):
-        super().__init__(size, interpolation, max_size, antialias)
-
     @torch.no_grad()
     def forward(self, x: Tuple[Tensor, Dict]) -> Tuple[Tensor, Dict]:
         video, info = x
@@ -264,25 +256,20 @@ class ClipNormalize(Module):
     @torch.no_grad()
     def forward(self, x: Tuple[Tensor, Dict]) -> Tuple[Tensor, Dict]:
         video, info = x
-        video = video / 255
+        video = video.to(torch.float32) / 255
         # for clip
-        clip_input = video[0].unsqueeze(0)
-        clip_input = clip_input * 2.0 - 1.0
-        clip_input = _resize_with_antialiasing(clip_input, (224, 224))
-        clip_input = (clip_input + 1.0) / 2.0
-        clip_input = self.clip_normalize(clip_input)
-        clip_input = clip_input[0]
+        image = video[0].unsqueeze(0)
+        image = image * 2.0 - 1.0
+        image = _resize_with_antialiasing(image, (224, 224))
+        image = (image + 1.0) / 2.0
+        image = self.clip_normalize(image)
+        image = image[0]
         # for vae
-        vae_video_input = []
-        for frame in video:
-            vae_video_input.append(self.vae_normalize(frame))
-        vae_video_input = torch.stack(vae_video_input)
-        vae_image_input = deepcopy(vae_video_input[0])
+        video = self.vae_normalize(video)
 
         info["controlnet_cond"] = info["controlnet_cond"] / 255
-        info["clip_input"] = clip_input
-        info["vae_video_input"] = vae_video_input
-        info["vae_image_input"] = vae_image_input
+        info["image"] = image
+        info["video"] = video
         return info
 
 
@@ -298,9 +285,9 @@ def _get_transforms(config: DictConfig) -> Compose:
         use_condition_jitter = config.data.use_condition_jitter
     transforms = Compose(
         [
-            FilterData(video_idx=0),
+            FilterData(config.data.noise_mean, config.data.noise_std),
             ToChannelFirst(),
-            ClipResize(config.data.size),
+            ClipResize(config.data.size, antialias=True),
             ClipRandomCrop(config.data.size),
             RandomClip(config.data.num_frames, config.data.frame_stride),
             ParseCondition(),
@@ -326,13 +313,8 @@ def _get_data_urls(root_dirs: List[str]) -> List[str]:
 
 def collation_fn(samples):
     batch = {}
-    batch["clip_input"] = torch.stack([sample["clip_input"] for sample in samples])
-    batch["vae_image_input"] = torch.stack(
-        [sample["vae_image_input"] for sample in samples]
-    )
-    batch["vae_video_input"] = torch.stack(
-        [sample["vae_video_input"] for sample in samples]
-    )
+    batch["image"] = torch.stack([sample["image"] for sample in samples])
+    batch["video"] = torch.stack([sample["video"] for sample in samples])
     batch["controlnet_cond"] = torch.stack(
         [sample["controlnet_cond"] for sample in samples]
     )
