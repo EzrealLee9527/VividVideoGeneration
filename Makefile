@@ -1,7 +1,7 @@
 CHARGED_GROUP ?= monet_video
-CPU ?= 200
+CPU ?= 192
 GPU ?= 8
-MEM_IN_GB ?= 992
+MEM_IN_GB ?= 768
 NUM_NODES ?= 1
 CONFIG ?=
 
