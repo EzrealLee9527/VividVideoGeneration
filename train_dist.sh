@@ -28,7 +28,7 @@ MASTER_ADDR=$(cat MASTER_ADDR)
 
 lightning run model \
   --strategy deepspeed_stage_3 \
-  --precision 16-mixed \
+  --precision bf16-mixed \
   --devices ${DEVICES} \
   --num-nodes ${NUM_NODES} \
   --node-rank ${NODE_RANK} \
