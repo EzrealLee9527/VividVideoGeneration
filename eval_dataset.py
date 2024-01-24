@@ -186,10 +186,12 @@ def main(args):
 
         # >>>>>>>>>>>> get reference image conditions >>>>>>>>>>>> #
         # b c h w
-        # pixel_values_ref_img = batch["pixel_values_ref_img"].to(device, dtype=weight_type)
-        # with torch.no_grad():
-        #     pixel_values_ref_img = rearrange(pixel_values_ref_img, "b c h w -> b h w c")
+        pixel_values_ref_img0 = batch["pixel_values_ref_img"].to(device, dtype=weight_type)
+        with torch.no_grad():
+            pixel_values_ref_img0 = rearrange(pixel_values_ref_img0, "b c h w -> b h w c")
         pixel_values_ref_img = pixel_values[:1,...].to(device, dtype=weight_type)
+        print('pixel_values_ref_img0', pixel_values_ref_img0.shape, pixel_values_ref_img0.max(), pixel_values_ref_img0.min())
+        print('pixel_values_ref_img', pixel_values_ref_img.shape, pixel_values_ref_img.max(), pixel_values_ref_img.min())
         # >>>>>>>>>>>> Get the image embedding for conditioning >>>>>>>>>>>>#
         with torch.inference_mode():
             ref_pil_images = []

@@ -62,7 +62,7 @@ def crop_and_resize(frame, target_size, crop_rect=None):
         right = (width + short_edge) // 2
         bottom = (height + short_edge) // 2
     frame_cropped = frame.crop((left, top, right, bottom))
-    frame_resized = frame_cropped.resize(target_size, Image.ANTIALIAS)
+    frame_resized = frame_cropped.resize(target_size)
     return frame_resized
 
 
@@ -154,7 +154,7 @@ def main(args):
 
         if test_video.endswith('.mp4') or test_video.endswith('.gif'):
             print('test_video', test_video)
-            control = VideoReader(test_video).read()[:config.L]
+            control = VideoReader(test_video).read()[:,:,:,:3]
             print('control', control.shape)
 
             img_for_face_det = torch.tensor(control[0]).to(torch.uint8).unsqueeze(0).permute(0, 3, 1, 2)
@@ -172,13 +172,19 @@ def main(args):
                 face_rect = None
 
             if control[0].shape[:2] != size:
-                print('size', size)
-                print('control', control[0].shape[:2])
                 control = [np.array(crop_and_resize(
                     Image.fromarray(c), size, crop_rect=face_rect)) for c in control]
             if config.max_length is not None:
                 control = control[config.offset: (
                     config.offset+config.max_length)]
+            control = np.array(control)
+
+            # print(f"sampling {prompt} ...")
+            print('org control', control.shape)
+            original_length = control.shape[0]
+            if control.shape[0] % config.L > 0:
+                control = np.pad(control, ((0, config.L-control.shape[0] % config.L), (0, 0), (0, 0), (0, 0)), mode='edge')
+            print('pad control', control.shape)
 
             ##################################
             # load dwpose detector, see controlnet_aux: https://github.com/patrickvonplaten/controlnet_aux
@@ -216,10 +222,10 @@ def main(args):
             pixel_values_pose = pixel_values_pose[:, :-offset, ...]
 
         if source_image.endswith(".mp4") or source_image.endswith(".gif"):
-            source_image = Image.fromarray(VideoReader(source_image).read()[0])
+            source_image = Image.fromarray(VideoReader(source_image).read()[0][:,:,:3])
         else:
             source_image = Image.open(source_image)
-        img_for_face_det = torch.tensor(np.array(source_image)).to(torch.uint8).unsqueeze(0).permute(0, 3, 1, 2)
+        img_for_face_det = torch.tensor(np.array(source_image)[:,:,:3]).to(torch.uint8).unsqueeze(0).permute(0, 3, 1, 2)
         if config.use_face_det:
             with torch.inference_mode():
                 faces = face_detector(img_for_face_det)
@@ -230,7 +236,7 @@ def main(args):
         else:
             face_rect = None
         source_image_pil = crop_and_resize(source_image, size, crop_rect=face_rect)
-        source_image = np.array(source_image_pil)
+        source_image = np.array(source_image_pil)[:,:,:3]
 
         source_image = ((torch.Tensor(source_image).unsqueeze(
             0).to(device, dtype=weight_type) / 255.0) - 0.5) * 2
@@ -265,16 +271,14 @@ def main(args):
         print(f"current seed: {torch.initial_seed()}")
         init_latents = None
 
-        # print(f"sampling {prompt} ...")
-        # if control.shape[0] % config.L > 0:
-        #     control = np.pad(control, ((0, config.L-control.shape[0] % config.L), (0, 0), (0, 0), (0, 0)), mode='edge')
+        
         generator = torch.Generator(device=torch.device("cuda:0"))
         generator.manual_seed(torch.initial_seed())
 
-        print('source_image', source_image.max(), source_image.min())
+        # print('source_image', source_image.max(), source_image.min())
         # pixel_values_pose = (pixel_values_pose + 1.0)/2.0
-        print('pixel_values_pose', pixel_values_pose.max(),pixel_values_pose.min())
-        print('image_prompt_embeddings', image_prompt_embeddings)
+        # print('pixel_values_pose', pixel_values_pose.max(),pixel_values_pose.min())
+        # print('image_prompt_embeddings', image_prompt_embeddings)
         samples_per_video = pipeline.infer(
             source_image=source_image,
             image_prompts=image_prompt_embeddings,
@@ -284,7 +288,8 @@ def main(args):
             random_seed=random_seed,
             context=config.context,
             size=config.size,
-            froce_text_embedding_zero=config.froce_text_embedding_zero
+            froce_text_embedding_zero=config.froce_text_embedding_zero,
+            original_length=original_length,
         )
 
         if args.rank == 0:
@@ -293,8 +298,8 @@ def main(args):
                 config.source_image[idx]).split(".")[0]
             save_videos_grid(
                 samples_per_video, f"{savedir}/videos/{source_name}_{video_name}.mp4")
-            # save_videos_grid(
-            #     samples_per_video[-1:], f"{savedir}/videos/{source_name}_{video_name}.gif")
+            save_videos_grid(
+                samples_per_video[-1:], f"{savedir}/videos/{source_name}_{video_name}.gif")
             # save_videos_grid(
             #     samples_per_video, f"{savedir}/videos/{source_name}_{video_name}/grid.gif")
 

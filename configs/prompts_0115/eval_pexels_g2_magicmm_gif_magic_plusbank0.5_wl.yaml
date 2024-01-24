@@ -1,0 +1,156 @@
+use_dwpose: true
+dwpose_only_face: true
+use_face_det: false
+froce_text_embedding_zero: false
+
+# pretrained_model_path: "runwayml/stable-diffusion-v1-5"
+pretrained_model_path: '/data/huggingface/hub/models--runwayml--stable-diffusion-v1-5/snapshots/1d0c4ebf6ff58a5caecab40fa1406526bca4b5b9'
+pretrained_vae_path: "/data/models/pretrained_models/sd-vae-ft-mse"
+pretrained_appearance_encoder_path: "/data/models/pretrained_models/MagicAnimate/appearance_encoder"
+pretrained_controlnet_path: "/data/models/pretrained_models/MagicAnimate/densepose_controlnet"
+pretrained_unet_path: ""
+image_encoder_path: "/data/work/IP-Adapter/IP-Adapter/models/image_encoder"
+# image_encoder_path: ""
+appearance_controlnet_motion_checkpoint_path: "/data/work/animate_based_ap_ctrl/outputs/train_stage1_w_imageencoder_celebv_nocenterface_cfg_train_zeroembed_plusbank0.5_ipadapter-2024-01-11T14-08-22/checkpoints/checkpoint-steps19500.ckpt"
+# motion_module: ""
+# 如果指定motion_module，appearance_controlnet_motion_checkpoint_path中的motion会被覆盖
+motion_module: "/data/models/pretrained_models/MagicAnimate/temporal_attention/temporal_attention.ckpt"
+
+savename: null
+
+fusion_blocks: "midup"
+
+seed:           42
+steps:          25
+guidance_scale: 2
+
+context:
+  context_frames: 16
+  context_stride: 1
+  context_overlap: 4
+
+
+source_image:
+    # - "/data/work/animate_based_ap_ctrl/data/templates/stars/7EE7A4DC-5921-4bb6-AA5C-B5698D2EE7CF.png"
+    # - "/data/work/animate_based_ap_ctrl/data/templates/stars/7EE7A4DC-5921-4bb6-AA5C-B5698D2EE7CF.png"
+    # - "/data/work/animate_based_ap_ctrl/data/templates/stars/61B17EC6-4F7E-42ba-B843-73451754F6FC.png"
+    # - "/data/work/animate_based_ap_ctrl/data/templates/stars/61B17EC6-4F7E-42ba-B843-73451754F6FC.png"
+    # - "/data/work/animate_based_ap_ctrl/data/templates/dai/sunwei_crop.jpg"
+    # - "/data/work/animate_based_ap_ctrl/data/templates/dai/sunwei_crop.jpg"
+    # - "/data/work/animate_based_ap_ctrl/data/templates/dai/sunwei_crop.jpg"
+    # - "/data/work/animate_based_ap_ctrl/data/templates/dai/sunwei_crop.jpg"
+    # - "/data/work/animate_based_ap_ctrl/data/templates/dai/sunwei_crop.jpg"
+    # - "/data/work/animate_based_ap_ctrl/data/templates/dai/sunwei_crop.jpg"
+    # - "/data/work/animate_based_ap_ctrl/data/templates/dai/sunwei_crop.jpg"
+    # - "/data/work/animate_based_ap_ctrl/data/templates/dai/sunwei_crop.jpg"
+    # - "/data/work/animate_based_ap_ctrl/data/templates/dai/sunwei_crop.jpg"
+
+    - "/data/work/VividVideoGeneration/data/templates/stars/wulei.jpg"
+    - "/data/work/VividVideoGeneration/data/templates/stars/wulei.jpg"
+    - "/data/work/VividVideoGeneration/data/templates/stars/wulei.jpg"
+    - "/data/work/VividVideoGeneration/data/templates/stars/wulei.jpg"
+    - "/data/work/VividVideoGeneration/data/templates/stars/wulei.jpg"
+    - "/data/work/VividVideoGeneration/data/templates/stars/wulei.jpg"
+    - "/data/work/VividVideoGeneration/data/templates/stars/wulei.jpg"
+    - "/data/work/VividVideoGeneration/data/templates/stars/wulei.jpg"
+    - "/data/work/VividVideoGeneration/data/templates/stars/wulei.jpg"
+
+    # - "/data/work/animate_based_ap_ctrl/data/templates/dai/sunwei_crop.jpg"
+    # - "/data/work/animate_based_ap_ctrl/data/templates/dai/sunwei_crop.jpg"
+    # - "/data/work/animate_based_ap_ctrl/data/templates/dai/sunwei_crop.jpg"  
+    # - "/data/work/animate_based_ap_ctrl/data/templates/dai/cat2.jpg"
+    # - "/data/work/animate_based_ap_ctrl/data/templates/dai/cat2.jpg"
+    # - "/data/work/animate_based_ap_ctrl/data/templates/dai/cat2.jpg"
+    # - "/data/work/animate_based_ap_ctrl/data/templates/dai/cat2.jpg"
+    # - "/data/work/animate_based_ap_ctrl/data/templates/dai/cat2.jpg"
+    # - "/data/work/animate_based_ap_ctrl/data/templates/dai/cat2.jpg"
+    # - "/data/work/animate_based_ap_ctrl/data/templates/dai/cat2.jpg"
+    # - "/data/work/animate_based_ap_ctrl/data/templates/dai/cat2.jpg"
+    # - "/data/work/animate_based_ap_ctrl/data/templates/dai/cat2.jpg"
+
+    # - "/data/work/animate_based_ap_ctrl/data/templates/dai/cat3.jpg"
+    # - "/data/work/animate_based_ap_ctrl/data/templates/dai/cat3.jpg"
+    # - "/data/work/animate_based_ap_ctrl/data/templates/dai/cat3.jpg"
+    # - "/data/work/animate_based_ap_ctrl/data/templates/dai/cat3.jpg"
+    # - "/data/work/animate_based_ap_ctrl/data/templates/dai/cat3.jpg"
+    # - "/data/work/animate_based_ap_ctrl/data/templates/dai/cat3.jpg"
+    # - "/data/work/animate_based_ap_ctrl/data/templates/dai/cat3.jpg"
+    # - "/data/work/animate_based_ap_ctrl/data/templates/dai/cat3.jpg"
+    # - "/data/work/animate_based_ap_ctrl/data/templates/dai/cat3.jpg"
+
+video_path:
+    # - "/data/work/animate_based_ap_ctrl/data/templates/gifs/fansile.gif"
+    # - "/data/work/animate_based_ap_ctrl/data/templates/gifs/shuizanchengshuifandui.gif"
+    # - "/data/work/animate_based_ap_ctrl/data/templates/gifs/fansile.gif"
+    # - "/data/work/animate_based_ap_ctrl/data/templates/gifs/shuizanchengshuifandui.gif"
+    # - "/data/work/animate_based_ap_ctrl/data/templates/dai/001.gif"
+    # - "/data/work/animate_based_ap_ctrl/data/templates/dai/002.gif"
+    # - "/data/work/animate_based_ap_ctrl/data/templates/dai/003.gif"
+    # - "/data/work/animate_based_ap_ctrl/data/templates/dai/004.gif"
+    # - "/data/work/animate_based_ap_ctrl/data/templates/dai/005.gif"
+    # - "/data/work/animate_based_ap_ctrl/data/templates/dai/006.gif"
+    # - "/data/work/animate_based_ap_ctrl/data/templates/dai/007.gif"
+    # - "/data/work/animate_based_ap_ctrl/data/templates/dai/008.gif"
+    # - "/data/work/animate_based_ap_ctrl/data/templates/dai/009.gif"
+    - "/data/work/animate_based_ap_ctrl/data/templates/wulei/001.gif"
+    - "/data/work/animate_based_ap_ctrl/data/templates/wulei/002.gif"
+    - "/data/work/animate_based_ap_ctrl/data/templates/wulei/003.gif"
+    - "/data/work/animate_based_ap_ctrl/data/templates/wulei/004.gif"
+    - "/data/work/animate_based_ap_ctrl/data/templates/wulei/005.gif"
+    - "/data/work/animate_based_ap_ctrl/data/templates/wulei/006.gif"
+    - "/data/work/animate_based_ap_ctrl/data/templates/wulei/007.gif"
+    - "/data/work/animate_based_ap_ctrl/data/templates/wulei/008.gif"
+    - "/data/work/animate_based_ap_ctrl/data/templates/wulei/009.gif"
+
+    # - "/data/work/animate_based_ap_ctrl/data/templates/fanzhiyi/fanzhiyi.gif"
+    # - "/data/work/animate_based_ap_ctrl/data/templates/fanzhiyi/fanzhiyi1.gif"
+    # - "/data/work/animate_based_ap_ctrl/data/templates/fanzhiyi/fanzhiyi2.gif"
+    # - "/data/work/animate_based_ap_ctrl/data/templates/fanzhiyi/fanzhiyi.gif"
+    # - "/data/work/animate_based_ap_ctrl/data/templates/fanzhiyi/fanzhiyi1.gif"
+    # - "/data/work/animate_based_ap_ctrl/data/templates/fanzhiyi/fanzhiyi2.gif"
+  
+
+  
+
+inference_config: "configs/inference/magic_inference.yaml"
+size: [512, 512]
+max_count:          1000
+# 长度一致
+L:    16
+S:    1
+I:    0
+clip: 0
+offset: 0
+max_length: null
+video_type: "condition"
+invert_video: false
+save_individual_videos: false
+
+unet_additional_kwargs:
+  unet_use_cross_frame_attention: false
+  unet_use_temporal_attention: false
+  use_motion_module: true
+  motion_module_resolutions:
+  - 1
+  - 2
+  - 4
+  - 8
+  motion_module_mid_block: false
+  motion_module_decoder_only: false
+  motion_module_type: Vanilla
+  motion_module_kwargs:
+    num_attention_heads: 8
+    num_transformer_block: 1
+    attention_block_types:
+    - Temporal_Self
+    - Temporal_Self
+    temporal_position_encoding: true
+    temporal_position_encoding_max_len: 24
+    temporal_attention_dim_div: 1
+  # Addition for image embeddings
+  use_image_condition            : true
+
+noise_scheduler_kwargs:
+  beta_start: 0.00085
+  beta_end: 0.012
+  beta_schedule: "linear"

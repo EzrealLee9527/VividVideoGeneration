@@ -41,7 +41,7 @@ from transformers import CLIPTextModel, CLIPTokenizer
 
 from diffusers.configuration_utils import FrozenDict
 from diffusers.models import AutoencoderKL
-from diffusers.pipeline_utils import DiffusionPipeline
+from diffusers import DiffusionPipeline
 from diffusers.schedulers import (
     DDIMScheduler,
     DPMSolverMultistepScheduler,
@@ -362,11 +362,31 @@ class AnimationPipeline(DiffusionPipeline):
                     shape, generator=generator, device=rand_device, dtype=dtype).to(device)
 
             latents = latents.repeat(1, 1, video_length // clip_length, 1, 1)
+
+            # shared noise
+            # shape_single = (
+            #     batch_size, num_channels_latents, 1, height // self.vae_scale_factor,
+            #     width // self.vae_scale_factor)
+            # latents = torch.randn(
+            #         shape_single, generator=generator, device=rand_device, dtype=dtype).to(device)
+            # latents_base = latents.repeat(1, 1, video_length, 1, 1)
+            # shape_all = (
+            #     batch_size, num_channels_latents, video_length, height // self.vae_scale_factor,
+            #     width // self.vae_scale_factor)
+            # latents_residual = torch.randn(
+            #         shape_all, generator=generator, device=rand_device, dtype=dtype).to(device)
+            # base_weight = torch.tensor(1.0).to(device)
+            # latents = latents_base * torch.sqrt(base_weight) + latents_residual * torch.sqrt(1-base_weight)
+
+
         else:
             if latents.shape != shape:
                 raise ValueError(
                     f"Unexpected latents shape, got {latents.shape}, expected {shape}")
             latents = latents.to(device)
+
+        # LLZ: same noise
+        latents = latents[:,:,:1,:,:].repeat(1, 1, video_length, 1, 1)
 
         # scale the initial noise by the standard deviation required by the scheduler
         latents = latents * self.scheduler.init_noise_sigma

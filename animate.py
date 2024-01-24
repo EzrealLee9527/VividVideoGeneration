@@ -197,7 +197,8 @@ class MagicAnimate(torch.nn.Module):
             self.L = config['validation_data']['val_video_length']
         print("Initialization Done!")
 
-    def infer(self, source_image, image_prompts, motion_sequence, random_seed, step, guidance_scale, context, size=(512, 768),froce_text_embedding_zero=False):
+    def infer(self, source_image, image_prompts, motion_sequence, random_seed, step, guidance_scale, context, original_length,
+              size=(512, 768),froce_text_embedding_zero=False):
         prompt = n_prompt = ""
         random_seed = int(random_seed)
         step = int(step)
@@ -226,7 +227,7 @@ class MagicAnimate(torch.nn.Module):
         B, H, W, C = source_image.shape
 
         init_latents = None
-        original_length = control.shape[1]
+        # original_length = control.shape[1]
         # offset = control.shape[1] % self.L
         # if offset > 0:
         #     control= control[:,:-offset,...]
@@ -266,8 +267,7 @@ class MagicAnimate(torch.nn.Module):
         # source_images = np.array([source_image[0].cpu()] * original_length)
         # source_images = rearrange(torch.from_numpy(source_images), "t h w c -> 1 c t h w") / 255.0
 
-        print('source_image1', source_image.shape)
-        print('control1', control.shape)
+        
 
         source_images = rearrange(source_image[:1,...].repeat(original_length,1,1,1), "t h w c -> 1 c t h w") 
         source_images = (source_images+1.0)/2.0
@@ -278,6 +278,10 @@ class MagicAnimate(torch.nn.Module):
         samples_per_video.append(control[:, :, :original_length].cpu())
 
         samples_per_video.append(sample[:, :, :original_length])
+        print('saving')
+        print('source_images', source_images.shape)
+        print('control', control[:, :, :original_length].shape)
+        print('sample', sample[:, :, :original_length].shape)
 
         samples_per_video = torch.cat(samples_per_video)
 

@@ -455,7 +455,8 @@ def main(
                         image_emb_neg = image_encoder(clip_image_neg.to(local_rank, dtype=weight_type),
                                                         output_hidden_states=True).hidden_states[-2]
 
-                        image_emb = torch.cat([image_emb_neg, image_emb])
+                        # image_emb = torch.cat([image_emb_neg, image_emb])
+                        image_emb = torch.cat([torch.zeros_like(image_emb), image_emb])
 
                         encoder_hidden_states_val.append(image_emb)
                     
@@ -475,7 +476,6 @@ def main(
                 
                 # print('encoder_hidden_states', encoder_hidden_states.shape)
                 # print('encoder_hidden_states_val', encoder_hidden_states_val.shape)
-            # project from (batch_size, 257, 1280) to (batch_size, 16, 768)
         
             # encoder_hidden_states = model.unet.image_proj_model(encoder_hidden_states)
             # encoder_hidden_states_val = model.unet.image_proj_model(encoder_hidden_states_val)
@@ -604,7 +604,8 @@ def main(
                         guidance_scale=guidance_scale[idx],
                         context=context,
                         size=(sample_size[1], sample_size[0]),
-                        froce_text_embedding_zero=config['froce_text_embedding_zero']
+                        froce_text_embedding_zero=config['froce_text_embedding_zero'],
+                        original_length=val_video_length,
                     )
                     # save_videos_grid(sample, f"{output_dir}/samples/sample-{global_step}/{idx}.gif")
                     samples.append(sample)

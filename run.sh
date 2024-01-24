@@ -37,7 +37,7 @@ MASTER_ADDR=$(cat hostfile.txt)
 echo "MASTER_ADDR is : $MASTER_ADDR"
 PYTHONPATH="$(dirname $0)/..":$PYTHONPATH \
 
-export NCCL_IB_HCA==mlx5_0
+export NCCL_IB_HCA=mlx5_0
 
 accelerate launch --config_file $ACC_CONFIG --gpu_ids all --use_deepspeed --num_processes $GPUS \
 --num_machines $NNODES --machine_rank $NODE_RANK --main_process_ip $MASTER_ADDR --main_process_port $PORT \
