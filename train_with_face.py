@@ -117,6 +117,7 @@ def main(
         froce_text_embedding_zero = False,
 
         ip_ckpt=None,
+        dwpose=None,
 
         
 ):
@@ -164,11 +165,10 @@ def main(
 
     # load dwpose detector, see controlnet_aux: https://github.com/patrickvonplaten/controlnet_aux
     # specify configs, ckpts and device, or it will be downloaded automatically and use cpu by default
-    det_config = '/data/models/controlnet_aux/src/controlnet_aux/dwpose/yolox_config/yolox_l_8xb8-300e_coco.py'
-    det_ckpt = '/data/models/controlnet_aux/yolox_l_8x8_300e_coco_20211126_140236-d3bd2b23.pth'
-    pose_config = '/data/models/controlnet_aux/src/controlnet_aux/dwpose/dwpose_config/dwpose-l_384x288.py'
-    pose_ckpt = '/data/models/controlnet_aux/dw-ll_ucoco_384.pth'
-
+    det_config = dwpose['det_config']
+    det_ckpt = dwpose['det_ckpt']
+    pose_config = dwpose['pose_config']
+    pose_ckpt = dwpose['pose_ckpt']
     if dwpose_only_face == True:
         from controlnet_aux_lib import DWposeDetector
     else:
