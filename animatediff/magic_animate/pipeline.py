@@ -386,7 +386,7 @@ class AnimationPipeline(DiffusionPipeline):
             latents = latents.to(device)
 
         # LLZ: same noise
-        latents = latents[:,:,:1,:,:].repeat(1, 1, video_length, 1, 1)
+        # latents = latents[:,:,:1,:,:].repeat(1, 1, video_length, 1, 1)
 
         # scale the initial noise by the standard deviation required by the scheduler
         latents = latents * self.scheduler.init_noise_sigma
