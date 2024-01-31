@@ -1,5 +1,11 @@
 import os
 def volces_get_worker_cnt_worldsize():
+    
+    
+    if os.environ.get("RLAUNCH_REPLICA") and os.environ.get("RLAUNCH_REPLICA_TOTAL"):
+        print("Detect rlaunch replica mode")
+        return int(os.environ.get("RLAUNCH_REPLICA")), int(os.environ.get("RLAUNCH_REPLICA_TOTAL"))
+    
     hostname = os.environ.get("HOSTNAME",None) # only work for volces
     if 'worker' not in hostname: # hacky code
         hostname = None

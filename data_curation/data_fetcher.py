@@ -278,7 +278,8 @@ def fetch_miaoji_duitang():
             
 
 __BLACK_LIST = [
-    "熊世界","纪录",'Discovery',"History","IMAX及其他",'宇宙星辰太空地球'
+    "熊世界","纪录",'Discovery',"History","IMAX及其他",'宇宙星辰太空地球','国家地理','数学和更新地平线','NHK','IMAX及其它'
+    'CH4+Netflix+PBS','阿波罗','8K'
 ]
 
 

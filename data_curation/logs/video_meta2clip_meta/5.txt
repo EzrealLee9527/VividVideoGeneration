@@ -1,6 +1,1715 @@
 ------------------------------------------------5/8-------------------------------------------------
 Video files : 1068
-0it [00:00, ?it/s]/usr/local/lib/python3.10/dist-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and may be removed in the future, please use 'weights' instead.
+0it [00:00, ?it/s]2024-01-11 10:39:38.647698098 [W:onnxruntime:, session_state.cc:1162 VerifyEachNodeIsAssignedToAnEp] Some nodes were not assigned to the preferred execution providers which may or may not have an negative impact on performance. e.g. ORT explicitly assigns shape related ops to CPU to improve perf.
+2024-01-11 10:39:38.647726387 [W:onnxruntime:, session_state.cc:1164 VerifyEachNodeIsAssignedToAnEp] Rerunning with verbose output on a non-minimal build will show node assignments.
+/usr/local/lib/python3.10/dist-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and may be removed in the future, please use 'weights' instead.
   warnings.warn(
 /usr/local/lib/python3.10/dist-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=None`.
   warnings.warn(msg)
+processing s3://ljj/Datasets/Raw/movie/20231228/06.CH4+Netflix+PBS 147G/NetFlix.11月13日.巴黎恐袭(内封中英字幕)/11月13日.巴黎恐袭.November.13.Attack.on.Paris.S01E03.720p.WEB-DL.x264.中英字幕-Fantopia.mp4
+Sync time : 3.58
+Sync to /data/tmp/4cbdef087eff0049f1e74859aecb5a8332dfa606654d368c7dc2433c.mp4
+
+Detected: 0 | Progress:   0%|          | 0/84358 [00:00<?, ?frames/s][A
+Detected: 0 | Progress:   0%|          | 54/84358 [00:00<02:37, 535.12frames/s][A
+Detected: 0 | Progress:   0%|          | 116/84358 [00:00<02:24, 583.38frames/s][A
+Detected: 0 | Progress:   0%|          | 202/84358 [00:00<01:59, 704.54frames/s][A
+Detected: 0 | Progress:   0%|          | 282/84358 [00:00<01:54, 736.73frames/s][A
+Detected: 0 | Progress:   0%|          | 368/84358 [00:00<01:48, 776.77frames/s][A
+Detected: 0 | Progress:   1%|          | 448/84358 [00:00<01:47, 780.04frames/s][A
+Detected: 0 | Progress:   1%|          | 528/84358 [00:00<01:47, 781.49frames/s][A
+Detected: 0 | Progress:   1%|          | 614/84358 [00:00<01:44, 800.37frames/s][A
+Detected: 0 | Progress:   1%|          | 696/84358 [00:00<01:46, 787.52frames/s][A
+Detected: 0 | Progress:   1%|          | 778/84358 [00:01<01:45, 791.94frames/s][A
+Detected: 0 | Progress:   1%|          | 860/84358 [00:01<01:44, 796.42frames/s][A
+Detected: 0 | Progress:   1%|          | 940/84358 [00:01<01:46, 783.20frames/s][A
+Detected: 0 | Progress:   1%|          | 1020/84358 [00:01<03:01, 459.16frames/s][A
+Detected: 0 | Progress:   1%|▏         | 1082/84358 [00:01<03:30, 395.99frames/s][A
+Detected: 0 | Progress:   1%|▏         | 1134/84358 [00:02<04:11, 331.32frames/s][A
+Detected: 0 | Progress:   1%|▏         | 1178/84358 [00:02<04:39, 297.52frames/s][A
+Detected: 0 | Progress:   1%|▏         | 1216/84358 [00:02<04:45, 290.92frames/s][A
+Detected: 0 | Progress:   1%|▏         | 1252/84358 [00:02<04:36, 300.92frames/s][A
+Detected: 0 | Progress:   2%|▏         | 1292/84358 [00:02<04:18, 321.18frames/s][A
+Detected: 0 | Progress:   2%|▏         | 1346/84358 [00:02<03:43, 371.13frames/s][A
+Detected: 0 | Progress:   2%|▏         | 1398/84358 [00:02<03:25, 402.86frames/s][A
+Detected: 0 | Progress:   2%|▏         | 1452/84358 [00:02<03:09, 436.91frames/s][A
+Detected: 0 | Progress:   2%|▏         | 1506/84358 [00:02<02:59, 461.90frames/s][A
+Detected: 0 | Progress:   2%|▏         | 1556/84358 [00:03<02:58, 462.82frames/s][A
+Detected: 0 | Progress:   2%|▏         | 1612/84358 [00:03<02:49, 487.83frames/s][A
+Detected: 0 | Progress:   2%|▏         | 1666/84358 [00:03<02:46, 496.28frames/s][A
+Detected: 0 | Progress:   2%|▏         | 1718/84358 [00:03<02:51, 480.54frames/s][A
+Detected: 0 | Progress:   2%|▏         | 1768/84358 [00:03<02:52, 479.41frames/s][A
+Detected: 0 | Progress:   2%|▏         | 1830/84358 [00:03<02:40, 514.10frames/s][A
+Detected: 0 | Progress:   2%|▏         | 1888/84358 [00:03<02:35, 529.33frames/s][A
+Detected: 0 | Progress:   2%|▏         | 1948/84358 [00:03<02:30, 545.90frames/s][A
+Detected: 0 | Progress:   2%|▏         | 2004/84358 [00:03<02:31, 542.60frames/s][A
+Detected: 0 | Progress:   2%|▏         | 2064/84358 [00:04<02:28, 555.01frames/s][A
+Detected: 0 | Progress:   3%|▎         | 2120/84358 [00:04<02:32, 538.68frames/s][A
+Detected: 0 | Progress:   3%|▎         | 2178/84358 [00:04<02:30, 547.32frames/s][A
+Detected: 0 | Progress:   3%|▎         | 2234/84358 [00:04<02:31, 543.73frames/s][A
+Detected: 0 | Progress:   3%|▎         | 2290/84358 [00:04<02:30, 543.68frames/s][A
+Detected: 0 | Progress:   3%|▎         | 2350/84358 [00:04<02:26, 558.72frames/s][A
+Detected: 0 | Progress:   3%|▎         | 2406/84358 [00:04<02:47, 489.74frames/s][A
+Detected: 0 | Progress:   3%|▎         | 2458/84358 [00:04<02:56, 464.89frames/s][A
+Detected: 0 | Progress:   3%|▎         | 2506/84358 [00:04<03:02, 448.87frames/s][A
+Detected: 0 | Progress:   3%|▎         | 2552/84358 [00:05<03:01, 449.69frames/s][A
+Detected: 0 | Progress:   3%|▎         | 2598/84358 [00:05<03:05, 439.80frames/s][A
+Detected: 0 | Progress:   3%|▎         | 2644/84358 [00:05<03:03, 444.97frames/s][A
+Detected: 0 | Progress:   3%|▎         | 2698/84358 [00:05<02:53, 469.37frames/s][A
+Detected: 0 | Progress:   3%|▎         | 2756/84358 [00:05<02:44, 494.88frames/s][A
+Detected: 0 | Progress:   3%|▎         | 2814/84358 [00:05<02:40, 506.95frames/s][A
+Detected: 0 | Progress:   3%|▎         | 2872/84358 [00:05<02:35, 524.81frames/s][A
+Detected: 0 | Progress:   3%|▎         | 2926/84358 [00:05<02:42, 501.66frames/s][A
+Detected: 0 | Progress:   4%|▎         | 2978/84358 [00:05<02:47, 484.86frames/s][A
+Detected: 0 | Progress:   4%|▎         | 3028/84358 [00:06<02:54, 465.42frames/s][A
+Detected: 0 | Progress:   4%|▎         | 3076/84358 [00:06<02:55, 463.00frames/s][A
+Detected: 0 | Progress:   4%|▎         | 3124/84358 [00:06<02:56, 460.47frames/s][A
+Detected: 0 | Progress:   4%|▍         | 3172/84358 [00:06<03:05, 436.68frames/s][A
+Detected: 0 | Progress:   4%|▍         | 3228/84358 [00:06<02:53, 467.65frames/s][A
+Detected: 0 | Progress:   4%|▍         | 3286/84358 [00:06<02:43, 495.07frames/s][A
+Detected: 0 | Progress:   4%|▍         | 3336/84358 [00:06<02:43, 495.36frames/s][A
+Detected: 0 | Progress:   4%|▍         | 3390/84358 [00:06<02:40, 504.33frames/s][A
+Detected: 0 | Progress:   4%|▍         | 3442/84358 [00:06<02:45, 490.17frames/s][A
+Detected: 0 | Progress:   4%|▍         | 3492/84358 [00:07<02:53, 466.45frames/s][A
+Detected: 0 | Progress:   4%|▍         | 3540/84358 [00:07<02:55, 459.73frames/s][A
+Detected: 0 | Progress:   4%|▍         | 3588/84358 [00:07<02:56, 456.70frames/s][A
+Detected: 0 | Progress:   4%|▍         | 3638/84358 [00:07<02:54, 461.98frames/s][A
+Detected: 0 | Progress:   4%|▍         | 3686/84358 [00:07<03:01, 443.59frames/s][A
+Detected: 0 | Progress:   4%|▍         | 3734/84358 [00:07<02:59, 448.47frames/s][A
+Detected: 0 | Progress:   4%|▍         | 3780/84358 [00:07<03:03, 438.93frames/s][A
+Detected: 0 | Progress:   5%|▍         | 3826/84358 [00:07<03:08, 426.96frames/s][A
+Detected: 0 | Progress:   5%|▍         | 3878/84358 [00:07<02:58, 451.74frames/s][A
+Detected: 0 | Progress:   5%|▍         | 3934/84358 [00:07<02:47, 479.17frames/s][A
+Detected: 0 | Progress:   5%|▍         | 3992/84358 [00:08<02:38, 506.77frames/s][A
+Detected: 0 | Progress:   5%|▍         | 4048/84358 [00:08<02:35, 516.41frames/s][A
+Detected: 0 | Progress:   5%|▍         | 4102/84358 [00:08<02:34, 518.89frames/s][A
+Detected: 0 | Progress:   5%|▍         | 4156/84358 [00:08<02:36, 511.22frames/s][A
+Detected: 0 | Progress:   5%|▍         | 4208/84358 [00:08<02:43, 491.60frames/s][A
+Detected: 0 | Progress:   5%|▌         | 4258/84358 [00:08<02:52, 464.36frames/s][A
+Detected: 0 | Progress:   5%|▌         | 4306/84358 [00:08<03:06, 428.17frames/s][A
+Detected: 0 | Progress:   5%|▌         | 4350/84358 [00:08<03:08, 425.22frames/s][A
+Detected: 0 | Progress:   5%|▌         | 4398/84358 [00:08<03:03, 435.08frames/s][A
+Detected: 0 | Progress:   5%|▌         | 4444/84358 [00:09<03:01, 440.72frames/s][A
+Detected: 0 | Progress:   5%|▌         | 4490/84358 [00:09<03:04, 432.87frames/s][A
+Detected: 0 | Progress:   5%|▌         | 4534/84358 [00:09<03:03, 434.16frames/s][A
+Detected: 0 | Progress:   5%|▌         | 4578/84358 [00:09<03:08, 423.57frames/s][A
+Detected: 0 | Progress:   5%|▌         | 4622/84358 [00:09<03:10, 417.98frames/s][A
+Detected: 0 | Progress:   6%|▌         | 4664/84358 [00:09<03:18, 400.59frames/s][A
+Detected: 0 | Progress:   6%|▌         | 4708/84358 [00:09<03:15, 408.04frames/s][A
+Detected: 0 | Progress:   6%|▌         | 4758/84358 [00:09<03:04, 430.46frames/s][A
+Detected: 0 | Progress:   6%|▌         | 4810/84358 [00:09<02:54, 455.94frames/s][A
+Detected: 0 | Progress:   6%|▌         | 4858/84358 [00:10<02:53, 457.69frames/s][A
+Detected: 0 | Progress:   6%|▌         | 4904/84358 [00:10<03:03, 433.98frames/s][A
+Detected: 0 | Progress:   6%|▌         | 4950/84358 [00:10<03:00, 438.87frames/s][A
+Detected: 0 | Progress:   6%|▌         | 4996/84358 [00:10<02:58, 443.55frames/s][A
+Detected: 0 | Progress:   6%|▌         | 5048/84358 [00:10<02:50, 465.32frames/s][A
+Detected: 0 | Progress:   6%|▌         | 5108/84358 [00:10<02:37, 501.95frames/s][A
+Detected: 0 | Progress:   6%|▌         | 5160/84358 [00:10<02:39, 496.90frames/s][A
+Detected: 0 | Progress:   6%|▌         | 5218/84358 [00:10<02:34, 512.42frames/s][A
+Detected: 0 | Progress:   6%|▌         | 5270/84358 [00:10<02:37, 501.02frames/s][A
+Detected: 0 | Progress:   6%|▋         | 5322/84358 [00:11<02:44, 481.50frames/s][A
+Detected: 0 | Progress:   6%|▋         | 5372/84358 [00:11<02:53, 456.32frames/s][A
+Detected: 0 | Progress:   6%|▋         | 5418/84358 [00:11<02:55, 450.52frames/s][A
+Detected: 0 | Progress:   6%|▋         | 5466/84358 [00:11<02:53, 455.36frames/s][A
+Detected: 0 | Progress:   7%|▋         | 5524/84358 [00:11<02:41, 486.73frames/s][A
+Detected: 0 | Progress:   7%|▋         | 5576/84358 [00:11<02:39, 493.16frames/s][A
+Detected: 0 | Progress:   7%|▋         | 5628/84358 [00:11<02:38, 497.49frames/s][A
+Detected: 0 | Progress:   7%|▋         | 5686/84358 [00:11<02:32, 515.51frames/s][A
+Detected: 0 | Progress:   7%|▋         | 5738/84358 [00:11<02:32, 514.02frames/s][A
+Detected: 0 | Progress:   7%|▋         | 5790/84358 [00:11<02:36, 502.41frames/s][A
+Detected: 0 | Progress:   7%|▋         | 5842/84358 [00:12<02:42, 484.29frames/s][A
+Detected: 0 | Progress:   7%|▋         | 5892/84358 [00:12<02:44, 476.20frames/s][A
+Detected: 0 | Progress:   7%|▋         | 5940/84358 [00:12<02:48, 464.09frames/s][A
+Detected: 0 | Progress:   7%|▋         | 5990/84358 [00:12<02:47, 469.13frames/s][A
+Detected: 0 | Progress:   7%|▋         | 6040/84358 [00:12<02:45, 473.42frames/s][A
+Detected: 0 | Progress:   7%|▋         | 6090/84358 [00:12<02:45, 472.56frames/s][A
+Detected: 0 | Progress:   7%|▋         | 6140/84358 [00:12<02:44, 474.57frames/s][A
+Detected: 0 | Progress:   7%|▋         | 6188/84358 [00:12<02:49, 461.61frames/s][A
+Detected: 0 | Progress:   7%|▋         | 6238/84358 [00:12<02:46, 468.36frames/s][A
+Detected: 0 | Progress:   7%|▋         | 6286/84358 [00:13<02:50, 457.45frames/s][A
+Detected: 0 | Progress:   8%|▊         | 6338/84358 [00:13<02:45, 470.18frames/s][A
+Detected: 0 | Progress:   8%|▊         | 6386/84358 [00:13<02:48, 463.64frames/s][A
+Detected: 0 | Progress:   8%|▊         | 6434/84358 [00:13<02:47, 465.56frames/s][A
+Detected: 0 | Progress:   8%|▊         | 6482/84358 [00:13<02:48, 463.02frames/s][A
+Detected: 0 | Progress:   8%|▊         | 6536/84358 [00:13<02:40, 484.91frames/s][A
+Detected: 0 | Progress:   8%|▊         | 6590/84358 [00:13<02:36, 498.03frames/s][A
+Detected: 0 | Progress:   8%|▊         | 6640/84358 [00:13<02:41, 481.15frames/s][A
+Detected: 0 | Progress:   8%|▊         | 6692/84358 [00:13<02:38, 488.57frames/s][A
+Detected: 0 | Progress:   8%|▊         | 6744/84358 [00:13<02:36, 494.61frames/s][A
+Detected: 0 | Progress:   8%|▊         | 6794/84358 [00:14<02:50, 454.50frames/s][A
+Detected: 0 | Progress:   8%|▊         | 6842/84358 [00:14<02:50, 453.79frames/s][A
+Detected: 0 | Progress:   8%|▊         | 6888/84358 [00:14<02:50, 453.76frames/s][A
+Detected: 0 | Progress:   8%|▊         | 6936/84358 [00:14<02:48, 459.58frames/s][A
+Detected: 0 | Progress:   8%|▊         | 6984/84358 [00:14<02:56, 438.63frames/s][A
+Detected: 0 | Progress:   8%|▊         | 7036/84358 [00:14<02:49, 456.65frames/s][A
+Detected: 0 | Progress:   8%|▊         | 7084/84358 [00:14<02:48, 459.55frames/s][A
+Detected: 0 | Progress:   8%|▊         | 7132/84358 [00:14<02:48, 458.02frames/s][A
+Detected: 0 | Progress:   9%|▊         | 7178/84358 [00:14<02:51, 449.96frames/s][A
+Detected: 0 | Progress:   9%|▊         | 7224/84358 [00:15<02:57, 435.13frames/s][A
+Detected: 0 | Progress:   9%|▊         | 7268/84358 [00:15<02:56, 435.54frames/s][A
+Detected: 0 | Progress:   9%|▊         | 7312/84358 [00:15<03:04, 418.69frames/s][A
+Detected: 0 | Progress:   9%|▊         | 7356/84358 [00:15<03:02, 422.62frames/s][A
+Detected: 0 | Progress:   9%|▉         | 7404/84358 [00:15<02:56, 435.74frames/s][A
+Detected: 0 | Progress:   9%|▉         | 7452/84358 [00:15<02:51, 447.39frames/s][A
+Detected: 0 | Progress:   9%|▉         | 7504/84358 [00:15<02:45, 465.59frames/s][A
+Detected: 0 | Progress:   9%|▉         | 7556/84358 [00:15<02:40, 477.50frames/s][A
+Detected: 0 | Progress:   9%|▉         | 7610/84358 [00:15<02:36, 491.52frames/s][A
+Detected: 0 | Progress:   9%|▉         | 7660/84358 [00:16<02:35, 493.67frames/s][A
+Detected: 0 | Progress:   9%|▉         | 7710/84358 [00:16<02:36, 491.23frames/s][A
+Detected: 0 | Progress:   9%|▉         | 7760/84358 [00:16<02:50, 449.14frames/s][A
+Detected: 0 | Progress:   9%|▉         | 7806/84358 [00:16<02:58, 429.30frames/s][A
+Detected: 0 | Progress:   9%|▉         | 7856/84358 [00:16<02:51, 446.94frames/s][A
+Detected: 0 | Progress:   9%|▉         | 7906/84358 [00:16<02:47, 456.55frames/s][A
+Detected: 0 | Progress:   9%|▉         | 7958/84358 [00:16<02:41, 473.01frames/s][A
+Detected: 0 | Progress:   9%|▉         | 8010/84358 [00:16<02:37, 485.20frames/s][A
+Detected: 0 | Progress:  10%|▉         | 8068/84358 [00:16<02:29, 509.62frames/s][A
+Detected: 0 | Progress:  10%|▉         | 8120/84358 [00:16<02:35, 491.02frames/s][A
+Detected: 0 | Progress:  10%|▉         | 8170/84358 [00:17<02:37, 483.02frames/s][A
+Detected: 0 | Progress:  10%|▉         | 8220/84358 [00:17<02:48, 451.76frames/s][A
+Detected: 0 | Progress:  10%|▉         | 8270/84358 [00:17<02:44, 463.10frames/s][A
+Detected: 0 | Progress:  10%|▉         | 8318/84358 [00:17<02:45, 459.58frames/s][A
+Detected: 0 | Progress:  10%|▉         | 8366/84358 [00:17<02:47, 454.27frames/s][A
+Detected: 0 | Progress:  10%|▉         | 8412/84358 [00:17<02:49, 448.52frames/s][A
+Detected: 0 | Progress:  10%|█         | 8458/84358 [00:17<02:54, 434.96frames/s][A
+Detected: 0 | Progress:  10%|█         | 8502/84358 [00:17<02:55, 433.21frames/s][A
+Detected: 0 | Progress:  10%|█         | 8552/84358 [00:17<02:49, 447.92frames/s][A
+Detected: 0 | Progress:  10%|█         | 8600/84358 [00:18<02:46, 454.13frames/s][A
+Detected: 0 | Progress:  10%|█         | 8646/84358 [00:18<02:46, 453.43frames/s][A
+Detected: 0 | Progress:  10%|█         | 8694/84358 [00:18<02:44, 459.67frames/s][A
+Detected: 0 | Progress:  10%|█         | 8746/84358 [00:18<02:38, 477.18frames/s][A
+Detected: 0 | Progress:  10%|█         | 8794/84358 [00:18<02:42, 464.16frames/s][A
+Detected: 0 | Progress:  10%|█         | 8842/84358 [00:18<02:43, 460.70frames/s][A
+Detected: 0 | Progress:  11%|█         | 8890/84358 [00:18<02:42, 464.17frames/s][A
+Detected: 0 | Progress:  11%|█         | 8938/84358 [00:18<02:43, 460.65frames/s][A
+Detected: 0 | Progress:  11%|█         | 8988/84358 [00:18<02:41, 466.84frames/s][A
+Detected: 0 | Progress:  11%|█         | 9038/84358 [00:19<02:39, 472.73frames/s][A
+Detected: 0 | Progress:  11%|█         | 9086/84358 [00:19<02:49, 443.27frames/s][A
+Detected: 0 | Progress:  11%|█         | 9132/84358 [00:19<02:50, 442.22frames/s][A
+Detected: 0 | Progress:  11%|█         | 9182/84358 [00:19<02:45, 453.45frames/s][A
+Detected: 0 | Progress:  11%|█         | 9228/84358 [00:19<02:45, 454.45frames/s][A
+Detected: 0 | Progress:  11%|█         | 9274/84358 [00:19<03:07, 399.49frames/s][A
+Detected: 0 | Progress:  11%|█         | 9316/84358 [00:19<03:38, 344.05frames/s][A
+Detected: 0 | Progress:  11%|█         | 9354/84358 [00:19<03:42, 336.75frames/s][A
+Detected: 0 | Progress:  11%|█         | 9390/84358 [00:19<03:46, 330.31frames/s][A
+Detected: 0 | Progress:  11%|█         | 9424/84358 [00:20<03:53, 320.50frames/s][A
+Detected: 0 | Progress:  11%|█         | 9458/84358 [00:20<03:56, 317.28frames/s][A
+Detected: 0 | Progress:  11%|█▏        | 9508/84358 [00:20<03:25, 363.44frames/s][A
+Detected: 0 | Progress:  11%|█▏        | 9560/84358 [00:20<03:05, 403.61frames/s][A
+Detected: 0 | Progress:  11%|█▏        | 9616/84358 [00:20<02:48, 444.87frames/s][A
+Detected: 0 | Progress:  11%|█▏        | 9662/84358 [00:20<02:54, 427.42frames/s][A
+Detected: 0 | Progress:  12%|█▏        | 9706/84358 [00:20<03:08, 396.34frames/s][A
+Detected: 0 | Progress:  12%|█▏        | 9748/84358 [00:20<03:13, 385.63frames/s][A
+Detected: 0 | Progress:  12%|█▏        | 9788/84358 [00:20<03:18, 375.25frames/s][A
+Detected: 0 | Progress:  12%|█▏        | 9826/84358 [00:21<03:22, 368.13frames/s][A
+Detected: 0 | Progress:  12%|█▏        | 9864/84358 [00:21<03:25, 362.07frames/s][A
+Detected: 0 | Progress:  12%|█▏        | 9902/84358 [00:21<03:25, 362.25frames/s][A
+Detected: 0 | Progress:  12%|█▏        | 9948/84358 [00:21<03:12, 386.87frames/s][A
+Detected: 0 | Progress:  12%|█▏        | 9996/84358 [00:21<03:00, 411.41frames/s][A
+Detected: 0 | Progress:  12%|█▏        | 10038/84358 [00:21<03:02, 407.04frames/s][A
+Detected: 0 | Progress:  12%|█▏        | 10084/84358 [00:21<02:56, 420.78frames/s][A
+Detected: 0 | Progress:  12%|█▏        | 10134/84358 [00:21<02:49, 438.15frames/s][A
+Detected: 0 | Progress:  12%|█▏        | 10180/84358 [00:21<02:47, 443.64frames/s][A
+Detected: 0 | Progress:  12%|█▏        | 10226/84358 [00:22<02:46, 445.26frames/s][A
+Detected: 0 | Progress:  12%|█▏        | 10274/84358 [00:22<02:44, 449.56frames/s][A
+Detected: 0 | Progress:  12%|█▏        | 10320/84358 [00:22<02:47, 442.53frames/s][A
+Detected: 0 | Progress:  12%|█▏        | 10366/84358 [00:22<02:47, 442.62frames/s][A
+Detected: 0 | Progress:  12%|█▏        | 10424/84358 [00:22<02:35, 476.05frames/s][A
+Detected: 0 | Progress:  12%|█▏        | 10472/84358 [00:22<02:37, 469.36frames/s][A
+Detected: 0 | Progress:  12%|█▏        | 10520/84358 [00:22<02:37, 469.83frames/s][A
+Detected: 0 | Progress:  13%|█▎        | 10568/84358 [00:22<02:39, 463.21frames/s][A
+Detected: 0 | Progress:  13%|█▎        | 10616/84358 [00:22<02:39, 461.46frames/s][A
+Detected: 0 | Progress:  13%|█▎        | 10664/84358 [00:22<02:46, 442.06frames/s][A
+Detected: 0 | Progress:  13%|█▎        | 10716/84358 [00:23<02:38, 463.83frames/s][A
+Detected: 0 | Progress:  13%|█▎        | 10770/84358 [00:23<02:31, 484.50frames/s][A
+Detected: 0 | Progress:  13%|█▎        | 10824/84358 [00:23<02:27, 499.65frames/s][A
+Detected: 0 | Progress:  13%|█▎        | 10876/84358 [00:23<02:30, 489.77frames/s][A
+Detected: 0 | Progress:  13%|█▎        | 10926/84358 [00:23<02:39, 460.83frames/s][A
+Detected: 0 | Progress:  13%|█▎        | 10976/84358 [00:23<02:36, 468.54frames/s][A
+Detected: 0 | Progress:  13%|█▎        | 11024/84358 [00:23<02:39, 461.12frames/s][A
+Detected: 0 | Progress:  13%|█▎        | 11072/84358 [00:23<02:39, 459.90frames/s][A
+Detected: 0 | Progress:  13%|█▎        | 11120/84358 [00:23<02:41, 452.88frames/s][A
+Detected: 0 | Progress:  13%|█▎        | 11166/84358 [00:24<02:45, 443.15frames/s][A
+Detected: 0 | Progress:  13%|█▎        | 11212/84358 [00:24<02:44, 444.26frames/s][A
+Detected: 0 | Progress:  13%|█▎        | 11264/84358 [00:24<02:37, 464.74frames/s][A
+Detected: 0 | Progress:  13%|█▎        | 11312/84358 [00:24<02:36, 465.31frames/s][A
+Detected: 0 | Progress:  13%|█▎        | 11362/84358 [00:24<02:34, 471.92frames/s][A
+Detected: 0 | Progress:  14%|█▎        | 11418/84358 [00:24<02:27, 496.11frames/s][A
+Detected: 0 | Progress:  14%|█▎        | 11468/84358 [00:24<02:27, 495.44frames/s][A
+Detected: 0 | Progress:  14%|█▎        | 11518/84358 [00:24<02:28, 490.30frames/s][A
+Detected: 0 | Progress:  14%|█▎        | 11574/84358 [00:24<02:23, 508.35frames/s][A
+Detected: 0 | Progress:  14%|█▍        | 11632/84358 [00:24<02:18, 526.12frames/s][A
+Detected: 0 | Progress:  14%|█▍        | 11686/84358 [00:25<02:17, 527.43frames/s][A
+Detected: 0 | Progress:  14%|█▍        | 11740/84358 [00:25<02:27, 493.97frames/s][A
+Detected: 0 | Progress:  14%|█▍        | 11790/84358 [00:25<02:26, 493.69frames/s][A
+Detected: 0 | Progress:  14%|█▍        | 11848/84358 [00:25<02:21, 513.13frames/s][A
+Detected: 0 | Progress:  14%|█▍        | 11900/84358 [00:25<02:36, 463.16frames/s][A
+Detected: 0 | Progress:  14%|█▍        | 11976/84358 [00:25<02:13, 542.40frames/s][A
+Detected: 0 | Progress:  14%|█▍        | 12032/84358 [00:25<02:14, 538.56frames/s][A
+Detected: 0 | Progress:  14%|█▍        | 12102/84358 [00:25<02:07, 566.20frames/s][A
+Detected: 0 | Progress:  14%|█▍        | 12188/84358 [00:25<01:51, 645.06frames/s][A
+Detected: 0 | Progress:  15%|█▍        | 12254/84358 [00:26<02:04, 580.86frames/s][A
+Detected: 0 | Progress:  15%|█▍        | 12314/84358 [00:26<02:10, 550.85frames/s][A
+Detected: 0 | Progress:  15%|█▍        | 12372/84358 [00:26<02:15, 532.23frames/s][A
+Detected: 0 | Progress:  15%|█▍        | 12430/84358 [00:26<02:12, 541.66frames/s][A
+Detected: 0 | Progress:  15%|█▍        | 12486/84358 [00:26<02:16, 526.66frames/s][A
+Detected: 0 | Progress:  15%|█▍        | 12540/84358 [00:26<02:26, 491.69frames/s][A
+Detected: 0 | Progress:  15%|█▍        | 12590/84358 [00:26<02:34, 463.56frames/s][A
+Detected: 0 | Progress:  15%|█▍        | 12638/84358 [00:26<02:35, 459.91frames/s][A
+Detected: 0 | Progress:  15%|█▌        | 12694/84358 [00:27<02:27, 485.30frames/s][A
+Detected: 0 | Progress:  15%|█▌        | 12744/84358 [00:27<02:27, 486.09frames/s][A
+Detected: 0 | Progress:  15%|█▌        | 12794/84358 [00:27<02:37, 453.63frames/s][A
+Detected: 0 | Progress:  15%|█▌        | 12840/84358 [00:27<02:42, 439.44frames/s][A
+Detected: 0 | Progress:  15%|█▌        | 12886/84358 [00:27<02:44, 433.47frames/s][A
+Detected: 0 | Progress:  15%|█▌        | 12930/84358 [00:27<02:55, 405.90frames/s][A
+Detected: 0 | Progress:  15%|█▌        | 12978/84358 [00:27<02:48, 423.48frames/s][A
+Detected: 0 | Progress:  15%|█▌        | 13026/84358 [00:27<02:44, 434.94frames/s][A
+Detected: 0 | Progress:  16%|█▌        | 13076/84358 [00:27<02:37, 452.83frames/s][A
+Detected: 0 | Progress:  16%|█▌        | 13122/84358 [00:28<02:40, 445.01frames/s][A
+Detected: 0 | Progress:  16%|█▌        | 13170/84358 [00:28<02:36, 453.56frames/s][A
+Detected: 0 | Progress:  16%|█▌        | 13216/84358 [00:28<02:43, 435.05frames/s][A
+Detected: 0 | Progress:  16%|█▌        | 13260/84358 [00:28<02:47, 423.40frames/s][A
+Detected: 0 | Progress:  16%|█▌        | 13304/84358 [00:28<02:49, 420.05frames/s][A
+Detected: 0 | Progress:  16%|█▌        | 13348/84358 [00:28<02:54, 406.15frames/s][A
+Detected: 0 | Progress:  16%|█▌        | 13394/84358 [00:28<02:48, 420.67frames/s][A
+Detected: 0 | Progress:  16%|█▌        | 13444/84358 [00:28<02:41, 440.31frames/s][A
+Detected: 0 | Progress:  16%|█▌        | 13494/84358 [00:28<02:36, 453.28frames/s][A
+Detected: 0 | Progress:  16%|█▌        | 13540/84358 [00:28<02:36, 453.26frames/s][A
+Detected: 0 | Progress:  16%|█▌        | 13590/84358 [00:29<02:32, 465.07frames/s][A
+Detected: 0 | Progress:  16%|█▌        | 13638/84358 [00:29<02:32, 463.31frames/s][A
+Detected: 0 | Progress:  16%|█▌        | 13686/84358 [00:29<02:40, 440.70frames/s][A
+Detected: 0 | Progress:  16%|█▋        | 13732/84358 [00:29<02:42, 434.32frames/s][A
+Detected: 0 | Progress:  16%|█▋        | 13776/84358 [00:29<02:46, 423.69frames/s][A
+Detected: 0 | Progress:  16%|█▋        | 13824/84358 [00:29<02:41, 437.84frames/s][A
+Detected: 0 | Progress:  16%|█▋        | 13868/84358 [00:29<02:48, 418.87frames/s][A
+Detected: 0 | Progress:  16%|█▋        | 13912/84358 [00:29<02:50, 413.34frames/s][A
+Detected: 0 | Progress:  17%|█▋        | 13958/84358 [00:29<02:45, 424.38frames/s][A
+Detected: 0 | Progress:  17%|█▋        | 14004/84358 [00:30<02:42, 432.54frames/s][A
+Detected: 0 | Progress:  17%|█▋        | 14052/84358 [00:30<02:39, 441.77frames/s][A
+Detected: 0 | Progress:  17%|█▋        | 14102/84358 [00:30<02:33, 457.34frames/s][A
+Detected: 0 | Progress:  17%|█▋        | 14158/84358 [00:30<02:24, 485.09frames/s][A
+Detected: 0 | Progress:  17%|█▋        | 14216/84358 [00:30<02:17, 510.03frames/s][A
+Detected: 0 | Progress:  17%|█▋        | 14276/84358 [00:30<02:11, 533.25frames/s][A
+Detected: 0 | Progress:  17%|█▋        | 14330/84358 [00:30<02:22, 490.18frames/s][A
+Detected: 0 | Progress:  17%|█▋        | 14380/84358 [00:30<02:24, 485.93frames/s][A
+Detected: 0 | Progress:  17%|█▋        | 14430/84358 [00:30<02:26, 476.28frames/s][A
+Detected: 0 | Progress:  17%|█▋        | 14478/84358 [00:31<02:27, 472.45frames/s][A
+Detected: 0 | Progress:  17%|█▋        | 14530/84358 [00:31<02:25, 481.19frames/s][A
+Detected: 0 | Progress:  17%|█▋        | 14580/84358 [00:31<02:28, 468.46frames/s][A
+Detected: 0 | Progress:  17%|█▋        | 14628/84358 [00:31<02:35, 447.34frames/s][A
+Detected: 0 | Progress:  17%|█▋        | 14674/84358 [00:31<02:35, 449.31frames/s][A
+Detected: 0 | Progress:  17%|█▋        | 14720/84358 [00:31<02:40, 434.39frames/s][A
+Detected: 0 | Progress:  18%|█▊        | 14772/84358 [00:31<02:32, 454.95frames/s][A
+Detected: 0 | Progress:  18%|█▊        | 14818/84358 [00:31<02:35, 448.38frames/s][A
+Detected: 0 | Progress:  18%|█▊        | 14872/84358 [00:31<02:26, 473.17frames/s][A
+Detected: 0 | Progress:  18%|█▊        | 14924/84358 [00:31<02:23, 484.79frames/s][A
+Detected: 0 | Progress:  18%|█▊        | 14974/84358 [00:32<02:26, 474.38frames/s][A
+Detected: 0 | Progress:  18%|█▊        | 15022/84358 [00:32<02:30, 461.86frames/s][A
+Detected: 0 | Progress:  18%|█▊        | 15072/84358 [00:32<02:28, 466.31frames/s][A
+Detected: 0 | Progress:  18%|█▊        | 15120/84358 [00:32<02:28, 466.49frames/s][A
+Detected: 0 | Progress:  18%|█▊        | 15168/84358 [00:32<02:28, 465.98frames/s][A
+Detected: 0 | Progress:  18%|█▊        | 15216/84358 [00:32<02:29, 461.89frames/s][A
+Detected: 0 | Progress:  18%|█▊        | 15266/84358 [00:32<02:26, 471.06frames/s][A
+Detected: 0 | Progress:  18%|█▊        | 15320/84358 [00:32<02:21, 488.69frames/s][A
+Detected: 0 | Progress:  18%|█▊        | 15370/84358 [00:32<02:21, 487.22frames/s][A
+Detected: 0 | Progress:  18%|█▊        | 15422/84358 [00:33<02:19, 492.98frames/s][A
+Detected: 0 | Progress:  18%|█▊        | 15474/84358 [00:33<02:18, 496.24frames/s][A
+Detected: 0 | Progress:  18%|█▊        | 15524/84358 [00:33<02:19, 492.20frames/s][A
+Detected: 0 | Progress:  18%|█▊        | 15574/84358 [00:33<02:23, 479.59frames/s][A
+Detected: 0 | Progress:  19%|█▊        | 15624/84358 [00:33<02:27, 466.62frames/s][A
+Detected: 0 | Progress:  19%|█▊        | 15672/84358 [00:33<02:27, 466.37frames/s][A
+Detected: 0 | Progress:  19%|█▊        | 15722/84358 [00:33<02:26, 469.63frames/s][A
+Detected: 0 | Progress:  19%|█▊        | 15778/84358 [00:33<02:22, 482.70frames/s][A
+Detected: 0 | Progress:  19%|█▉        | 15828/84358 [00:33<02:24, 473.18frames/s][A
+Detected: 0 | Progress:  19%|█▉        | 15876/84358 [00:34<02:24, 475.02frames/s][A
+Detected: 0 | Progress:  19%|█▉        | 15924/84358 [00:34<02:28, 460.21frames/s][A
+Detected: 0 | Progress:  19%|█▉        | 15974/84358 [00:34<02:25, 469.77frames/s][A
+Detected: 0 | Progress:  19%|█▉        | 16028/84358 [00:34<02:20, 485.08frames/s][A
+Detected: 0 | Progress:  19%|█▉        | 16078/84358 [00:34<02:25, 469.95frames/s][A
+Detected: 0 | Progress:  19%|█▉        | 16126/84358 [00:34<02:31, 449.34frames/s][A
+Detected: 0 | Progress:  19%|█▉        | 16172/84358 [00:34<02:38, 429.46frames/s][A
+Detected: 0 | Progress:  19%|█▉        | 16216/84358 [00:34<02:38, 430.88frames/s][A
+Detected: 0 | Progress:  19%|█▉        | 16260/84358 [00:34<02:37, 432.84frames/s][A
+Detected: 0 | Progress:  19%|█▉        | 16304/84358 [00:34<02:41, 420.87frames/s][A
+Detected: 0 | Progress:  19%|█▉        | 16348/84358 [00:35<02:45, 410.93frames/s][A
+Detected: 0 | Progress:  19%|█▉        | 16390/84358 [00:35<02:54, 390.50frames/s][A
+Detected: 0 | Progress:  19%|█▉        | 16430/84358 [00:35<02:55, 387.95frames/s][A
+Detected: 0 | Progress:  20%|█▉        | 16470/84358 [00:35<02:56, 383.82frames/s][A
+Detected: 0 | Progress:  20%|█▉        | 16512/84358 [00:35<02:52, 392.33frames/s][A
+Detected: 0 | Progress:  20%|█▉        | 16558/84358 [00:35<02:45, 409.11frames/s][A
+Detected: 0 | Progress:  20%|█▉        | 16600/84358 [00:35<02:47, 403.44frames/s][A
+Detected: 0 | Progress:  20%|█▉        | 16650/84358 [00:35<02:37, 430.71frames/s][A
+Detected: 0 | Progress:  20%|█▉        | 16708/84358 [00:35<02:24, 468.39frames/s][A
+Detected: 0 | Progress:  20%|█▉        | 16764/84358 [00:36<02:17, 492.93frames/s][A
+Detected: 0 | Progress:  20%|█▉        | 16820/84358 [00:36<02:11, 511.72frames/s][A
+Detected: 0 | Progress:  20%|██        | 16878/84358 [00:36<02:11, 511.83frames/s][A
+Detected: 0 | Progress:  20%|██        | 16934/84358 [00:36<02:09, 520.92frames/s][A
+Detected: 0 | Progress:  20%|██        | 16992/84358 [00:36<02:05, 535.00frames/s][A
+Detected: 0 | Progress:  20%|██        | 17050/84358 [00:36<02:04, 540.04frames/s][A
+Detected: 0 | Progress:  20%|██        | 17108/84358 [00:36<02:02, 548.79frames/s][A
+Detected: 0 | Progress:  20%|██        | 17164/84358 [00:36<02:04, 541.56frames/s][A
+Detected: 0 | Progress:  20%|██        | 17220/84358 [00:36<02:02, 546.56frames/s][A
+Detected: 0 | Progress:  20%|██        | 17278/84358 [00:36<02:00, 555.81frames/s][A
+Detected: 0 | Progress:  21%|██        | 17336/84358 [00:37<01:59, 561.23frames/s][A
+Detected: 0 | Progress:  21%|██        | 17394/84358 [00:37<02:02, 548.52frames/s][A
+Detected: 0 | Progress:  21%|██        | 17450/84358 [00:37<02:02, 545.15frames/s][A
+Detected: 0 | Progress:  21%|██        | 17508/84358 [00:37<02:00, 553.14frames/s][A
+Detected: 0 | Progress:  21%|██        | 17564/84358 [00:37<02:05, 534.20frames/s][A
+Detected: 0 | Progress:  21%|██        | 17618/84358 [00:37<02:22, 469.71frames/s][A
+Detected: 0 | Progress:  21%|██        | 17668/84358 [00:37<02:41, 414.06frames/s][A
+Detected: 0 | Progress:  21%|██        | 17712/84358 [00:37<02:56, 377.56frames/s][A
+Detected: 0 | Progress:  21%|██        | 17752/84358 [00:38<03:06, 357.64frames/s][A
+Detected: 0 | Progress:  21%|██        | 17790/84358 [00:38<03:13, 344.69frames/s][A
+Detected: 0 | Progress:  21%|██        | 17826/84358 [00:38<03:14, 341.57frames/s][A
+Detected: 0 | Progress:  21%|██        | 17862/84358 [00:38<03:16, 338.35frames/s][A
+Detected: 0 | Progress:  21%|██        | 17898/84358 [00:38<03:14, 341.88frames/s][A
+Detected: 0 | Progress:  21%|██▏       | 17934/84358 [00:38<03:14, 342.20frames/s][A
+Detected: 0 | Progress:  21%|██▏       | 17970/84358 [00:38<03:17, 336.48frames/s][A
+Detected: 0 | Progress:  21%|██▏       | 18004/84358 [00:38<03:28, 317.98frames/s][A
+Detected: 0 | Progress:  21%|██▏       | 18036/84358 [00:38<03:30, 314.84frames/s][A
+Detected: 0 | Progress:  21%|██▏       | 18068/84358 [00:39<03:37, 304.21frames/s][A
+Detected: 0 | Progress:  21%|██▏       | 18100/84358 [00:39<03:36, 306.36frames/s][A
+Detected: 0 | Progress:  21%|██▏       | 18132/84358 [00:39<03:38, 302.84frames/s][A
+Detected: 0 | Progress:  22%|██▏       | 18166/84358 [00:39<03:34, 308.03frames/s][A
+Detected: 0 | Progress:  22%|██▏       | 18198/84358 [00:39<03:34, 308.66frames/s][A
+Detected: 0 | Progress:  22%|██▏       | 18230/84358 [00:39<03:40, 300.40frames/s][A
+Detected: 0 | Progress:  22%|██▏       | 18262/84358 [00:39<03:36, 305.03frames/s][A
+Detected: 0 | Progress:  22%|██▏       | 18294/84358 [00:39<03:37, 303.42frames/s][A
+Detected: 0 | Progress:  22%|██▏       | 18330/84358 [00:39<03:28, 317.04frames/s][A
+Detected: 0 | Progress:  22%|██▏       | 18366/84358 [00:40<03:22, 325.11frames/s][A
+Detected: 0 | Progress:  22%|██▏       | 18400/84358 [00:40<03:28, 316.24frames/s][A
+Detected: 0 | Progress:  22%|██▏       | 18436/84358 [00:40<03:22, 324.81frames/s][A
+Detected: 0 | Progress:  22%|██▏       | 18470/84358 [00:40<03:22, 325.92frames/s][A
+Detected: 0 | Progress:  22%|██▏       | 18504/84358 [00:40<03:29, 314.23frames/s][A
+Detected: 0 | Progress:  22%|██▏       | 18542/84358 [00:40<03:20, 328.77frames/s][A
+Detected: 0 | Progress:  22%|██▏       | 18576/84358 [00:40<03:20, 327.67frames/s][A
+Detected: 0 | Progress:  22%|██▏       | 18610/84358 [00:40<03:30, 312.65frames/s][A
+Detected: 0 | Progress:  22%|██▏       | 18642/84358 [00:40<03:34, 306.05frames/s][A
+Detected: 0 | Progress:  22%|██▏       | 18674/84358 [00:41<03:38, 301.01frames/s][A
+Detected: 0 | Progress:  22%|██▏       | 18706/84358 [00:41<03:55, 278.54frames/s][A
+Detected: 0 | Progress:  22%|██▏       | 18736/84358 [00:41<03:56, 277.09frames/s][A
+Detected: 0 | Progress:  22%|██▏       | 18766/84358 [00:41<03:52, 281.74frames/s][A
+Detected: 0 | Progress:  22%|██▏       | 18796/84358 [00:41<03:51, 283.55frames/s][A
+Detected: 0 | Progress:  22%|██▏       | 18830/84358 [00:41<03:39, 298.30frames/s][A
+Detected: 0 | Progress:  22%|██▏       | 18866/84358 [00:41<03:28, 314.14frames/s][A
+Detected: 0 | Progress:  22%|██▏       | 18902/84358 [00:41<03:22, 323.38frames/s][A
+Detected: 0 | Progress:  22%|██▏       | 18938/84358 [00:41<03:16, 332.81frames/s][A
+Detected: 0 | Progress:  22%|██▏       | 18972/84358 [00:42<03:22, 323.59frames/s][A
+Detected: 0 | Progress:  23%|██▎       | 19006/84358 [00:42<03:19, 327.80frames/s][A
+Detected: 0 | Progress:  23%|██▎       | 19042/84358 [00:42<03:15, 333.79frames/s][A
+Detected: 0 | Progress:  23%|██▎       | 19078/84358 [00:42<03:13, 337.97frames/s][A
+Detected: 0 | Progress:  23%|██▎       | 19116/84358 [00:42<03:08, 345.74frames/s][A
+Detected: 0 | Progress:  23%|██▎       | 19152/84358 [00:42<03:11, 340.84frames/s][A
+Detected: 0 | Progress:  23%|██▎       | 19188/84358 [00:42<03:10, 341.63frames/s][A
+Detected: 0 | Progress:  23%|██▎       | 19224/84358 [00:42<03:11, 340.42frames/s][A
+Detected: 0 | Progress:  23%|██▎       | 19260/84358 [00:42<03:13, 337.10frames/s][A
+Detected: 0 | Progress:  23%|██▎       | 19306/84358 [00:42<02:56, 368.12frames/s][A
+Detected: 0 | Progress:  23%|██▎       | 19358/84358 [00:43<02:37, 411.47frames/s][A
+Detected: 0 | Progress:  23%|██▎       | 19418/84358 [00:43<02:20, 462.57frames/s][A
+Detected: 0 | Progress:  23%|██▎       | 19474/84358 [00:43<02:12, 490.00frames/s][A
+Detected: 0 | Progress:  23%|██▎       | 19534/84358 [00:43<02:04, 521.17frames/s][A
+Detected: 0 | Progress:  23%|██▎       | 19592/84358 [00:43<02:00, 536.55frames/s][A
+Detected: 0 | Progress:  23%|██▎       | 19656/84358 [00:43<01:54, 564.87frames/s][A
+Detected: 0 | Progress:  23%|██▎       | 19714/84358 [00:43<02:02, 529.40frames/s][A
+Detected: 0 | Progress:  23%|██▎       | 19768/84358 [00:43<02:19, 462.18frames/s][A
+Detected: 0 | Progress:  23%|██▎       | 19816/84358 [00:43<02:23, 449.32frames/s][A
+Detected: 0 | Progress:  24%|██▎       | 19864/84358 [00:44<02:24, 447.44frames/s][A
+Detected: 0 | Progress:  24%|██▎       | 19914/84358 [00:44<02:19, 461.42frames/s][A
+Detected: 0 | Progress:  24%|██▎       | 19962/84358 [00:44<02:18, 463.69frames/s][A
+Detected: 0 | Progress:  24%|██▎       | 20010/84358 [00:44<02:23, 448.27frames/s][A
+Detected: 0 | Progress:  24%|██▍       | 20058/84358 [00:44<02:21, 453.16frames/s][A
+Detected: 0 | Progress:  24%|██▍       | 20106/84358 [00:44<02:20, 457.47frames/s][A
+Detected: 0 | Progress:  24%|██▍       | 20168/84358 [00:44<02:08, 501.07frames/s][A
+Detected: 0 | Progress:  24%|██▍       | 20226/84358 [00:44<02:03, 519.03frames/s][A
+Detected: 0 | Progress:  24%|██▍       | 20280/84358 [00:44<02:05, 509.61frames/s][A
+Detected: 0 | Progress:  24%|██▍       | 20332/84358 [00:45<02:18, 462.63frames/s][A
+Detected: 0 | Progress:  24%|██▍       | 20380/84358 [00:45<02:24, 442.08frames/s][A
+Detected: 0 | Progress:  24%|██▍       | 20426/84358 [00:45<02:27, 432.92frames/s][A
+Detected: 0 | Progress:  24%|██▍       | 20478/84358 [00:45<02:20, 453.85frames/s][A
+Detected: 0 | Progress:  24%|██▍       | 20536/84358 [00:45<02:11, 485.35frames/s][A
+Detected: 0 | Progress:  24%|██▍       | 20592/84358 [00:45<02:06, 502.86frames/s][A
+Detected: 0 | Progress:  24%|██▍       | 20646/84358 [00:45<02:04, 510.90frames/s][A
+Detected: 0 | Progress:  25%|██▍       | 20702/84358 [00:45<02:01, 522.99frames/s][A
+Detected: 0 | Progress:  25%|██▍       | 20762/84358 [00:45<01:57, 542.17frames/s][A
+Detected: 0 | Progress:  25%|██▍       | 20820/84358 [00:45<01:55, 552.19frames/s][A
+Detected: 0 | Progress:  25%|██▍       | 20876/84358 [00:46<01:56, 546.04frames/s][A
+Detected: 0 | Progress:  25%|██▍       | 20932/84358 [00:46<02:01, 523.20frames/s][A
+Detected: 0 | Progress:  25%|██▍       | 20986/84358 [00:46<02:05, 503.58frames/s][A
+Detected: 0 | Progress:  25%|██▍       | 21038/84358 [00:46<02:08, 493.25frames/s][A
+Detected: 0 | Progress:  25%|██▍       | 21088/84358 [00:46<02:09, 488.77frames/s][A
+Detected: 0 | Progress:  25%|██▌       | 21146/84358 [00:46<02:04, 509.66frames/s][A
+Detected: 0 | Progress:  25%|██▌       | 21198/84358 [00:46<02:08, 489.92frames/s][A
+Detected: 0 | Progress:  25%|██▌       | 21248/84358 [00:46<02:11, 480.27frames/s][A
+Detected: 0 | Progress:  25%|██▌       | 21298/84358 [00:46<02:11, 478.57frames/s][A
+Detected: 0 | Progress:  25%|██▌       | 21346/84358 [00:47<02:16, 461.60frames/s][A
+Detected: 0 | Progress:  25%|██▌       | 21394/84358 [00:47<02:22, 441.88frames/s][A
+Detected: 0 | Progress:  25%|██▌       | 21440/84358 [00:47<02:22, 441.52frames/s][A
+Detected: 0 | Progress:  25%|██▌       | 21504/84358 [00:47<02:06, 496.37frames/s][A
+Detected: 0 | Progress:  26%|██▌       | 21606/84358 [00:47<01:37, 642.91frames/s][A
+Detected: 0 | Progress:  26%|██▌       | 21672/84358 [00:47<01:36, 647.33frames/s][A
+Detected: 0 | Progress:  26%|██▌       | 21738/84358 [00:47<01:57, 534.62frames/s][A
+Detected: 0 | Progress:  26%|██▌       | 21796/84358 [00:47<02:08, 486.27frames/s][A
+Detected: 0 | Progress:  26%|██▌       | 21848/84358 [00:48<02:12, 471.50frames/s][A
+Detected: 0 | Progress:  26%|██▌       | 21898/84358 [00:48<02:16, 458.69frames/s][A
+Detected: 0 | Progress:  26%|██▌       | 21946/84358 [00:48<02:16, 457.17frames/s][A
+Detected: 0 | Progress:  26%|██▌       | 21994/84358 [00:48<02:15, 459.45frames/s][A
+Detected: 0 | Progress:  26%|██▌       | 22042/84358 [00:48<02:21, 439.21frames/s][A
+Detected: 0 | Progress:  26%|██▌       | 22088/84358 [00:48<02:25, 426.94frames/s][A
+Detected: 0 | Progress:  26%|██▌       | 22132/84358 [00:48<02:25, 427.48frames/s][A
+Detected: 0 | Progress:  26%|██▋       | 22186/84358 [00:48<02:16, 454.92frames/s][A
+Detected: 0 | Progress:  26%|██▋       | 22244/84358 [00:48<02:07, 487.02frames/s][A
+Detected: 0 | Progress:  26%|██▋       | 22304/84358 [00:49<01:59, 518.46frames/s][A
+Detected: 0 | Progress:  27%|██▋       | 22358/84358 [00:49<02:00, 513.36frames/s][A
+Detected: 0 | Progress:  27%|██▋       | 22410/84358 [00:49<02:04, 499.14frames/s][A
+Detected: 0 | Progress:  27%|██▋       | 22462/84358 [00:49<02:08, 480.21frames/s][A
+Detected: 0 | Progress:  27%|██▋       | 22516/84358 [00:49<02:04, 495.05frames/s][A
+Detected: 0 | Progress:  27%|██▋       | 22576/84358 [00:49<01:58, 521.46frames/s][A
+Detected: 0 | Progress:  27%|██▋       | 22630/84358 [00:49<02:02, 504.55frames/s][A
+Detected: 0 | Progress:  27%|██▋       | 22682/84358 [00:49<02:34, 399.14frames/s][A
+Detected: 0 | Progress:  27%|██▋       | 22726/84358 [00:50<02:55, 351.69frames/s][A
+Detected: 0 | Progress:  27%|██▋       | 22766/84358 [00:50<03:09, 324.90frames/s][A
+Detected: 0 | Progress:  27%|██▋       | 22802/84358 [00:50<03:16, 313.10frames/s][A
+Detected: 0 | Progress:  27%|██▋       | 22836/84358 [00:50<03:19, 307.69frames/s][A
+Detected: 0 | Progress:  27%|██▋       | 22882/84358 [00:50<02:59, 343.23frames/s][A
+Detected: 0 | Progress:  27%|██▋       | 22940/84358 [00:50<02:32, 401.73frames/s][A
+Detected: 0 | Progress:  27%|██▋       | 22986/84358 [00:50<02:27, 416.46frames/s][A
+Detected: 0 | Progress:  27%|██▋       | 23048/84358 [00:50<02:10, 468.97frames/s][A
+Detected: 0 | Progress:  27%|██▋       | 23110/84358 [00:50<02:00, 507.82frames/s][A
+Detected: 0 | Progress:  27%|██▋       | 23164/84358 [00:51<01:59, 510.35frames/s][A
+Detected: 0 | Progress:  28%|██▊       | 23216/84358 [00:51<02:02, 498.96frames/s][A
+Detected: 0 | Progress:  28%|██▊       | 23268/84358 [00:51<02:08, 476.29frames/s][A
+Detected: 0 | Progress:  28%|██▊       | 23318/84358 [00:51<02:12, 461.80frames/s][A
+Detected: 0 | Progress:  28%|██▊       | 23366/84358 [00:51<02:15, 449.63frames/s][A
+Detected: 0 | Progress:  28%|██▊       | 23414/84358 [00:51<02:13, 454.89frames/s][A
+Detected: 0 | Progress:  28%|██▊       | 23460/84358 [00:51<02:13, 455.60frames/s][A
+Detected: 0 | Progress:  28%|██▊       | 23508/84358 [00:51<02:11, 462.15frames/s][A
+Detected: 0 | Progress:  28%|██▊       | 23562/84358 [00:51<02:07, 476.90frames/s][A
+Detected: 0 | Progress:  28%|██▊       | 23610/84358 [00:52<02:13, 455.65frames/s][A
+Detected: 0 | Progress:  28%|██▊       | 23656/84358 [00:52<02:15, 447.52frames/s][A
+Detected: 0 | Progress:  28%|██▊       | 23702/84358 [00:52<02:17, 439.60frames/s][A
+Detected: 0 | Progress:  28%|██▊       | 23748/84358 [00:52<02:21, 428.12frames/s][A
+Detected: 0 | Progress:  28%|██▊       | 23792/84358 [00:52<02:21, 426.81frames/s][A
+Detected: 0 | Progress:  28%|██▊       | 23838/84358 [00:52<02:20, 431.83frames/s][A
+Detected: 0 | Progress:  28%|██▊       | 23882/84358 [00:52<02:20, 430.82frames/s][A
+Detected: 0 | Progress:  28%|██▊       | 23926/84358 [00:52<02:21, 426.14frames/s][A
+Detected: 0 | Progress:  28%|██▊       | 23978/84358 [00:52<02:13, 452.09frames/s][A
+Detected: 0 | Progress:  28%|██▊       | 24028/84358 [00:52<02:10, 463.04frames/s][A
+Detected: 0 | Progress:  29%|██▊       | 24076/84358 [00:53<02:12, 454.54frames/s][A
+Detected: 0 | Progress:  29%|██▊       | 24124/84358 [00:53<02:12, 455.13frames/s][A
+Detected: 0 | Progress:  29%|██▊       | 24174/84358 [00:53<02:09, 465.58frames/s][A
+Detected: 0 | Progress:  29%|██▊       | 24226/84358 [00:53<02:04, 481.18frames/s][A
+Detected: 0 | Progress:  29%|██▉       | 24284/84358 [00:53<01:58, 508.70frames/s][A
+Detected: 0 | Progress:  29%|██▉       | 24336/84358 [00:53<01:59, 500.98frames/s][A
+Detected: 0 | Progress:  29%|██▉       | 24392/84358 [00:53<01:56, 516.16frames/s][A
+Detected: 0 | Progress:  29%|██▉       | 24452/84358 [00:53<01:50, 539.76frames/s][A
+Detected: 0 | Progress:  29%|██▉       | 24508/84358 [00:53<02:05, 475.65frames/s][A
+Detected: 0 | Progress:  29%|██▉       | 24558/84358 [00:54<02:21, 422.63frames/s][A
+Detected: 0 | Progress:  29%|██▉       | 24604/84358 [00:54<02:26, 408.72frames/s][A
+Detected: 0 | Progress:  29%|██▉       | 24654/84358 [00:54<02:18, 431.42frames/s][A
+Detected: 0 | Progress:  29%|██▉       | 24706/84358 [00:54<02:11, 454.93frames/s][A
+Detected: 0 | Progress:  29%|██▉       | 24754/84358 [00:54<02:11, 453.51frames/s][A
+Detected: 0 | Progress:  29%|██▉       | 24804/84358 [00:54<02:08, 463.40frames/s][A
+Detected: 0 | Progress:  29%|██▉       | 24852/84358 [00:54<02:12, 450.15frames/s][A
+Detected: 0 | Progress:  30%|██▉       | 24898/84358 [00:54<02:18, 429.62frames/s][A
+Detected: 0 | Progress:  30%|██▉       | 24942/84358 [00:55<02:24, 411.75frames/s][A
+Detected: 0 | Progress:  30%|██▉       | 24988/84358 [00:55<02:20, 421.86frames/s][A
+Detected: 0 | Progress:  30%|██▉       | 25042/84358 [00:55<02:10, 453.00frames/s][A
+Detected: 0 | Progress:  30%|██▉       | 25098/84358 [00:55<02:02, 482.53frames/s][A
+Detected: 0 | Progress:  30%|██▉       | 25154/84358 [00:55<01:57, 502.13frames/s][A
+Detected: 0 | Progress:  30%|██▉       | 25210/84358 [00:55<01:54, 518.06frames/s][A
+Detected: 0 | Progress:  30%|██▉       | 25268/84358 [00:55<01:50, 533.26frames/s][A
+Detected: 0 | Progress:  30%|███       | 25324/84358 [00:55<01:49, 540.41frames/s][A
+Detected: 0 | Progress:  30%|███       | 25380/84358 [00:55<01:54, 515.46frames/s][A
+Detected: 0 | Progress:  30%|███       | 25432/84358 [00:55<02:05, 471.25frames/s][A
+Detected: 0 | Progress:  30%|███       | 25482/84358 [00:56<02:09, 456.16frames/s][A
+Detected: 0 | Progress:  30%|███       | 25530/84358 [00:56<02:18, 423.61frames/s][A
+Detected: 0 | Progress:  30%|███       | 25576/84358 [00:56<02:16, 429.71frames/s][A
+Detected: 0 | Progress:  30%|███       | 25626/84358 [00:56<02:10, 448.41frames/s][A
+Detected: 0 | Progress:  30%|███       | 25674/84358 [00:56<02:08, 455.60frames/s][A
+Detected: 0 | Progress:  30%|███       | 25724/84358 [00:56<02:05, 466.01frames/s][A
+Detected: 0 | Progress:  31%|███       | 25778/84358 [00:56<02:00, 485.01frames/s][A
+Detected: 0 | Progress:  31%|███       | 25840/84358 [00:56<01:52, 521.35frames/s][A
+Detected: 0 | Progress:  31%|███       | 25902/84358 [00:56<01:47, 546.17frames/s][A
+Detected: 0 | Progress:  31%|███       | 25964/84358 [00:57<01:43, 563.86frames/s][A
+Detected: 0 | Progress:  31%|███       | 26022/84358 [00:57<01:44, 560.14frames/s][A
+Detected: 0 | Progress:  31%|███       | 26080/84358 [00:57<01:45, 551.62frames/s][A
+Detected: 0 | Progress:  31%|███       | 26136/84358 [00:57<01:50, 526.39frames/s][A
+Detected: 0 | Progress:  31%|███       | 26190/84358 [00:57<01:59, 486.24frames/s][A
+Detected: 0 | Progress:  31%|███       | 26240/84358 [00:57<02:05, 461.90frames/s][A
+Detected: 0 | Progress:  31%|███       | 26288/84358 [00:57<02:08, 451.68frames/s][A
+Detected: 0 | Progress:  31%|███       | 26334/84358 [00:57<02:13, 435.10frames/s][A
+Detected: 0 | Progress:  31%|███▏      | 26378/84358 [00:57<02:16, 424.14frames/s][A
+Detected: 0 | Progress:  31%|███▏      | 26422/84358 [00:58<02:17, 420.87frames/s][A
+Detected: 0 | Progress:  31%|███▏      | 26466/84358 [00:58<02:18, 417.68frames/s][A
+Detected: 0 | Progress:  31%|███▏      | 26512/84358 [00:58<02:16, 424.80frames/s][A
+Detected: 0 | Progress:  31%|███▏      | 26560/84358 [00:58<02:12, 435.52frames/s][A
+Detected: 0 | Progress:  32%|███▏      | 26604/84358 [00:58<02:18, 418.32frames/s][A
+Detected: 0 | Progress:  32%|███▏      | 26646/84358 [00:58<02:18, 416.32frames/s][A
+Detected: 0 | Progress:  32%|███▏      | 26692/84358 [00:58<02:15, 426.23frames/s][A
+Detected: 0 | Progress:  32%|███▏      | 26740/84358 [00:58<02:11, 438.66frames/s][A
+Detected: 0 | Progress:  32%|███▏      | 26794/84358 [00:58<02:04, 462.76frames/s][A
+Detected: 0 | Progress:  32%|███▏      | 26870/84358 [00:59<01:45, 547.39frames/s][A
+Detected: 0 | Progress:  32%|███▏      | 26972/84358 [00:59<01:23, 685.48frames/s][A
+Detected: 0 | Progress:  32%|███▏      | 27046/84358 [00:59<01:21, 701.45frames/s][A
+Detected: 0 | Progress:  32%|███▏      | 27118/84358 [00:59<01:40, 570.95frames/s][A
+Detected: 0 | Progress:  32%|███▏      | 27180/84358 [00:59<01:45, 543.41frames/s][A
+Detected: 0 | Progress:  32%|███▏      | 27238/84358 [00:59<01:48, 526.56frames/s][A
+Detected: 0 | Progress:  32%|███▏      | 27294/84358 [00:59<01:49, 522.91frames/s][A
+Detected: 0 | Progress:  32%|███▏      | 27348/84358 [00:59<02:08, 442.02frames/s][A
+Detected: 0 | Progress:  32%|███▏      | 27398/84358 [01:00<02:05, 453.60frames/s][A
+Detected: 0 | Progress:  33%|███▎      | 27448/84358 [01:00<02:02, 464.15frames/s][A
+Detected: 0 | Progress:  33%|███▎      | 27498/84358 [01:00<02:09, 438.86frames/s][A
+Detected: 0 | Progress:  33%|███▎      | 27544/84358 [01:00<02:13, 427.14frames/s][A
+Detected: 0 | Progress:  33%|███▎      | 27602/84358 [01:00<02:01, 466.48frames/s][A
+Detected: 0 | Progress:  33%|███▎      | 27662/84358 [01:00<01:52, 502.10frames/s][A
+Detected: 0 | Progress:  33%|███▎      | 27714/84358 [01:00<01:51, 506.11frames/s][A
+Detected: 0 | Progress:  33%|███▎      | 27766/84358 [01:00<01:52, 501.51frames/s][A
+Detected: 0 | Progress:  33%|███▎      | 27820/84358 [01:00<01:50, 511.34frames/s][A
+Detected: 0 | Progress:  33%|███▎      | 27872/84358 [01:00<01:52, 502.64frames/s][A
+Detected: 0 | Progress:  33%|███▎      | 27924/84358 [01:01<01:55, 490.67frames/s][A
+Detected: 0 | Progress:  33%|███▎      | 27974/84358 [01:01<01:56, 482.85frames/s][A
+Detected: 0 | Progress:  33%|███▎      | 28024/84358 [01:01<01:59, 470.64frames/s][A
+Detected: 0 | Progress:  33%|███▎      | 28072/84358 [01:01<02:05, 447.96frames/s][A
+Detected: 0 | Progress:  33%|███▎      | 28118/84358 [01:01<02:09, 432.97frames/s][A
+Detected: 0 | Progress:  33%|███▎      | 28162/84358 [01:01<02:10, 431.96frames/s][A
+Detected: 0 | Progress:  33%|███▎      | 28206/84358 [01:01<02:10, 431.56frames/s][A
+Detected: 0 | Progress:  33%|███▎      | 28256/84358 [01:01<02:04, 450.67frames/s][A
+Detected: 0 | Progress:  34%|███▎      | 28302/84358 [01:01<02:13, 418.39frames/s][A
+Detected: 0 | Progress:  34%|███▎      | 28346/84358 [01:02<02:16, 410.32frames/s][A
+Detected: 0 | Progress:  34%|███▎      | 28404/84358 [01:02<02:02, 456.63frames/s][A
+Detected: 0 | Progress:  34%|███▎      | 28460/84358 [01:02<01:55, 483.54frames/s][A
+Detected: 0 | Progress:  34%|███▍      | 28514/84358 [01:02<01:52, 495.24frames/s][A
+Detected: 0 | Progress:  34%|███▍      | 28564/84358 [01:02<01:56, 480.59frames/s][A
+Detected: 0 | Progress:  34%|███▍      | 28614/84358 [01:02<02:11, 423.48frames/s][A
+Detected: 0 | Progress:  34%|███▍      | 28658/84358 [01:02<02:16, 408.71frames/s][A
+Detected: 0 | Progress:  34%|███▍      | 28700/84358 [01:02<02:16, 408.30frames/s][A
+Detected: 0 | Progress:  34%|███▍      | 28742/84358 [01:02<02:15, 409.04frames/s][A
+Detected: 0 | Progress:  34%|███▍      | 28784/84358 [01:03<02:24, 384.07frames/s][A
+Detected: 0 | Progress:  34%|███▍      | 28824/84358 [01:03<02:35, 357.50frames/s][A
+Detected: 0 | Progress:  34%|███▍      | 28862/84358 [01:03<02:36, 354.80frames/s][A
+Detected: 0 | Progress:  34%|███▍      | 28910/84358 [01:03<02:22, 387.94frames/s][A
+Detected: 0 | Progress:  34%|███▍      | 28956/84358 [01:03<02:17, 403.49frames/s][A
+Detected: 0 | Progress:  34%|███▍      | 29000/84358 [01:03<02:15, 408.47frames/s][A
+Detected: 0 | Progress:  34%|███▍      | 29052/84358 [01:03<02:07, 434.61frames/s][A
+Detected: 0 | Progress:  35%|███▍      | 29104/84358 [01:03<02:01, 453.57frames/s][A
+Detected: 0 | Progress:  35%|███▍      | 29150/84358 [01:03<02:04, 444.03frames/s][A
+Detected: 0 | Progress:  35%|███▍      | 29200/84358 [01:04<02:01, 455.67frames/s][A
+Detected: 0 | Progress:  35%|███▍      | 29250/84358 [01:04<01:58, 464.89frames/s][A
+Detected: 0 | Progress:  35%|███▍      | 29304/84358 [01:04<01:53, 483.68frames/s][A
+Detected: 0 | Progress:  35%|███▍      | 29362/84358 [01:04<01:48, 505.99frames/s][A
+Detected: 0 | Progress:  35%|███▍      | 29414/84358 [01:04<01:53, 483.26frames/s][A
+Detected: 0 | Progress:  35%|███▍      | 29498/84358 [01:04<01:34, 583.12frames/s][A
+Detected: 0 | Progress:  35%|███▌      | 29574/84358 [01:04<01:26, 632.46frames/s][A
+Detected: 0 | Progress:  35%|███▌      | 29638/84358 [01:04<01:36, 564.13frames/s][A
+Detected: 0 | Progress:  35%|███▌      | 29698/84358 [01:05<01:45, 520.13frames/s][A
+Detected: 0 | Progress:  35%|███▌      | 29752/84358 [01:05<01:54, 477.83frames/s][A
+Detected: 0 | Progress:  35%|███▌      | 29804/84358 [01:05<01:52, 485.65frames/s][A
+Detected: 0 | Progress:  35%|███▌      | 29862/84358 [01:05<01:47, 506.41frames/s][A
+Detected: 0 | Progress:  35%|███▌      | 29914/84358 [01:05<01:50, 493.73frames/s][A
+Detected: 0 | Progress:  36%|███▌      | 29966/84358 [01:05<01:52, 483.36frames/s][A
+Detected: 0 | Progress:  36%|███▌      | 30056/84358 [01:05<01:31, 594.73frames/s][A
+Detected: 0 | Progress:  36%|███▌      | 30158/84358 [01:05<01:15, 713.61frames/s][A
+Detected: 0 | Progress:  36%|███▌      | 30232/84358 [01:05<01:15, 713.64frames/s][A
+Detected: 0 | Progress:  36%|███▌      | 30306/84358 [01:06<01:24, 637.42frames/s][A
+Detected: 0 | Progress:  36%|███▌      | 30374/84358 [01:06<01:27, 614.03frames/s][A
+Detected: 0 | Progress:  36%|███▌      | 30438/84358 [01:06<01:39, 544.14frames/s][A
+Detected: 0 | Progress:  36%|███▌      | 30496/84358 [01:06<01:44, 513.01frames/s][A
+Detected: 0 | Progress:  36%|███▌      | 30550/84358 [01:06<01:53, 476.14frames/s][A
+Detected: 0 | Progress:  36%|███▋      | 30600/84358 [01:06<01:58, 454.41frames/s][A
+Detected: 0 | Progress:  36%|███▋      | 30648/84358 [01:06<02:05, 426.75frames/s][A
+Detected: 0 | Progress:  36%|███▋      | 30692/84358 [01:06<02:06, 424.88frames/s][A
+Detected: 0 | Progress:  36%|███▋      | 30738/84358 [01:07<02:04, 429.76frames/s][A
+Detected: 0 | Progress:  36%|███▋      | 30782/84358 [01:07<02:04, 431.01frames/s][A
+Detected: 0 | Progress:  37%|███▋      | 30828/84358 [01:07<02:02, 437.42frames/s][A
+Detected: 0 | Progress:  37%|███▋      | 30876/84358 [01:07<01:59, 445.91frames/s][A
+Detected: 0 | Progress:  37%|███▋      | 30934/84358 [01:07<01:50, 482.22frames/s][A
+Detected: 0 | Progress:  37%|███▋      | 30992/84358 [01:07<01:45, 507.86frames/s][A
+Detected: 0 | Progress:  37%|███▋      | 31048/84358 [01:07<01:42, 520.50frames/s][A
+Detected: 0 | Progress:  37%|███▋      | 31102/84358 [01:07<01:50, 482.88frames/s][A
+Detected: 0 | Progress:  37%|███▋      | 31152/84358 [01:07<01:52, 474.07frames/s][A
+Detected: 0 | Progress:  37%|███▋      | 31200/84358 [01:07<01:52, 474.62frames/s][A
+Detected: 0 | Progress:  37%|███▋      | 31248/84358 [01:08<01:54, 462.37frames/s][A
+Detected: 0 | Progress:  37%|███▋      | 31296/84358 [01:08<01:53, 466.03frames/s][A
+Detected: 0 | Progress:  37%|███▋      | 31344/84358 [01:08<01:53, 467.03frames/s][A
+Detected: 0 | Progress:  37%|███▋      | 31392/84358 [01:08<01:52, 469.16frames/s][A
+Detected: 0 | Progress:  37%|███▋      | 31450/84358 [01:08<01:46, 496.95frames/s][A
+Detected: 0 | Progress:  37%|███▋      | 31500/84358 [01:08<01:46, 496.73frames/s][A
+Detected: 0 | Progress:  37%|███▋      | 31550/84358 [01:08<01:46, 496.56frames/s][A
+Detected: 0 | Progress:  37%|███▋      | 31600/84358 [01:08<01:52, 468.64frames/s][A
+Detected: 0 | Progress:  38%|███▊      | 31648/84358 [01:08<01:57, 448.26frames/s][A
+Detected: 0 | Progress:  38%|███▊      | 31694/84358 [01:09<02:03, 427.93frames/s][A
+Detected: 0 | Progress:  38%|███▊      | 31738/84358 [01:09<02:09, 406.97frames/s][A
+Detected: 0 | Progress:  38%|███▊      | 31780/84358 [01:09<02:14, 389.80frames/s][A
+Detected: 0 | Progress:  38%|███▊      | 31820/84358 [01:09<02:27, 355.21frames/s][A
+Detected: 0 | Progress:  38%|███▊      | 31858/84358 [01:09<02:33, 343.11frames/s][A
+Detected: 0 | Progress:  38%|███▊      | 31902/84358 [01:09<02:23, 366.54frames/s][A
+Detected: 0 | Progress:  38%|███▊      | 31950/84358 [01:09<02:12, 394.65frames/s][A
+Detected: 0 | Progress:  38%|███▊      | 32000/84358 [01:09<02:05, 417.79frames/s][A
+Detected: 0 | Progress:  38%|███▊      | 32044/84358 [01:09<02:07, 411.53frames/s][A
+Detected: 0 | Progress:  38%|███▊      | 32090/84358 [01:10<02:03, 424.59frames/s][A
+Detected: 0 | Progress:  38%|███▊      | 32140/84358 [01:10<01:58, 442.39frames/s][A
+Detected: 0 | Progress:  38%|███▊      | 32186/84358 [01:10<01:57, 444.16frames/s][A
+Detected: 0 | Progress:  38%|███▊      | 32236/84358 [01:10<01:53, 458.26frames/s][A
+Detected: 0 | Progress:  38%|███▊      | 32284/84358 [01:10<01:52, 461.55frames/s][A
+Detected: 0 | Progress:  38%|███▊      | 32334/84358 [01:10<01:50, 468.76frames/s][A
+Detected: 0 | Progress:  38%|███▊      | 32382/84358 [01:10<01:56, 445.63frames/s][A
+Detected: 0 | Progress:  38%|███▊      | 32428/84358 [01:10<01:59, 436.32frames/s][A
+Detected: 0 | Progress:  38%|███▊      | 32474/84358 [01:10<01:58, 437.21frames/s][A
+Detected: 0 | Progress:  39%|███▊      | 32520/84358 [01:11<01:57, 442.65frames/s][A
+Detected: 0 | Progress:  39%|███▊      | 32570/84358 [01:11<01:53, 454.65frames/s][A
+Detected: 0 | Progress:  39%|███▊      | 32618/84358 [01:11<01:52, 458.81frames/s][A
+Detected: 0 | Progress:  39%|███▊      | 32674/84358 [01:11<01:45, 487.93frames/s][A
+Detected: 0 | Progress:  39%|███▉      | 32724/84358 [01:11<01:50, 467.23frames/s][A
+Detected: 0 | Progress:  39%|███▉      | 32772/84358 [01:11<01:53, 454.31frames/s][A
+Detected: 0 | Progress:  39%|███▉      | 32818/84358 [01:11<01:53, 453.93frames/s][A
+Detected: 0 | Progress:  39%|███▉      | 32874/84358 [01:11<01:46, 482.13frames/s][A
+Detected: 0 | Progress:  39%|███▉      | 32924/84358 [01:11<01:50, 466.47frames/s][A
+Detected: 0 | Progress:  39%|███▉      | 32972/84358 [01:12<01:52, 458.20frames/s][A
+Detected: 0 | Progress:  39%|███▉      | 33018/84358 [01:12<01:56, 439.32frames/s][A
+Detected: 0 | Progress:  39%|███▉      | 33064/84358 [01:12<01:57, 435.73frames/s][A
+Detected: 0 | Progress:  39%|███▉      | 33108/84358 [01:12<01:58, 432.23frames/s][A
+Detected: 0 | Progress:  39%|███▉      | 33152/84358 [01:12<02:00, 425.82frames/s][A
+Detected: 0 | Progress:  39%|███▉      | 33204/84358 [01:12<01:53, 450.44frames/s][A
+Detected: 0 | Progress:  39%|███▉      | 33260/84358 [01:12<01:47, 476.42frames/s][A
+Detected: 0 | Progress:  39%|███▉      | 33310/84358 [01:12<01:45, 482.92frames/s][A
+Detected: 0 | Progress:  40%|███▉      | 33360/84358 [01:12<01:44, 486.55frames/s][A
+Detected: 0 | Progress:  40%|███▉      | 33412/84358 [01:12<01:42, 494.86frames/s][A
+Detected: 0 | Progress:  40%|███▉      | 33474/84358 [01:13<01:36, 529.19frames/s][A
+Detected: 0 | Progress:  40%|███▉      | 33528/84358 [01:13<01:36, 528.36frames/s][A
+Detected: 0 | Progress:  40%|███▉      | 33582/84358 [01:13<02:07, 398.64frames/s][A
+Detected: 0 | Progress:  40%|███▉      | 33628/84358 [01:13<02:17, 369.11frames/s][A
+Detected: 0 | Progress:  40%|███▉      | 33674/84358 [01:13<02:09, 390.17frames/s][A
+Detected: 0 | Progress:  40%|███▉      | 33732/84358 [01:13<01:55, 436.84frames/s][A
+Detected: 0 | Progress:  40%|████      | 33784/84358 [01:13<01:50, 457.73frames/s][A
+Detected: 0 | Progress:  40%|████      | 33838/84358 [01:13<01:45, 479.34frames/s][A
+Detected: 0 | Progress:  40%|████      | 33892/84358 [01:14<01:42, 493.67frames/s][A
+Detected: 0 | Progress:  40%|████      | 33944/84358 [01:14<01:44, 482.01frames/s][A
+Detected: 0 | Progress:  40%|████      | 33994/84358 [01:14<01:47, 469.99frames/s][A
+Detected: 0 | Progress:  40%|████      | 34042/84358 [01:14<01:47, 467.09frames/s][A
+Detected: 0 | Progress:  40%|████      | 34090/84358 [01:14<01:47, 469.39frames/s][A
+Detected: 0 | Progress:  40%|████      | 34140/84358 [01:14<01:45, 476.53frames/s][A
+Detected: 0 | Progress:  41%|████      | 34190/84358 [01:14<01:44, 480.48frames/s][A
+Detected: 0 | Progress:  41%|████      | 34246/84358 [01:14<01:40, 498.81frames/s][A
+Detected: 0 | Progress:  41%|████      | 34304/84358 [01:14<01:36, 518.32frames/s][A
+Detected: 0 | Progress:  41%|████      | 34362/84358 [01:14<01:33, 532.91frames/s][A
+Detected: 0 | Progress:  41%|████      | 34422/84358 [01:15<01:30, 551.85frames/s][A
+Detected: 0 | Progress:  41%|████      | 34478/84358 [01:15<01:32, 542.17frames/s][A
+Detected: 0 | Progress:  41%|████      | 34534/84358 [01:15<01:32, 536.34frames/s][A
+Detected: 0 | Progress:  41%|████      | 34588/84358 [01:15<01:34, 525.22frames/s][A
+Detected: 0 | Progress:  41%|████      | 34642/84358 [01:15<01:37, 512.33frames/s][A
+Detected: 0 | Progress:  41%|████      | 34694/84358 [01:15<01:37, 508.43frames/s][A
+Detected: 0 | Progress:  41%|████      | 34746/84358 [01:15<01:39, 499.91frames/s][A
+Detected: 0 | Progress:  41%|████▏     | 34798/84358 [01:15<01:45, 470.58frames/s][A
+Detected: 0 | Progress:  41%|████▏     | 34846/84358 [01:15<01:48, 458.16frames/s][A
+Detected: 0 | Progress:  41%|████▏     | 34894/84358 [01:16<01:47, 459.65frames/s][A
+Detected: 0 | Progress:  41%|████▏     | 34942/84358 [01:16<01:48, 453.90frames/s][A
+Detected: 0 | Progress:  41%|████▏     | 34988/84358 [01:16<01:51, 441.81frames/s][A
+Detected: 0 | Progress:  42%|████▏     | 35036/84358 [01:16<01:49, 449.08frames/s][A
+Detected: 0 | Progress:  42%|████▏     | 35082/84358 [01:16<01:51, 441.87frames/s][A
+Detected: 0 | Progress:  42%|████▏     | 35138/84358 [01:16<01:44, 472.45frames/s][A
+Detected: 0 | Progress:  42%|████▏     | 35188/84358 [01:16<01:42, 477.72frames/s][A
+Detected: 0 | Progress:  42%|████▏     | 35246/84358 [01:16<01:37, 503.29frames/s][A
+Detected: 0 | Progress:  42%|████▏     | 35306/84358 [01:16<01:33, 527.02frames/s][A
+Detected: 0 | Progress:  42%|████▏     | 35360/84358 [01:17<01:37, 500.83frames/s][A
+Detected: 0 | Progress:  42%|████▏     | 35412/84358 [01:17<01:41, 481.41frames/s][A
+Detected: 0 | Progress:  42%|████▏     | 35462/84358 [01:17<01:44, 468.58frames/s][A
+Detected: 0 | Progress:  42%|████▏     | 35510/84358 [01:17<01:43, 469.94frames/s][A
+Detected: 0 | Progress:  42%|████▏     | 35558/84358 [01:17<01:46, 458.41frames/s][A
+Detected: 0 | Progress:  42%|████▏     | 35604/84358 [01:17<01:48, 448.56frames/s][A
+Detected: 0 | Progress:  42%|████▏     | 35650/84358 [01:17<01:54, 426.43frames/s][A
+Detected: 0 | Progress:  42%|████▏     | 35694/84358 [01:17<01:53, 427.47frames/s][A
+Detected: 0 | Progress:  42%|████▏     | 35738/84358 [01:17<01:54, 424.07frames/s][A
+Detected: 0 | Progress:  42%|████▏     | 35788/84358 [01:17<01:51, 437.19frames/s][A
+Detected: 0 | Progress:  42%|████▏     | 35842/84358 [01:18<01:44, 463.42frames/s][A
+Detected: 0 | Progress:  43%|████▎     | 35896/84358 [01:18<01:40, 481.05frames/s][A
+Detected: 0 | Progress:  43%|████▎     | 35946/84358 [01:18<01:45, 459.44frames/s][A
+Detected: 0 | Progress:  43%|████▎     | 35994/84358 [01:18<01:45, 459.34frames/s][A
+Detected: 0 | Progress:  43%|████▎     | 36046/84358 [01:18<01:42, 472.15frames/s][A
+Detected: 0 | Progress:  43%|████▎     | 36098/84358 [01:18<01:39, 485.06frames/s][A
+Detected: 0 | Progress:  43%|████▎     | 36150/84358 [01:18<01:37, 494.95frames/s][A
+Detected: 0 | Progress:  43%|████▎     | 36200/84358 [01:18<01:40, 478.75frames/s][A
+Detected: 0 | Progress:  43%|████▎     | 36250/84358 [01:19<01:59, 403.23frames/s][A
+Detected: 0 | Progress:  43%|████▎     | 36294/84358 [01:19<02:05, 383.36frames/s][A
+Detected: 0 | Progress:  43%|████▎     | 36334/84358 [01:19<02:11, 363.91frames/s][A
+Detected: 0 | Progress:  43%|████▎     | 36372/84358 [01:19<02:22, 337.83frames/s][A
+Detected: 0 | Progress:  43%|████▎     | 36408/84358 [01:19<02:26, 327.05frames/s][A
+Detected: 0 | Progress:  43%|████▎     | 36444/84358 [01:19<02:24, 330.96frames/s][A
+Detected: 0 | Progress:  43%|████▎     | 36480/84358 [01:19<02:22, 334.82frames/s][A
+Detected: 0 | Progress:  43%|████▎     | 36518/84358 [01:19<02:17, 346.83frames/s][A
+Detected: 0 | Progress:  43%|████▎     | 36556/84358 [01:19<02:15, 353.15frames/s][A
+Detected: 0 | Progress:  43%|████▎     | 36594/84358 [01:20<02:12, 360.49frames/s][A
+Detected: 0 | Progress:  43%|████▎     | 36632/84358 [01:20<02:11, 363.95frames/s][A
+Detected: 0 | Progress:  43%|████▎     | 36672/84358 [01:20<02:08, 372.19frames/s][A
+Detected: 0 | Progress:  44%|████▎     | 36718/84358 [01:20<02:00, 394.44frames/s][A
+Detected: 0 | Progress:  44%|████▎     | 36766/84358 [01:20<01:56, 407.21frames/s][A
+Detected: 0 | Progress:  44%|████▎     | 36810/84358 [01:20<01:55, 410.03frames/s][A
+Detected: 0 | Progress:  44%|████▎     | 36856/84358 [01:20<01:52, 421.62frames/s][A
+Detected: 0 | Progress:  44%|████▎     | 36900/84358 [01:20<01:58, 399.95frames/s][A
+Detected: 0 | Progress:  44%|████▍     | 36950/84358 [01:20<01:50, 427.96frames/s][A
+Detected: 0 | Progress:  44%|████▍     | 36996/84358 [01:20<01:49, 434.15frames/s][A
+Detected: 0 | Progress:  44%|████▍     | 37040/84358 [01:21<01:49, 430.38frames/s][A
+Detected: 0 | Progress:  44%|████▍     | 37084/84358 [01:21<01:49, 431.07frames/s][A
+Detected: 0 | Progress:  44%|████▍     | 37128/84358 [01:21<01:53, 416.26frames/s][A
+Detected: 0 | Progress:  44%|████▍     | 37176/84358 [01:21<01:49, 431.27frames/s][A
+Detected: 0 | Progress:  44%|████▍     | 37220/84358 [01:21<01:50, 425.50frames/s][A
+Detected: 0 | Progress:  44%|████▍     | 37264/84358 [01:21<01:52, 417.55frames/s][A
+Detected: 0 | Progress:  44%|████▍     | 37310/84358 [01:21<01:53, 415.62frames/s][A
+Detected: 0 | Progress:  44%|████▍     | 37354/84358 [01:21<01:52, 418.77frames/s][A
+Detected: 0 | Progress:  44%|████▍     | 37402/84358 [01:21<01:48, 433.25frames/s][A
+Detected: 0 | Progress:  44%|████▍     | 37446/84358 [01:22<01:49, 428.28frames/s][A
+Detected: 0 | Progress:  44%|████▍     | 37490/84358 [01:22<01:51, 420.81frames/s][A
+Detected: 0 | Progress:  44%|████▍     | 37534/84358 [01:22<01:52, 416.85frames/s][A
+Detected: 0 | Progress:  45%|████▍     | 37578/84358 [01:22<01:51, 420.71frames/s][A
+Detected: 0 | Progress:  45%|████▍     | 37622/84358 [01:22<01:53, 412.66frames/s][A
+Detected: 0 | Progress:  45%|████▍     | 37664/84358 [01:22<01:53, 409.67frames/s][A
+Detected: 0 | Progress:  45%|████▍     | 37706/84358 [01:22<01:53, 411.67frames/s][A
+Detected: 0 | Progress:  45%|████▍     | 37756/84358 [01:22<01:47, 433.50frames/s][A
+Detected: 0 | Progress:  45%|████▍     | 37808/84358 [01:22<01:42, 456.36frames/s][A
+Detected: 0 | Progress:  45%|████▍     | 37856/84358 [01:22<01:40, 461.20frames/s][A
+Detected: 0 | Progress:  45%|████▍     | 37906/84358 [01:23<01:38, 470.04frames/s][A
+Detected: 0 | Progress:  45%|████▍     | 37954/84358 [01:23<01:42, 451.20frames/s][A
+Detected: 0 | Progress:  45%|████▌     | 38000/84358 [01:23<01:44, 443.71frames/s][A
+Detected: 0 | Progress:  45%|████▌     | 38046/84358 [01:23<01:44, 443.93frames/s][A
+Detected: 0 | Progress:  45%|████▌     | 38096/84358 [01:23<01:41, 456.59frames/s][A
+Detected: 0 | Progress:  45%|████▌     | 38142/84358 [01:23<01:46, 434.82frames/s][A
+Detected: 0 | Progress:  45%|████▌     | 38186/84358 [01:23<01:48, 426.57frames/s][A
+Detected: 0 | Progress:  45%|████▌     | 38232/84358 [01:23<01:46, 433.51frames/s][A
+Detected: 0 | Progress:  45%|████▌     | 38278/84358 [01:23<01:44, 439.02frames/s][A
+Detected: 0 | Progress:  45%|████▌     | 38332/84358 [01:24<01:38, 467.27frames/s][A
+Detected: 0 | Progress:  45%|████▌     | 38380/84358 [01:24<01:40, 459.62frames/s][A
+Detected: 0 | Progress:  46%|████▌     | 38428/84358 [01:24<01:42, 448.53frames/s][A
+Detected: 0 | Progress:  46%|████▌     | 38474/84358 [01:24<01:45, 434.02frames/s][A
+Detected: 0 | Progress:  46%|████▌     | 38524/84358 [01:24<01:42, 447.24frames/s][A
+Detected: 0 | Progress:  46%|████▌     | 38570/84358 [01:24<01:50, 414.67frames/s][A
+Detected: 0 | Progress:  46%|████▌     | 38612/84358 [01:24<01:53, 404.00frames/s][A
+Detected: 0 | Progress:  46%|████▌     | 38654/84358 [01:24<02:05, 365.19frames/s][A
+Detected: 0 | Progress:  46%|████▌     | 38692/84358 [01:24<02:04, 366.27frames/s][A
+Detected: 0 | Progress:  46%|████▌     | 38730/84358 [01:25<02:03, 369.41frames/s][A
+Detected: 0 | Progress:  46%|████▌     | 38768/84358 [01:25<02:03, 370.31frames/s][A
+Detected: 0 | Progress:  46%|████▌     | 38808/84358 [01:25<02:01, 375.80frames/s][A
+Detected: 0 | Progress:  46%|████▌     | 38850/84358 [01:25<02:02, 370.99frames/s][A
+Detected: 0 | Progress:  46%|████▌     | 38894/84358 [01:25<01:56, 389.61frames/s][A
+Detected: 0 | Progress:  46%|████▌     | 38938/84358 [01:25<01:53, 399.60frames/s][A
+Detected: 0 | Progress:  46%|████▌     | 38988/84358 [01:25<01:46, 425.25frames/s][A
+Detected: 0 | Progress:  46%|████▋     | 39032/84358 [01:25<01:48, 418.40frames/s][A
+Detected: 0 | Progress:  46%|████▋     | 39080/84358 [01:25<01:48, 417.47frames/s][A
+Detected: 0 | Progress:  46%|████▋     | 39122/84358 [01:26<01:50, 411.14frames/s][A
+Detected: 0 | Progress:  46%|████▋     | 39164/84358 [01:26<01:50, 409.40frames/s][A
+Detected: 0 | Progress:  46%|████▋     | 39212/84358 [01:26<01:46, 424.98frames/s][A
+Detected: 0 | Progress:  47%|████▋     | 39262/84358 [01:26<01:41, 444.94frames/s][A
+Detected: 0 | Progress:  47%|████▋     | 39310/84358 [01:26<01:39, 452.47frames/s][A
+Detected: 0 | Progress:  47%|████▋     | 39358/84358 [01:26<01:38, 457.87frames/s][A
+Detected: 0 | Progress:  47%|████▋     | 39408/84358 [01:26<01:36, 464.10frames/s][A
+Detected: 0 | Progress:  47%|████▋     | 39456/84358 [01:26<01:36, 465.94frames/s][A
+Detected: 0 | Progress:  47%|████▋     | 39506/84358 [01:26<01:34, 475.89frames/s][A
+Detected: 0 | Progress:  47%|████▋     | 39558/84358 [01:26<01:32, 484.53frames/s][A
+Detected: 0 | Progress:  47%|████▋     | 39608/84358 [01:27<01:31, 486.63frames/s][A
+Detected: 0 | Progress:  47%|████▋     | 39658/84358 [01:27<01:32, 481.23frames/s][A
+Detected: 0 | Progress:  47%|████▋     | 39708/84358 [01:27<01:34, 474.30frames/s][A
+Detected: 0 | Progress:  47%|████▋     | 39760/84358 [01:27<01:31, 485.69frames/s][A
+Detected: 0 | Progress:  47%|████▋     | 39812/84358 [01:27<01:30, 491.01frames/s][A
+Detected: 0 | Progress:  47%|████▋     | 39866/84358 [01:27<01:28, 502.80frames/s][A
+Detected: 0 | Progress:  47%|████▋     | 39918/84358 [01:27<01:53, 393.19frames/s][A
+Detected: 0 | Progress:  47%|████▋     | 39962/84358 [01:27<02:12, 334.41frames/s][A
+Detected: 0 | Progress:  47%|████▋     | 40000/84358 [01:28<02:26, 302.83frames/s][A
+Detected: 0 | Progress:  47%|████▋     | 40034/84358 [01:28<02:37, 282.15frames/s][A
+Detected: 0 | Progress:  47%|████▋     | 40066/84358 [01:28<02:40, 276.39frames/s][A
+Detected: 0 | Progress:  48%|████▊     | 40102/84358 [01:28<02:30, 294.59frames/s][A
+Detected: 0 | Progress:  48%|████▊     | 40148/84358 [01:28<02:15, 326.36frames/s][A
+Detected: 0 | Progress:  48%|████▊     | 40198/84358 [01:28<01:59, 370.38frames/s][A
+Detected: 0 | Progress:  48%|████▊     | 40246/84358 [01:28<01:50, 398.53frames/s][A
+Detected: 0 | Progress:  48%|████▊     | 40296/84358 [01:28<01:46, 415.04frames/s][A
+Detected: 0 | Progress:  48%|████▊     | 40340/84358 [01:29<01:59, 366.95frames/s][A
+Detected: 0 | Progress:  48%|████▊     | 40380/84358 [01:29<02:15, 324.81frames/s][A
+Detected: 0 | Progress:  48%|████▊     | 40416/84358 [01:29<02:26, 299.06frames/s][A
+Detected: 0 | Progress:  48%|████▊     | 40448/84358 [01:29<02:31, 290.35frames/s][A
+Detected: 0 | Progress:  48%|████▊     | 40478/84358 [01:29<02:40, 273.92frames/s][A
+Detected: 0 | Progress:  48%|████▊     | 40506/84358 [01:29<02:49, 258.62frames/s][A
+Detected: 0 | Progress:  48%|████▊     | 40534/84358 [01:29<02:47, 262.25frames/s][A
+Detected: 0 | Progress:  48%|████▊     | 40578/84358 [01:29<02:22, 306.93frames/s][A
+Detected: 0 | Progress:  48%|████▊     | 40624/84358 [01:30<02:06, 345.71frames/s][A
+Detected: 0 | Progress:  48%|████▊     | 40674/84358 [01:30<01:53, 385.95frames/s][A
+Detected: 0 | Progress:  48%|████▊     | 40728/84358 [01:30<01:41, 428.62frames/s][A
+Detected: 0 | Progress:  48%|████▊     | 40782/84358 [01:30<01:34, 459.71frames/s][A
+Detected: 0 | Progress:  48%|████▊     | 40836/84358 [01:30<01:30, 479.50frames/s][A
+Detected: 0 | Progress:  48%|████▊     | 40888/84358 [01:30<01:28, 489.97frames/s][A
+Detected: 0 | Progress:  49%|████▊     | 40940/84358 [01:30<01:27, 495.70frames/s][A
+Detected: 0 | Progress:  49%|████▊     | 40990/84358 [01:30<01:27, 496.11frames/s][A
+Detected: 0 | Progress:  49%|████▊     | 41040/84358 [01:30<01:31, 474.90frames/s][A
+Detected: 0 | Progress:  49%|████▊     | 41092/84358 [01:31<01:29, 483.45frames/s][A
+Detected: 0 | Progress:  49%|████▉     | 41144/84358 [01:31<01:28, 490.09frames/s][A
+Detected: 0 | Progress:  49%|████▉     | 41194/84358 [01:31<01:29, 483.47frames/s][A
+Detected: 0 | Progress:  49%|████▉     | 41250/84358 [01:31<01:26, 499.53frames/s][A
+Detected: 0 | Progress:  49%|████▉     | 41302/84358 [01:31<01:26, 498.37frames/s][A
+Detected: 0 | Progress:  49%|████▉     | 41358/84358 [01:31<01:24, 511.69frames/s][A
+Detected: 0 | Progress:  49%|████▉     | 41414/84358 [01:31<01:21, 523.83frames/s][A
+Detected: 0 | Progress:  49%|████▉     | 41468/84358 [01:31<01:22, 522.69frames/s][A
+Detected: 0 | Progress:  49%|████▉     | 41522/84358 [01:31<01:21, 527.31frames/s][A
+Detected: 0 | Progress:  49%|████▉     | 41576/84358 [01:31<01:29, 476.11frames/s][A
+Detected: 0 | Progress:  49%|████▉     | 41626/84358 [01:32<01:34, 451.32frames/s][A
+Detected: 0 | Progress:  49%|████▉     | 41680/84358 [01:32<01:30, 470.48frames/s][A
+Detected: 0 | Progress:  49%|████▉     | 41738/84358 [01:32<01:25, 497.53frames/s][A
+Detected: 0 | Progress:  50%|████▉     | 41790/84358 [01:32<01:28, 481.38frames/s][A
+Detected: 0 | Progress:  50%|████▉     | 41840/84358 [01:32<01:28, 482.50frames/s][A
+Detected: 0 | Progress:  50%|████▉     | 41892/84358 [01:32<01:26, 492.23frames/s][A
+Detected: 0 | Progress:  50%|████▉     | 41942/84358 [01:32<01:27, 485.72frames/s][A
+Detected: 0 | Progress:  50%|████▉     | 41992/84358 [01:32<01:28, 476.75frames/s][A
+Detected: 0 | Progress:  50%|████▉     | 42040/84358 [01:32<01:32, 455.87frames/s][A
+Detected: 0 | Progress:  50%|████▉     | 42086/84358 [01:33<01:35, 444.02frames/s][A
+Detected: 0 | Progress:  50%|████▉     | 42132/84358 [01:33<01:36, 439.37frames/s][A
+Detected: 0 | Progress:  50%|████▉     | 42178/84358 [01:33<01:37, 433.76frames/s][A
+Detected: 0 | Progress:  50%|█████     | 42224/84358 [01:33<01:35, 439.00frames/s][A
+Detected: 0 | Progress:  50%|█████     | 42274/84358 [01:33<01:32, 454.30frames/s][A
+Detected: 0 | Progress:  50%|█████     | 42328/84358 [01:33<01:27, 478.29frames/s][A
+Detected: 0 | Progress:  50%|█████     | 42384/84358 [01:33<01:24, 499.66frames/s][A
+Detected: 0 | Progress:  50%|█████     | 42436/84358 [01:33<01:24, 493.71frames/s][A
+Detected: 0 | Progress:  50%|█████     | 42492/84358 [01:33<01:22, 508.00frames/s][A
+Detected: 0 | Progress:  50%|█████     | 42546/84358 [01:34<01:20, 516.47frames/s][A
+Detected: 0 | Progress:  50%|█████     | 42600/84358 [01:34<01:21, 515.37frames/s][A
+Detected: 0 | Progress:  51%|█████     | 42652/84358 [01:34<01:28, 472.13frames/s][A
+Detected: 0 | Progress:  51%|█████     | 42700/84358 [01:34<01:31, 456.66frames/s][A
+Detected: 0 | Progress:  51%|█████     | 42748/84358 [01:34<01:34, 438.56frames/s][A
+Detected: 0 | Progress:  51%|█████     | 42794/84358 [01:34<01:35, 435.78frames/s][A
+Detected: 0 | Progress:  51%|█████     | 42838/84358 [01:34<01:35, 434.08frames/s][A
+Detected: 0 | Progress:  51%|█████     | 42882/84358 [01:34<01:41, 410.32frames/s][A
+Detected: 0 | Progress:  51%|█████     | 42936/84358 [01:34<01:33, 443.42frames/s][A
+Detected: 0 | Progress:  51%|█████     | 42992/84358 [01:35<01:27, 472.60frames/s][A
+Detected: 0 | Progress:  51%|█████     | 43048/84358 [01:35<01:23, 497.02frames/s][A
+Detected: 0 | Progress:  51%|█████     | 43100/84358 [01:35<01:22, 501.52frames/s][A
+Detected: 0 | Progress:  51%|█████     | 43154/84358 [01:35<01:20, 512.29frames/s][A
+Detected: 0 | Progress:  51%|█████     | 43206/84358 [01:35<01:20, 513.59frames/s][A
+Detected: 0 | Progress:  51%|█████▏    | 43266/84358 [01:35<01:16, 536.14frames/s][A
+Detected: 0 | Progress:  51%|█████▏    | 43320/84358 [01:35<01:41, 403.21frames/s][A
+Detected: 0 | Progress:  51%|█████▏    | 43366/84358 [01:35<02:00, 339.86frames/s][A
+Detected: 0 | Progress:  51%|█████▏    | 43406/84358 [01:36<02:11, 312.41frames/s][A
+Detected: 0 | Progress:  51%|█████▏    | 43442/84358 [01:36<02:17, 296.71frames/s][A
+Detected: 0 | Progress:  52%|█████▏    | 43474/84358 [01:36<02:19, 294.07frames/s][A
+Detected: 0 | Progress:  52%|█████▏    | 43510/84358 [01:36<02:13, 305.97frames/s][A
+Detected: 0 | Progress:  52%|█████▏    | 43550/84358 [01:36<02:05, 324.10frames/s][A
+Detected: 0 | Progress:  52%|█████▏    | 43590/84358 [01:36<02:01, 336.80frames/s][A
+Detected: 0 | Progress:  52%|█████▏    | 43628/84358 [01:36<01:57, 346.94frames/s][A
+Detected: 0 | Progress:  52%|█████▏    | 43664/84358 [01:36<02:10, 311.65frames/s][A
+Detected: 0 | Progress:  52%|█████▏    | 43698/84358 [01:37<02:18, 293.39frames/s][A
+Detected: 0 | Progress:  52%|█████▏    | 43730/84358 [01:37<02:23, 284.10frames/s][A
+Detected: 0 | Progress:  52%|█████▏    | 43760/84358 [01:37<02:28, 273.13frames/s][A
+Detected: 0 | Progress:  52%|█████▏    | 43788/84358 [01:37<02:36, 258.92frames/s][A
+Detected: 0 | Progress:  52%|█████▏    | 43816/84358 [01:37<02:38, 255.10frames/s][A
+Detected: 0 | Progress:  52%|█████▏    | 43842/84358 [01:37<02:38, 254.99frames/s][A
+Detected: 0 | Progress:  52%|█████▏    | 43870/84358 [01:37<02:35, 260.38frames/s][A
+Detected: 0 | Progress:  52%|█████▏    | 43898/84358 [01:37<02:38, 255.39frames/s][A
+Detected: 0 | Progress:  52%|█████▏    | 43924/84358 [01:37<02:39, 254.24frames/s][A
+Detected: 0 | Progress:  52%|█████▏    | 43950/84358 [01:38<02:40, 252.20frames/s][A
+Detected: 0 | Progress:  52%|█████▏    | 43978/84358 [01:38<02:36, 257.68frames/s][A
+Detected: 0 | Progress:  52%|█████▏    | 44004/84358 [01:38<02:45, 243.95frames/s][A
+Detected: 0 | Progress:  52%|█████▏    | 44030/84358 [01:38<02:51, 235.20frames/s][A
+Detected: 0 | Progress:  52%|█████▏    | 44054/84358 [01:38<02:50, 235.73frames/s][A
+Detected: 0 | Progress:  52%|█████▏    | 44078/84358 [01:38<02:51, 235.05frames/s][A
+Detected: 0 | Progress:  52%|█████▏    | 44120/84358 [01:38<02:21, 285.21frames/s][A
+Detected: 0 | Progress:  52%|█████▏    | 44164/84358 [01:38<02:02, 327.01frames/s][A
+Detected: 0 | Progress:  52%|█████▏    | 44214/84358 [01:38<01:46, 376.06frames/s][A
+Detected: 0 | Progress:  52%|█████▏    | 44264/84358 [01:39<01:38, 407.07frames/s][A
+Detected: 0 | Progress:  53%|█████▎    | 44310/84358 [01:39<01:34, 422.18frames/s][A
+Detected: 0 | Progress:  53%|█████▎    | 44354/84358 [01:39<01:34, 422.88frames/s][A
+Detected: 0 | Progress:  53%|█████▎    | 44398/84358 [01:39<01:37, 409.66frames/s][A
+Detected: 0 | Progress:  53%|█████▎    | 44442/84358 [01:39<01:35, 418.18frames/s][A
+Detected: 0 | Progress:  53%|█████▎    | 44488/84358 [01:39<01:34, 423.84frames/s][A
+Detected: 0 | Progress:  53%|█████▎    | 44532/84358 [01:39<01:33, 424.25frames/s][A
+Detected: 0 | Progress:  53%|█████▎    | 44576/84358 [01:39<01:32, 428.57frames/s][A
+Detected: 0 | Progress:  53%|█████▎    | 44622/84358 [01:39<01:31, 434.05frames/s][A
+Detected: 0 | Progress:  53%|█████▎    | 44674/84358 [01:39<01:27, 455.57frames/s][A
+Detected: 0 | Progress:  53%|█████▎    | 44720/84358 [01:40<01:29, 442.81frames/s][A
+Detected: 0 | Progress:  53%|█████▎    | 44766/84358 [01:40<01:31, 432.68frames/s][A
+Detected: 0 | Progress:  53%|█████▎    | 44810/84358 [01:40<01:33, 421.17frames/s][A
+Detected: 0 | Progress:  53%|█████▎    | 44856/84358 [01:40<01:31, 429.85frames/s][A
+Detected: 0 | Progress:  53%|█████▎    | 44900/84358 [01:40<01:31, 430.57frames/s][A
+Detected: 0 | Progress:  53%|█████▎    | 44946/84358 [01:40<01:30, 437.57frames/s][A
+Detected: 0 | Progress:  53%|█████▎    | 44994/84358 [01:40<01:27, 449.51frames/s][A
+Detected: 0 | Progress:  53%|█████▎    | 45048/84358 [01:40<01:22, 474.15frames/s][A
+Detected: 0 | Progress:  53%|█████▎    | 45098/84358 [01:40<01:21, 481.41frames/s][A
+Detected: 0 | Progress:  54%|█████▎    | 45154/84358 [01:40<01:18, 500.84frames/s][A
+Detected: 0 | Progress:  54%|█████▎    | 45206/84358 [01:41<01:23, 471.46frames/s][A
+Detected: 0 | Progress:  54%|█████▎    | 45254/84358 [01:41<01:28, 439.82frames/s][A
+Detected: 0 | Progress:  54%|█████▎    | 45300/84358 [01:41<01:33, 416.03frames/s][A
+Detected: 0 | Progress:  54%|█████▍    | 45344/84358 [01:41<01:36, 403.20frames/s][A
+Detected: 0 | Progress:  54%|█████▍    | 45386/84358 [01:41<01:38, 395.75frames/s][A
+Detected: 0 | Progress:  54%|█████▍    | 45432/84358 [01:41<01:34, 411.18frames/s][A
+Detected: 0 | Progress:  54%|█████▍    | 45488/84358 [01:41<01:26, 448.05frames/s][A
+Detected: 0 | Progress:  54%|█████▍    | 45536/84358 [01:41<01:25, 454.40frames/s][A
+Detected: 0 | Progress:  54%|█████▍    | 45584/84358 [01:41<01:24, 461.20frames/s][A
+Detected: 0 | Progress:  54%|█████▍    | 45632/84358 [01:42<01:24, 455.69frames/s][A
+Detected: 0 | Progress:  54%|█████▍    | 45678/84358 [01:42<01:26, 446.20frames/s][A
+Detected: 0 | Progress:  54%|█████▍    | 45726/84358 [01:42<01:25, 453.12frames/s][A
+Detected: 0 | Progress:  54%|█████▍    | 45772/84358 [01:42<01:31, 419.89frames/s][A
+Detected: 0 | Progress:  54%|█████▍    | 45828/84358 [01:42<01:24, 454.46frames/s][A
+Detected: 0 | Progress:  54%|█████▍    | 45888/84358 [01:42<01:17, 495.00frames/s][A
+Detected: 0 | Progress:  54%|█████▍    | 45940/84358 [01:42<01:18, 490.62frames/s][A
+Detected: 0 | Progress:  55%|█████▍    | 45990/84358 [01:42<01:23, 457.67frames/s][A
+Detected: 0 | Progress:  55%|█████▍    | 46038/84358 [01:43<01:30, 422.17frames/s][A
+Detected: 0 | Progress:  55%|█████▍    | 46082/84358 [01:43<01:33, 411.19frames/s][A
+Detected: 0 | Progress:  55%|█████▍    | 46124/84358 [01:43<01:34, 405.21frames/s][A
+Detected: 0 | Progress:  55%|█████▍    | 46166/84358 [01:43<01:33, 407.71frames/s][A
+Detected: 0 | Progress:  55%|█████▍    | 46208/84358 [01:43<01:34, 405.43frames/s][A
+Detected: 0 | Progress:  55%|█████▍    | 46252/84358 [01:43<01:31, 414.98frames/s][A
+Detected: 0 | Progress:  55%|█████▍    | 46302/84358 [01:43<01:26, 439.05frames/s][A
+Detected: 0 | Progress:  55%|█████▍    | 46358/84358 [01:43<01:21, 468.89frames/s][A
+Detected: 0 | Progress:  55%|█████▌    | 46412/84358 [01:43<01:17, 488.67frames/s][A
+Detected: 0 | Progress:  55%|█████▌    | 46462/84358 [01:43<01:18, 484.32frames/s][A
+Detected: 0 | Progress:  55%|█████▌    | 46512/84358 [01:44<01:22, 458.51frames/s][A
+Detected: 0 | Progress:  55%|█████▌    | 46560/84358 [01:44<01:26, 437.04frames/s][A
+Detected: 0 | Progress:  55%|█████▌    | 46606/84358 [01:44<01:26, 434.06frames/s][A
+Detected: 0 | Progress:  55%|█████▌    | 46660/84358 [01:44<01:21, 460.75frames/s][A
+Detected: 0 | Progress:  55%|█████▌    | 46718/84358 [01:44<01:18, 481.17frames/s][A
+Detected: 0 | Progress:  55%|█████▌    | 46768/84358 [01:44<01:23, 450.66frames/s][A
+Detected: 0 | Progress:  55%|█████▌    | 46814/84358 [01:44<01:24, 442.04frames/s][A
+Detected: 0 | Progress:  56%|█████▌    | 46860/84358 [01:44<01:25, 437.72frames/s][A
+Detected: 0 | Progress:  56%|█████▌    | 46906/84358 [01:44<01:24, 443.06frames/s][A
+Detected: 0 | Progress:  56%|█████▌    | 46956/84358 [01:45<01:22, 455.30frames/s][A
+Detected: 0 | Progress:  56%|█████▌    | 47002/84358 [01:45<01:23, 445.30frames/s][A
+Detected: 0 | Progress:  56%|█████▌    | 47048/84358 [01:45<01:24, 443.78frames/s][A
+Detected: 0 | Progress:  56%|█████▌    | 47096/84358 [01:45<01:22, 453.76frames/s][A
+Detected: 0 | Progress:  56%|█████▌    | 47144/84358 [01:45<01:20, 460.29frames/s][A
+Detected: 0 | Progress:  56%|█████▌    | 47192/84358 [01:45<01:20, 461.09frames/s][A
+Detected: 0 | Progress:  56%|█████▌    | 47244/84358 [01:45<01:18, 475.79frames/s][A
+Detected: 0 | Progress:  56%|█████▌    | 47292/84358 [01:45<01:18, 471.92frames/s][A
+Detected: 0 | Progress:  56%|█████▌    | 47344/84358 [01:45<01:16, 485.97frames/s][A
+Detected: 0 | Progress:  56%|█████▌    | 47394/84358 [01:46<01:17, 473.92frames/s][A
+Detected: 0 | Progress:  56%|█████▋    | 47452/84358 [01:46<01:15, 490.08frames/s][A
+Detected: 0 | Progress:  56%|█████▋    | 47502/84358 [01:46<01:16, 484.66frames/s][A
+Detected: 0 | Progress:  56%|█████▋    | 47558/84358 [01:46<01:12, 504.66frames/s][A
+Detected: 0 | Progress:  56%|█████▋    | 47610/84358 [01:46<01:14, 494.56frames/s][A
+Detected: 0 | Progress:  56%|█████▋    | 47660/84358 [01:46<01:16, 477.29frames/s][A
+Detected: 0 | Progress:  57%|█████▋    | 47708/84358 [01:46<01:18, 464.06frames/s][A
+Detected: 0 | Progress:  57%|█████▋    | 47758/84358 [01:46<01:17, 472.37frames/s][A
+Detected: 0 | Progress:  57%|█████▋    | 47806/84358 [01:46<01:19, 457.19frames/s][A
+Detected: 0 | Progress:  57%|█████▋    | 47860/84358 [01:46<01:16, 478.47frames/s][A
+Detected: 0 | Progress:  57%|█████▋    | 47910/84358 [01:47<01:15, 484.20frames/s][A
+Detected: 0 | Progress:  57%|█████▋    | 47960/84358 [01:47<01:17, 472.55frames/s][A
+Detected: 0 | Progress:  57%|█████▋    | 48008/84358 [01:47<01:18, 464.05frames/s][A
+Detected: 0 | Progress:  57%|█████▋    | 48056/84358 [01:47<01:23, 434.36frames/s][A
+Detected: 0 | Progress:  57%|█████▋    | 48100/84358 [01:47<01:25, 425.94frames/s][A
+Detected: 0 | Progress:  57%|█████▋    | 48146/84358 [01:47<01:24, 430.55frames/s][A
+Detected: 0 | Progress:  57%|█████▋    | 48192/84358 [01:47<01:22, 436.94frames/s][A
+Detected: 0 | Progress:  57%|█████▋    | 48238/84358 [01:47<01:21, 443.43frames/s][A
+Detected: 0 | Progress:  57%|█████▋    | 48284/84358 [01:47<01:24, 426.00frames/s][A
+Detected: 0 | Progress:  57%|█████▋    | 48328/84358 [01:48<01:23, 429.54frames/s][A
+Detected: 0 | Progress:  57%|█████▋    | 48372/84358 [01:48<01:23, 431.46frames/s][A
+Detected: 0 | Progress:  57%|█████▋    | 48418/84358 [01:48<01:22, 434.22frames/s][A
+Detected: 0 | Progress:  57%|█████▋    | 48464/84358 [01:48<01:22, 437.40frames/s][A
+Detected: 0 | Progress:  58%|█████▊    | 48508/84358 [01:48<01:22, 432.15frames/s][A
+Detected: 0 | Progress:  58%|█████▊    | 48556/84358 [01:48<01:20, 444.17frames/s][A
+Detected: 0 | Progress:  58%|█████▊    | 48612/84358 [01:48<01:15, 472.68frames/s][A
+Detected: 0 | Progress:  58%|█████▊    | 48670/84358 [01:48<01:11, 502.24frames/s][A
+Detected: 0 | Progress:  58%|█████▊    | 48728/84358 [01:48<01:07, 524.30frames/s][A
+Detected: 0 | Progress:  58%|█████▊    | 48782/84358 [01:48<01:11, 498.66frames/s][A
+Detected: 0 | Progress:  58%|█████▊    | 48834/84358 [01:49<01:12, 490.62frames/s][A
+Detected: 0 | Progress:  58%|█████▊    | 48884/84358 [01:49<01:11, 492.98frames/s][A
+Detected: 0 | Progress:  58%|█████▊    | 48934/84358 [01:49<01:15, 468.15frames/s][A
+Detected: 0 | Progress:  58%|█████▊    | 48984/84358 [01:49<01:14, 474.36frames/s][A
+Detected: 0 | Progress:  58%|█████▊    | 49036/84358 [01:49<01:12, 486.01frames/s][A
+Detected: 0 | Progress:  58%|█████▊    | 49086/84358 [01:49<01:12, 484.84frames/s][A
+Detected: 0 | Progress:  58%|█████▊    | 49138/84358 [01:49<01:11, 494.43frames/s][A
+Detected: 0 | Progress:  58%|█████▊    | 49188/84358 [01:49<01:12, 482.49frames/s][A
+Detected: 0 | Progress:  58%|█████▊    | 49238/84358 [01:49<01:15, 467.68frames/s][A
+Detected: 0 | Progress:  58%|█████▊    | 49286/84358 [01:50<01:16, 456.18frames/s][A
+Detected: 0 | Progress:  58%|█████▊    | 49332/84358 [01:50<01:18, 448.26frames/s][A
+Detected: 0 | Progress:  59%|█████▊    | 49378/84358 [01:50<01:19, 438.60frames/s][A
+Detected: 0 | Progress:  59%|█████▊    | 49422/84358 [01:50<01:22, 421.21frames/s][A
+Detected: 0 | Progress:  59%|█████▊    | 49468/84358 [01:50<01:21, 428.13frames/s][A
+Detected: 0 | Progress:  59%|█████▊    | 49512/84358 [01:50<01:22, 424.69frames/s][A
+Detected: 0 | Progress:  59%|█████▊    | 49556/84358 [01:50<01:22, 421.19frames/s][A
+Detected: 0 | Progress:  59%|█████▉    | 49614/84358 [01:50<01:15, 462.43frames/s][A
+Detected: 0 | Progress:  59%|█████▉    | 49666/84358 [01:50<01:12, 477.80frames/s][A
+Detected: 0 | Progress:  59%|█████▉    | 49726/84358 [01:51<01:07, 511.92frames/s][A
+Detected: 0 | Progress:  59%|█████▉    | 49780/84358 [01:51<01:06, 516.27frames/s][A
+Detected: 0 | Progress:  59%|█████▉    | 49832/84358 [01:51<01:06, 517.17frames/s][A
+Detected: 0 | Progress:  59%|█████▉    | 49892/84358 [01:51<01:04, 537.16frames/s][A
+Detected: 0 | Progress:  59%|█████▉    | 49946/84358 [01:51<01:07, 513.20frames/s][A
+Detected: 0 | Progress:  59%|█████▉    | 49998/84358 [01:51<01:10, 489.32frames/s][A
+Detected: 0 | Progress:  59%|█████▉    | 50048/84358 [01:51<01:10, 487.06frames/s][A
+Detected: 0 | Progress:  59%|█████▉    | 50098/84358 [01:51<01:13, 467.71frames/s][A
+Detected: 0 | Progress:  59%|█████▉    | 50146/84358 [01:51<01:13, 466.84frames/s][A
+Detected: 0 | Progress:  60%|█████▉    | 50194/84358 [01:51<01:13, 463.52frames/s][A
+Detected: 0 | Progress:  60%|█████▉    | 50246/84358 [01:52<01:12, 473.62frames/s][A
+Detected: 0 | Progress:  60%|█████▉    | 50294/84358 [01:52<01:13, 464.17frames/s][A
+Detected: 0 | Progress:  60%|█████▉    | 50342/84358 [01:52<01:13, 465.16frames/s][A
+Detected: 0 | Progress:  60%|█████▉    | 50390/84358 [01:52<01:13, 464.81frames/s][A
+Detected: 0 | Progress:  60%|█████▉    | 50438/84358 [01:52<01:13, 461.71frames/s][A
+Detected: 0 | Progress:  60%|█████▉    | 50486/84358 [01:52<01:16, 440.08frames/s][A
+Detected: 0 | Progress:  60%|█████▉    | 50532/84358 [01:52<01:16, 440.09frames/s][A
+Detected: 0 | Progress:  60%|█████▉    | 50578/84358 [01:52<01:19, 425.49frames/s][A
+Detected: 0 | Progress:  60%|██████    | 50624/84358 [01:52<01:18, 429.07frames/s][A
+Detected: 0 | Progress:  60%|██████    | 50672/84358 [01:53<01:16, 438.92frames/s][A
+Detected: 0 | Progress:  60%|██████    | 50722/84358 [01:53<01:14, 452.20frames/s][A
+Detected: 0 | Progress:  60%|██████    | 50768/84358 [01:53<01:14, 450.18frames/s][A
+Detected: 0 | Progress:  60%|██████    | 50814/84358 [01:53<01:14, 451.59frames/s][A
+Detected: 0 | Progress:  60%|██████    | 50860/84358 [01:53<01:14, 448.94frames/s][A
+Detected: 0 | Progress:  60%|██████    | 50910/84358 [01:53<01:12, 458.36frames/s][A
+Detected: 0 | Progress:  60%|██████    | 50960/84358 [01:53<01:11, 469.45frames/s][A
+Detected: 0 | Progress:  60%|██████    | 51010/84358 [01:53<01:09, 478.30frames/s][A
+Detected: 0 | Progress:  61%|██████    | 51066/84358 [01:53<01:06, 501.12frames/s][A
+Detected: 0 | Progress:  61%|██████    | 51118/84358 [01:53<01:06, 501.04frames/s][A
+Detected: 0 | Progress:  61%|██████    | 51170/84358 [01:54<01:09, 476.55frames/s][A
+Detected: 0 | Progress:  61%|██████    | 51218/84358 [01:54<01:12, 455.31frames/s][A
+Detected: 0 | Progress:  61%|██████    | 51264/84358 [01:54<01:12, 455.62frames/s][A
+Detected: 0 | Progress:  61%|██████    | 51312/84358 [01:54<01:11, 461.47frames/s][A
+Detected: 0 | Progress:  61%|██████    | 51360/84358 [01:54<01:14, 442.54frames/s][A
+Detected: 0 | Progress:  61%|██████    | 51408/84358 [01:54<01:13, 449.28frames/s][A
+Detected: 0 | Progress:  61%|██████    | 51460/84358 [01:54<01:11, 462.05frames/s][A
+Detected: 0 | Progress:  61%|██████    | 51522/84358 [01:54<01:05, 503.19frames/s][A
+Detected: 0 | Progress:  61%|██████    | 51574/84358 [01:54<01:05, 499.21frames/s][A
+Detected: 0 | Progress:  61%|██████    | 51626/84358 [01:55<01:18, 416.34frames/s][A
+Detected: 0 | Progress:  61%|██████▏   | 51672/84358 [01:55<01:23, 392.57frames/s][A
+Detected: 0 | Progress:  61%|██████▏   | 51714/84358 [01:55<01:27, 373.67frames/s][A
+Detected: 0 | Progress:  61%|██████▏   | 51772/84358 [01:55<01:17, 422.40frames/s][A
+Detected: 0 | Progress:  61%|██████▏   | 51832/84358 [01:55<01:09, 466.34frames/s][A
+Detected: 0 | Progress:  62%|██████▏   | 51888/84358 [01:55<01:06, 487.18frames/s][A
+Detected: 0 | Progress:  62%|██████▏   | 51940/84358 [01:55<01:06, 490.84frames/s][A
+Detected: 0 | Progress:  62%|██████▏   | 51998/84358 [01:55<01:02, 515.61frames/s][A
+Detected: 0 | Progress:  62%|██████▏   | 52058/84358 [01:56<01:00, 536.79frames/s][A
+Detected: 0 | Progress:  62%|██████▏   | 52114/84358 [01:56<01:00, 529.38frames/s][A
+Detected: 0 | Progress:  62%|██████▏   | 52168/84358 [01:56<01:00, 530.82frames/s][A
+Detected: 0 | Progress:  62%|██████▏   | 52222/84358 [01:56<01:01, 520.28frames/s][A
+Detected: 0 | Progress:  62%|██████▏   | 52282/84358 [01:56<00:59, 541.02frames/s][A
+Detected: 0 | Progress:  62%|██████▏   | 52350/84358 [01:56<00:55, 575.64frames/s][A
+Detected: 0 | Progress:  62%|██████▏   | 52418/84358 [01:56<00:53, 601.09frames/s][A
+Detected: 0 | Progress:  62%|██████▏   | 52480/84358 [01:56<00:58, 543.23frames/s][A
+Detected: 0 | Progress:  62%|██████▏   | 52536/84358 [01:56<00:58, 546.26frames/s][A
+Detected: 0 | Progress:  62%|██████▏   | 52608/84358 [01:56<00:53, 590.27frames/s][A
+Detected: 0 | Progress:  62%|██████▏   | 52680/84358 [01:57<00:50, 622.29frames/s][A
+Detected: 0 | Progress:  63%|██████▎   | 52744/84358 [01:57<00:58, 537.30frames/s][A
+Detected: 0 | Progress:  63%|██████▎   | 52802/84358 [01:57<01:04, 485.79frames/s][A
+Detected: 0 | Progress:  63%|██████▎   | 52854/84358 [01:57<01:07, 466.09frames/s][A
+Detected: 0 | Progress:  63%|██████▎   | 52904/84358 [01:57<01:08, 460.48frames/s][A
+Detected: 0 | Progress:  63%|██████▎   | 52952/84358 [01:57<01:08, 458.43frames/s][A
+Detected: 0 | Progress:  63%|██████▎   | 53010/84358 [01:57<01:04, 487.98frames/s][A
+Detected: 0 | Progress:  63%|██████▎   | 53066/84358 [01:57<01:01, 506.28frames/s][A
+Detected: 0 | Progress:  63%|██████▎   | 53120/84358 [01:58<01:01, 511.32frames/s][A
+Detected: 0 | Progress:  63%|██████▎   | 53172/84358 [01:58<01:01, 509.29frames/s][A
+Detected: 0 | Progress:  63%|██████▎   | 53228/84358 [01:58<00:59, 521.87frames/s][A
+Detected: 0 | Progress:  63%|██████▎   | 53284/84358 [01:58<00:58, 530.30frames/s][A
+Detected: 0 | Progress:  63%|██████▎   | 53340/84358 [01:58<00:57, 537.36frames/s][A
+Detected: 0 | Progress:  63%|██████▎   | 53394/84358 [01:58<00:59, 520.93frames/s][A
+Detected: 0 | Progress:  63%|██████▎   | 53450/84358 [01:58<00:58, 527.98frames/s][A
+Detected: 0 | Progress:  63%|██████▎   | 53506/84358 [01:58<00:58, 524.23frames/s][A
+Detected: 0 | Progress:  63%|██████▎   | 53560/84358 [01:59<01:24, 363.10frames/s][A
+Detected: 0 | Progress:  64%|██████▎   | 53604/84358 [01:59<01:39, 308.35frames/s][A
+Detected: 0 | Progress:  64%|██████▎   | 53642/84358 [01:59<01:47, 286.07frames/s][A
+Detected: 0 | Progress:  64%|██████▎   | 53676/84358 [01:59<01:55, 264.59frames/s][A
+Detected: 0 | Progress:  64%|██████▎   | 53706/84358 [01:59<01:59, 256.70frames/s][A
+Detected: 0 | Progress:  64%|██████▎   | 53734/84358 [01:59<02:03, 247.82frames/s][A
+Detected: 0 | Progress:  64%|██████▎   | 53760/84358 [01:59<02:05, 244.52frames/s][A
+Detected: 0 | Progress:  64%|██████▍   | 53786/84358 [02:00<02:06, 242.57frames/s][A
+Detected: 0 | Progress:  64%|██████▍   | 53812/84358 [02:00<02:08, 238.51frames/s][A
+Detected: 0 | Progress:  64%|██████▍   | 53856/84358 [02:00<01:45, 287.97frames/s][A
+Detected: 0 | Progress:  64%|██████▍   | 53904/84358 [02:00<01:31, 333.16frames/s][A
+Detected: 0 | Progress:  64%|██████▍   | 53952/84358 [02:00<01:21, 371.51frames/s][A
+Detected: 0 | Progress:  64%|██████▍   | 53998/84358 [02:00<01:16, 394.76frames/s][A
+Detected: 0 | Progress:  64%|██████▍   | 54040/84358 [02:00<01:17, 391.76frames/s][A
+Detected: 0 | Progress:  64%|██████▍   | 54082/84358 [02:00<01:16, 395.41frames/s][A
+Detected: 0 | Progress:  64%|██████▍   | 54122/84358 [02:00<01:17, 387.99frames/s][A
+Detected: 0 | Progress:  64%|██████▍   | 54164/84358 [02:00<01:16, 392.61frames/s][A
+Detected: 0 | Progress:  64%|██████▍   | 54204/84358 [02:01<01:17, 389.55frames/s][A
+Detected: 0 | Progress:  64%|██████▍   | 54246/84358 [02:01<01:16, 395.74frames/s][A
+Detected: 0 | Progress:  64%|██████▍   | 54286/84358 [02:01<01:26, 347.73frames/s][A
+Detected: 0 | Progress:  64%|██████▍   | 54330/84358 [02:01<01:21, 369.67frames/s][A
+Detected: 0 | Progress:  64%|██████▍   | 54370/84358 [02:01<01:19, 375.89frames/s][A
+Detected: 0 | Progress:  65%|██████▍   | 54412/84358 [02:01<01:17, 384.61frames/s][A
+Detected: 0 | Progress:  65%|██████▍   | 54452/84358 [02:01<01:17, 384.71frames/s][A
+Detected: 0 | Progress:  65%|██████▍   | 54492/84358 [02:01<01:19, 374.43frames/s][A
+Detected: 0 | Progress:  65%|██████▍   | 54530/84358 [02:01<01:22, 362.31frames/s][A
+Detected: 0 | Progress:  65%|██████▍   | 54582/84358 [02:02<01:13, 404.40frames/s][A
+Detected: 0 | Progress:  65%|██████▍   | 54644/84358 [02:02<01:04, 463.77frames/s][A
+Detected: 0 | Progress:  65%|██████▍   | 54696/84358 [02:02<01:01, 479.14frames/s][A
+Detected: 0 | Progress:  65%|██████▍   | 54750/84358 [02:02<01:00, 491.25frames/s][A
+Detected: 0 | Progress:  65%|██████▍   | 54800/84358 [02:02<01:00, 484.68frames/s][A
+Detected: 0 | Progress:  65%|██████▌   | 54850/84358 [02:02<01:00, 485.47frames/s][A
+Detected: 0 | Progress:  65%|██████▌   | 54900/84358 [02:02<01:03, 467.14frames/s][A
+Detected: 0 | Progress:  65%|██████▌   | 54948/84358 [02:02<01:02, 470.47frames/s][A
+Detected: 0 | Progress:  65%|██████▌   | 54996/84358 [02:02<01:02, 467.71frames/s][A
+Detected: 0 | Progress:  65%|██████▌   | 55044/84358 [02:03<01:02, 466.84frames/s][A
+Detected: 0 | Progress:  65%|██████▌   | 55092/84358 [02:03<01:03, 464.02frames/s][A
+Detected: 0 | Progress:  65%|██████▌   | 55140/84358 [02:03<01:03, 457.98frames/s][A
+Detected: 0 | Progress:  65%|██████▌   | 55190/84358 [02:03<01:02, 468.84frames/s][A
+Detected: 0 | Progress:  65%|██████▌   | 55238/84358 [02:03<01:02, 468.47frames/s][A
+Detected: 0 | Progress:  66%|██████▌   | 55288/84358 [02:03<01:01, 475.96frames/s][A
+Detected: 0 | Progress:  66%|██████▌   | 55344/84358 [02:03<00:58, 497.36frames/s][A
+Detected: 0 | Progress:  66%|██████▌   | 55394/84358 [02:03<00:59, 483.61frames/s][A
+Detected: 0 | Progress:  66%|██████▌   | 55446/84358 [02:03<00:58, 490.59frames/s][A
+Detected: 0 | Progress:  66%|██████▌   | 55502/84358 [02:03<00:57, 502.64frames/s][A
+Detected: 0 | Progress:  66%|██████▌   | 55554/84358 [02:04<00:59, 486.36frames/s][A
+Detected: 0 | Progress:  66%|██████▌   | 55604/84358 [02:04<01:00, 472.82frames/s][A
+Detected: 0 | Progress:  66%|██████▌   | 55652/84358 [02:04<01:02, 462.77frames/s][A
+Detected: 0 | Progress:  66%|██████▌   | 55700/84358 [02:04<01:03, 453.30frames/s][A
+Detected: 0 | Progress:  66%|██████▌   | 55748/84358 [02:04<01:02, 455.31frames/s][A
+Detected: 0 | Progress:  66%|██████▌   | 55796/84358 [02:04<01:01, 460.76frames/s][A
+Detected: 0 | Progress:  66%|██████▌   | 55844/84358 [02:04<01:03, 451.78frames/s][A
+Detected: 0 | Progress:  66%|██████▋   | 55892/84358 [02:04<01:02, 454.84frames/s][A
+Detected: 0 | Progress:  66%|██████▋   | 55940/84358 [02:04<01:01, 460.68frames/s][A
+Detected: 0 | Progress:  66%|██████▋   | 55994/84358 [02:05<00:58, 482.38frames/s][A
+Detected: 0 | Progress:  66%|██████▋   | 56048/84358 [02:05<00:57, 495.85frames/s][A
+Detected: 0 | Progress:  66%|██████▋   | 56098/84358 [02:05<00:57, 487.95frames/s][A
+Detected: 0 | Progress:  67%|██████▋   | 56148/84358 [02:05<00:57, 487.94frames/s][A
+Detected: 0 | Progress:  67%|██████▋   | 56198/84358 [02:05<00:58, 478.65frames/s][A
+Detected: 0 | Progress:  67%|██████▋   | 56246/84358 [02:05<01:02, 449.10frames/s][A
+Detected: 0 | Progress:  67%|██████▋   | 56292/84358 [02:05<01:09, 406.30frames/s][A
+Detected: 0 | Progress:  67%|██████▋   | 56334/84358 [02:05<01:12, 387.32frames/s][A
+Detected: 0 | Progress:  67%|██████▋   | 56378/84358 [02:05<01:10, 399.37frames/s][A
+Detected: 0 | Progress:  67%|██████▋   | 56422/84358 [02:06<01:08, 409.22frames/s][A
+Detected: 0 | Progress:  67%|██████▋   | 56468/84358 [02:06<01:06, 419.69frames/s][A
+Detected: 0 | Progress:  67%|██████▋   | 56512/84358 [02:06<01:12, 385.08frames/s][A
+Detected: 0 | Progress:  67%|██████▋   | 56560/84358 [02:06<01:08, 408.04frames/s][A
+Detected: 0 | Progress:  67%|██████▋   | 56610/84358 [02:06<01:04, 431.95frames/s][A
+Detected: 0 | Progress:  67%|██████▋   | 56654/84358 [02:06<01:06, 415.57frames/s][A
+Detected: 0 | Progress:  67%|██████▋   | 56698/84358 [02:06<01:08, 406.10frames/s][A
+Detected: 0 | Progress:  67%|██████▋   | 56740/84358 [02:06<01:11, 385.74frames/s][A
+Detected: 0 | Progress:  67%|██████▋   | 56780/84358 [02:06<01:11, 387.72frames/s][A
+Detected: 0 | Progress:  67%|██████▋   | 56820/84358 [02:07<01:11, 382.57frames/s][A
+Detected: 0 | Progress:  67%|██████▋   | 56862/84358 [02:07<01:11, 385.59frames/s][A
+Detected: 0 | Progress:  67%|██████▋   | 56902/84358 [02:07<01:13, 372.98frames/s][A
+Detected: 0 | Progress:  67%|██████▋   | 56940/84358 [02:07<01:14, 367.61frames/s][A
+Detected: 0 | Progress:  68%|██████▊   | 56978/84358 [02:07<01:14, 368.84frames/s][A
+Detected: 0 | Progress:  68%|██████▊   | 57016/84358 [02:07<01:19, 342.18frames/s][A
+Detected: 0 | Progress:  68%|██████▊   | 57052/84358 [02:07<01:22, 332.83frames/s][A
+Detected: 0 | Progress:  68%|██████▊   | 57086/84358 [02:07<01:21, 333.83frames/s][A
+Detected: 0 | Progress:  68%|██████▊   | 57122/84358 [02:07<01:20, 338.42frames/s][A
+Detected: 0 | Progress:  68%|██████▊   | 57164/84358 [02:08<01:16, 357.56frames/s][A
+Detected: 0 | Progress:  68%|██████▊   | 57212/84358 [02:08<01:09, 387.93frames/s][A
+Detected: 0 | Progress:  68%|██████▊   | 57266/84358 [02:08<01:03, 428.50frames/s][A
+Detected: 0 | Progress:  68%|██████▊   | 57316/84358 [02:08<01:00, 448.12frames/s][A
+Detected: 0 | Progress:  68%|██████▊   | 57362/84358 [02:08<00:59, 451.47frames/s][A
+Detected: 0 | Progress:  68%|██████▊   | 57416/84358 [02:08<00:56, 474.74frames/s][A
+Detected: 0 | Progress:  68%|██████▊   | 57484/84358 [02:08<00:50, 534.36frames/s][A
+Detected: 0 | Progress:  68%|██████▊   | 57540/84358 [02:08<00:49, 540.22frames/s][A
+Detected: 0 | Progress:  68%|██████▊   | 57610/84358 [02:08<00:46, 571.96frames/s][A
+Detected: 0 | Progress:  68%|██████▊   | 57690/84358 [02:08<00:41, 635.92frames/s][A
+Detected: 0 | Progress:  68%|██████▊   | 57754/84358 [02:09<00:47, 563.36frames/s][A
+Detected: 0 | Progress:  69%|██████▊   | 57812/84358 [02:09<00:55, 475.09frames/s][A
+Detected: 0 | Progress:  69%|██████▊   | 57864/84358 [02:09<01:06, 396.99frames/s][A
+Detected: 0 | Progress:  69%|██████▊   | 57908/84358 [02:09<01:12, 366.64frames/s][A
+Detected: 0 | Progress:  69%|██████▊   | 57948/84358 [02:09<01:15, 348.49frames/s][A
+Detected: 0 | Progress:  69%|██████▊   | 57986/84358 [02:09<01:23, 315.08frames/s][A
+Detected: 0 | Progress:  69%|██████▉   | 58020/84358 [02:10<01:27, 301.76frames/s][A
+Detected: 0 | Progress:  69%|██████▉   | 58052/84358 [02:10<01:28, 295.70frames/s][A
+Detected: 0 | Progress:  69%|██████▉   | 58084/84358 [02:10<01:30, 290.63frames/s][A
+Detected: 0 | Progress:  69%|██████▉   | 58114/84358 [02:10<01:31, 287.58frames/s][A
+Detected: 0 | Progress:  69%|██████▉   | 58144/84358 [02:10<01:33, 279.56frames/s][A
+Detected: 0 | Progress:  69%|██████▉   | 58174/84358 [02:10<01:33, 281.18frames/s][A
+Detected: 0 | Progress:  69%|██████▉   | 58216/84358 [02:10<01:22, 316.22frames/s][A
+Detected: 0 | Progress:  69%|██████▉   | 58256/84358 [02:10<01:17, 338.53frames/s][A
+Detected: 0 | Progress:  69%|██████▉   | 58298/84358 [02:10<01:12, 358.93frames/s][A
+Detected: 0 | Progress:  69%|██████▉   | 58336/84358 [02:11<01:12, 360.22frames/s][A
+Detected: 0 | Progress:  69%|██████▉   | 58378/84358 [02:11<01:09, 374.16frames/s][A
+Detected: 0 | Progress:  69%|██████▉   | 58420/84358 [02:11<01:08, 380.83frames/s][A
+Detected: 0 | Progress:  69%|██████▉   | 58460/84358 [02:11<01:07, 385.24frames/s][A
+Detected: 0 | Progress:  69%|██████▉   | 58508/84358 [02:11<01:02, 412.80frames/s][A
+Detected: 0 | Progress:  69%|██████▉   | 58562/84358 [02:11<00:57, 447.33frames/s][A
+Detected: 0 | Progress:  69%|██████▉   | 58608/84358 [02:11<00:57, 446.17frames/s][A
+Detected: 0 | Progress:  70%|██████▉   | 58654/84358 [02:11<00:57, 446.67frames/s][A
+Detected: 0 | Progress:  70%|██████▉   | 58702/84358 [02:11<00:56, 454.95frames/s][A
+Detected: 0 | Progress:  70%|██████▉   | 58752/84358 [02:11<00:54, 465.91frames/s][A
+Detected: 0 | Progress:  70%|██████▉   | 58800/84358 [02:12<00:54, 467.97frames/s][A
+Detected: 0 | Progress:  70%|██████▉   | 58848/84358 [02:12<00:55, 459.23frames/s][A
+Detected: 0 | Progress:  70%|██████▉   | 58894/84358 [02:12<00:56, 452.99frames/s][A
+Detected: 0 | Progress:  70%|██████▉   | 58940/84358 [02:12<00:57, 440.88frames/s][A
+Detected: 0 | Progress:  70%|██████▉   | 58986/84358 [02:12<00:59, 429.87frames/s][A
+Detected: 0 | Progress:  70%|██████▉   | 59030/84358 [02:12<01:00, 419.35frames/s][A
+Detected: 0 | Progress:  70%|███████   | 59074/84358 [02:12<00:59, 422.74frames/s][A
+Detected: 0 | Progress:  70%|███████   | 59118/84358 [02:12<01:02, 407.03frames/s][A
+Detected: 0 | Progress:  70%|███████   | 59160/84358 [02:12<01:01, 409.64frames/s][A
+Detected: 0 | Progress:  70%|███████   | 59202/84358 [02:13<01:06, 376.63frames/s][A
+Detected: 0 | Progress:  70%|███████   | 59242/84358 [02:13<01:14, 339.27frames/s][A
+Detected: 0 | Progress:  70%|███████   | 59278/84358 [02:13<01:20, 311.14frames/s][A
+Detected: 0 | Progress:  70%|███████   | 59312/84358 [02:13<01:24, 297.35frames/s][A
+Detected: 0 | Progress:  70%|███████   | 59344/84358 [02:13<01:24, 296.35frames/s][A
+Detected: 0 | Progress:  70%|███████   | 59378/84358 [02:13<01:22, 303.91frames/s][A
+Detected: 0 | Progress:  70%|███████   | 59418/84358 [02:13<01:16, 327.02frames/s][A
+Detected: 0 | Progress:  70%|███████   | 59456/84358 [02:13<01:13, 338.95frames/s][A
+Detected: 0 | Progress:  71%|███████   | 59492/84358 [02:13<01:12, 342.36frames/s][A
+Detected: 0 | Progress:  71%|███████   | 59528/84358 [02:14<01:12, 342.79frames/s][A
+Detected: 0 | Progress:  71%|███████   | 59564/84358 [02:14<01:11, 344.92frames/s][A
+Detected: 0 | Progress:  71%|███████   | 59600/84358 [02:14<01:11, 344.58frames/s][A
+Detected: 0 | Progress:  71%|███████   | 59636/84358 [02:14<01:11, 346.45frames/s][A
+Detected: 0 | Progress:  71%|███████   | 59672/84358 [02:14<01:11, 343.95frames/s][A
+Detected: 0 | Progress:  71%|███████   | 59712/84358 [02:14<01:09, 356.99frames/s][A
+Detected: 0 | Progress:  71%|███████   | 59752/84358 [02:14<01:07, 362.96frames/s][A
+Detected: 0 | Progress:  71%|███████   | 59798/84358 [02:14<01:03, 387.83frames/s][A
+Detected: 0 | Progress:  71%|███████   | 59844/84358 [02:14<01:00, 407.93frames/s][A
+Detected: 0 | Progress:  71%|███████   | 59892/84358 [02:15<00:57, 425.98frames/s][A
+Detected: 0 | Progress:  71%|███████   | 59936/84358 [02:15<00:57, 422.63frames/s][A
+Detected: 0 | Progress:  71%|███████   | 59980/84358 [02:15<00:59, 412.82frames/s][A
+Detected: 0 | Progress:  71%|███████   | 60022/84358 [02:15<01:00, 401.80frames/s][A
+Detected: 0 | Progress:  71%|███████   | 60064/84358 [02:15<01:01, 394.75frames/s][A
+Detected: 0 | Progress:  71%|███████   | 60104/84358 [02:15<01:02, 390.39frames/s][A
+Detected: 0 | Progress:  71%|███████▏  | 60146/84358 [02:15<01:00, 397.94frames/s][A
+Detected: 0 | Progress:  71%|███████▏  | 60196/84358 [02:15<00:56, 424.90frames/s][A
+Detected: 0 | Progress:  71%|███████▏  | 60252/84358 [02:15<00:52, 458.97frames/s][A
+Detected: 0 | Progress:  71%|███████▏  | 60308/84358 [02:15<00:49, 485.89frames/s][A
+Detected: 0 | Progress:  72%|███████▏  | 60362/84358 [02:16<00:48, 497.01frames/s][A
+Detected: 0 | Progress:  72%|███████▏  | 60418/84358 [02:16<00:46, 512.80frames/s][A
+Detected: 0 | Progress:  72%|███████▏  | 60470/84358 [02:16<00:48, 494.41frames/s][A
+Detected: 0 | Progress:  72%|███████▏  | 60520/84358 [02:16<00:51, 463.07frames/s][A
+Detected: 0 | Progress:  72%|███████▏  | 60568/84358 [02:16<00:52, 449.22frames/s][A
+Detected: 0 | Progress:  72%|███████▏  | 60614/84358 [02:16<00:52, 450.27frames/s][A
+Detected: 0 | Progress:  72%|███████▏  | 60664/84358 [02:16<00:51, 460.64frames/s][A
+Detected: 0 | Progress:  72%|███████▏  | 60714/84358 [02:16<00:50, 470.56frames/s][A
+Detected: 0 | Progress:  72%|███████▏  | 60762/84358 [02:16<00:52, 448.49frames/s][A
+Detected: 0 | Progress:  72%|███████▏  | 60808/84358 [02:17<00:54, 430.99frames/s][A
+Detected: 0 | Progress:  72%|███████▏  | 60852/84358 [02:17<00:55, 421.22frames/s][A
+Detected: 0 | Progress:  72%|███████▏  | 60896/84358 [02:17<00:55, 424.24frames/s][A
+Detected: 0 | Progress:  72%|███████▏  | 60944/84358 [02:17<00:53, 436.07frames/s][A
+Detected: 0 | Progress:  72%|███████▏  | 60996/84358 [02:17<00:51, 456.77frames/s][A
+Detected: 0 | Progress:  72%|███████▏  | 61044/84358 [02:17<00:50, 462.04frames/s][A
+Detected: 0 | Progress:  72%|███████▏  | 61092/84358 [02:17<00:49, 465.61frames/s][A
+Detected: 0 | Progress:  72%|███████▏  | 61140/84358 [02:17<00:50, 458.14frames/s][A
+Detected: 0 | Progress:  73%|███████▎  | 61188/84358 [02:17<00:50, 462.89frames/s][A
+Detected: 0 | Progress:  73%|███████▎  | 61236/84358 [02:18<00:51, 449.50frames/s][A
+Detected: 0 | Progress:  73%|███████▎  | 61282/84358 [02:18<00:53, 428.33frames/s][A
+Detected: 0 | Progress:  73%|███████▎  | 61326/84358 [02:18<00:55, 416.44frames/s][A
+Detected: 0 | Progress:  73%|███████▎  | 61370/84358 [02:18<00:54, 420.18frames/s][A
+Detected: 0 | Progress:  73%|███████▎  | 61418/84358 [02:18<00:52, 432.88frames/s][A
+Detected: 0 | Progress:  73%|███████▎  | 61468/84358 [02:18<00:50, 448.99frames/s][A
+Detected: 0 | Progress:  73%|███████▎  | 61514/84358 [02:18<00:51, 445.33frames/s][A
+Detected: 0 | Progress:  73%|███████▎  | 61560/84358 [02:18<00:51, 445.00frames/s][A
+Detected: 0 | Progress:  73%|███████▎  | 61606/84358 [02:18<00:53, 425.56frames/s][A
+Detected: 0 | Progress:  73%|███████▎  | 61656/84358 [02:18<00:51, 443.06frames/s][A
+Detected: 0 | Progress:  73%|███████▎  | 61708/84358 [02:19<00:49, 459.66frames/s][A
+Detected: 0 | Progress:  73%|███████▎  | 61756/84358 [02:19<00:51, 441.92frames/s][A
+Detected: 0 | Progress:  73%|███████▎  | 61804/84358 [02:19<00:50, 449.08frames/s][A
+Detected: 0 | Progress:  73%|███████▎  | 61852/84358 [02:19<00:49, 456.00frames/s][A
+Detected: 0 | Progress:  73%|███████▎  | 61902/84358 [02:19<00:48, 463.25frames/s][A
+Detected: 0 | Progress:  73%|███████▎  | 61950/84358 [02:19<00:47, 467.36frames/s][A
+Detected: 0 | Progress:  73%|███████▎  | 62000/84358 [02:19<00:47, 472.77frames/s][A
+Detected: 0 | Progress:  74%|███████▎  | 62048/84358 [02:19<00:47, 471.82frames/s][A
+Detected: 0 | Progress:  74%|███████▎  | 62102/84358 [02:19<00:45, 489.57frames/s][A
+Detected: 0 | Progress:  74%|███████▎  | 62172/84358 [02:20<00:41, 530.46frames/s][A
+Detected: 0 | Progress:  74%|███████▍  | 62238/84358 [02:20<00:39, 566.12frames/s][A
+Detected: 0 | Progress:  74%|███████▍  | 62310/84358 [02:20<00:36, 606.87frames/s][A
+Detected: 0 | Progress:  74%|███████▍  | 62374/84358 [02:20<00:35, 614.33frames/s][A
+Detected: 0 | Progress:  74%|███████▍  | 62436/84358 [02:20<00:35, 610.59frames/s][A
+Detected: 0 | Progress:  74%|███████▍  | 62498/84358 [02:20<00:36, 602.58frames/s][A
+Detected: 0 | Progress:  74%|███████▍  | 62560/84358 [02:20<00:41, 520.85frames/s][A
+Detected: 0 | Progress:  74%|███████▍  | 62616/84358 [02:20<00:43, 505.24frames/s][A
+Detected: 0 | Progress:  74%|███████▍  | 62668/84358 [02:20<00:43, 496.12frames/s][A
+Detected: 0 | Progress:  74%|███████▍  | 62720/84358 [02:21<00:46, 462.88frames/s][A
+Detected: 0 | Progress:  74%|███████▍  | 62768/84358 [02:21<00:46, 465.75frames/s][A
+Detected: 0 | Progress:  74%|███████▍  | 62820/84358 [02:21<00:45, 476.93frames/s][A
+Detected: 0 | Progress:  75%|███████▍  | 62874/84358 [02:21<00:43, 493.99frames/s][A
+Detected: 0 | Progress:  75%|███████▍  | 62930/84358 [02:21<00:42, 508.16frames/s][A
+Detected: 0 | Progress:  75%|███████▍  | 62982/84358 [02:21<00:41, 509.75frames/s][A
+Detected: 0 | Progress:  75%|███████▍  | 63034/84358 [02:21<00:43, 490.79frames/s][A
+Detected: 0 | Progress:  75%|███████▍  | 63084/84358 [02:21<00:43, 489.27frames/s][A
+Detected: 0 | Progress:  75%|███████▍  | 63136/84358 [02:21<00:43, 493.38frames/s][A
+Detected: 0 | Progress:  75%|███████▍  | 63186/84358 [02:22<00:45, 466.09frames/s][A
+Detected: 0 | Progress:  75%|███████▍  | 63234/84358 [02:22<00:49, 428.19frames/s][A
+Detected: 0 | Progress:  75%|███████▌  | 63278/84358 [02:22<00:50, 415.65frames/s][A
+Detected: 0 | Progress:  75%|███████▌  | 63322/84358 [02:22<00:50, 416.73frames/s][A
+Detected: 0 | Progress:  75%|███████▌  | 63374/84358 [02:22<00:47, 442.63frames/s][A
+Detected: 0 | Progress:  75%|███████▌  | 63420/84358 [02:22<00:47, 436.63frames/s][A
+Detected: 0 | Progress:  75%|███████▌  | 63464/84358 [02:22<00:48, 433.84frames/s][A
+Detected: 0 | Progress:  75%|███████▌  | 63514/84358 [02:22<00:46, 449.46frames/s][A
+Detected: 0 | Progress:  75%|███████▌  | 63566/84358 [02:22<00:44, 468.39frames/s][A
+Detected: 0 | Progress:  75%|███████▌  | 63622/84358 [02:22<00:41, 494.94frames/s][A
+Detected: 0 | Progress:  75%|███████▌  | 63686/84358 [02:23<00:38, 531.24frames/s][A
+Detected: 0 | Progress:  76%|███████▌  | 63740/84358 [02:23<00:39, 517.98frames/s][A
+Detected: 0 | Progress:  76%|███████▌  | 63794/84358 [02:23<00:39, 522.26frames/s][A
+Detected: 0 | Progress:  76%|███████▌  | 63848/84358 [02:23<00:41, 491.20frames/s][A
+Detected: 0 | Progress:  76%|███████▌  | 63898/84358 [02:23<00:43, 475.48frames/s][A
+Detected: 0 | Progress:  76%|███████▌  | 63946/84358 [02:23<00:44, 455.59frames/s][A
+Detected: 0 | Progress:  76%|███████▌  | 63992/84358 [02:23<00:45, 444.60frames/s][A
+Detected: 0 | Progress:  76%|███████▌  | 64038/84358 [02:23<00:45, 444.72frames/s][A
+Detected: 0 | Progress:  76%|███████▌  | 64088/84358 [02:23<00:44, 456.68frames/s][A
+Detected: 0 | Progress:  76%|███████▌  | 64136/84358 [02:24<00:44, 458.32frames/s][A
+Detected: 0 | Progress:  76%|███████▌  | 64182/84358 [02:24<00:46, 430.13frames/s][A
+Detected: 0 | Progress:  76%|███████▌  | 64226/84358 [02:24<00:48, 414.40frames/s][A
+Detected: 0 | Progress:  76%|███████▌  | 64268/84358 [02:24<00:51, 392.76frames/s][A
+Detected: 0 | Progress:  76%|███████▌  | 64308/84358 [02:24<00:51, 389.83frames/s][A
+Detected: 0 | Progress:  76%|███████▋  | 64348/84358 [02:24<00:53, 374.43frames/s][A
+Detected: 0 | Progress:  76%|███████▋  | 64390/84358 [02:24<00:52, 382.18frames/s][A
+Detected: 0 | Progress:  76%|███████▋  | 64436/84358 [02:24<00:49, 401.24frames/s][A
+Detected: 0 | Progress:  76%|███████▋  | 64484/84358 [02:24<00:46, 423.29frames/s][A
+Detected: 0 | Progress:  77%|███████▋  | 64540/84358 [02:25<00:42, 460.99frames/s][A
+Detected: 0 | Progress:  77%|███████▋  | 64596/84358 [02:25<00:40, 483.10frames/s][A
+Detected: 0 | Progress:  77%|███████▋  | 64650/84358 [02:25<00:39, 495.82frames/s][A
+Detected: 0 | Progress:  77%|███████▋  | 64700/84358 [02:25<00:40, 490.45frames/s][A
+Detected: 0 | Progress:  77%|███████▋  | 64750/84358 [02:25<00:41, 468.29frames/s][A
+Detected: 0 | Progress:  77%|███████▋  | 64798/84358 [02:25<00:42, 460.85frames/s][A
+Detected: 0 | Progress:  77%|███████▋  | 64846/84358 [02:25<00:42, 455.07frames/s][A
+Detected: 0 | Progress:  77%|███████▋  | 64892/84358 [02:25<00:43, 443.08frames/s][A
+Detected: 0 | Progress:  77%|███████▋  | 64938/84358 [02:25<00:45, 424.88frames/s][A
+Detected: 0 | Progress:  77%|███████▋  | 64984/84358 [02:26<00:44, 432.72frames/s][A
+Detected: 0 | Progress:  77%|███████▋  | 65028/84358 [02:26<00:46, 418.27frames/s][A
+Detected: 0 | Progress:  77%|███████▋  | 65072/84358 [02:26<00:45, 420.30frames/s][A
+Detected: 0 | Progress:  77%|███████▋  | 65122/84358 [02:26<00:43, 441.05frames/s][A
+Detected: 0 | Progress:  77%|███████▋  | 65170/84358 [02:26<00:44, 435.12frames/s][A
+Detected: 0 | Progress:  77%|███████▋  | 65214/84358 [02:26<00:43, 436.50frames/s][A
+Detected: 0 | Progress:  77%|███████▋  | 65258/84358 [02:26<00:44, 426.08frames/s][A
+Detected: 0 | Progress:  77%|███████▋  | 65302/84358 [02:26<00:45, 421.08frames/s][A
+Detected: 0 | Progress:  77%|███████▋  | 65346/84358 [02:26<00:44, 424.35frames/s][A
+Detected: 0 | Progress:  78%|███████▊  | 65392/84358 [02:27<00:43, 431.36frames/s][A
+Detected: 0 | Progress:  78%|███████▊  | 65440/84358 [02:27<00:42, 441.32frames/s][A
+Detected: 0 | Progress:  78%|███████▊  | 65496/84358 [02:27<00:39, 473.03frames/s][A
+Detected: 0 | Progress:  78%|███████▊  | 65550/84358 [02:27<00:38, 488.18frames/s][A
+Detected: 0 | Progress:  78%|███████▊  | 65600/84358 [02:27<00:41, 457.50frames/s][A
+Detected: 0 | Progress:  78%|███████▊  | 65648/84358 [02:27<00:44, 423.31frames/s][A
+Detected: 0 | Progress:  78%|███████▊  | 65692/84358 [02:27<00:44, 423.61frames/s][A
+Detected: 0 | Progress:  78%|███████▊  | 65736/84358 [02:27<00:44, 418.12frames/s][A
+Detected: 0 | Progress:  78%|███████▊  | 65780/84358 [02:27<00:44, 418.49frames/s][A
+Detected: 0 | Progress:  78%|███████▊  | 65824/84358 [02:27<00:44, 414.92frames/s][A
+Detected: 0 | Progress:  78%|███████▊  | 65868/84358 [02:28<00:44, 419.98frames/s][A
+Detected: 0 | Progress:  78%|███████▊  | 65912/84358 [02:28<00:44, 413.66frames/s][A
+Detected: 0 | Progress:  78%|███████▊  | 65954/84358 [02:28<00:45, 408.30frames/s][A
+Detected: 0 | Progress:  78%|███████▊  | 66010/84358 [02:28<00:41, 446.48frames/s][A
+Detected: 0 | Progress:  78%|███████▊  | 66060/84358 [02:28<00:40, 449.48frames/s][A
+Detected: 0 | Progress:  78%|███████▊  | 66112/84358 [02:28<00:38, 468.65frames/s][A
+Detected: 0 | Progress:  78%|███████▊  | 66160/84358 [02:28<00:38, 469.29frames/s][A
+Detected: 0 | Progress:  78%|███████▊  | 66208/84358 [02:28<00:40, 452.36frames/s][A
+Detected: 0 | Progress:  79%|███████▊  | 66254/84358 [02:28<00:43, 420.37frames/s][A
+Detected: 0 | Progress:  79%|███████▊  | 66298/84358 [02:29<00:49, 366.86frames/s][A
+Detected: 0 | Progress:  79%|███████▊  | 66338/84358 [02:29<00:50, 359.63frames/s][A
+Detected: 0 | Progress:  79%|███████▊  | 66380/84358 [02:29<00:47, 374.78frames/s][A
+Detected: 0 | Progress:  79%|███████▊  | 66420/84358 [02:29<00:51, 345.12frames/s][A
+Detected: 0 | Progress:  79%|███████▉  | 66456/84358 [02:29<00:52, 339.89frames/s][A
+Detected: 0 | Progress:  79%|███████▉  | 66492/84358 [02:29<00:52, 341.21frames/s][A
+Detected: 0 | Progress:  79%|███████▉  | 66530/84358 [02:29<00:52, 336.70frames/s][A
+Detected: 0 | Progress:  79%|███████▉  | 66568/84358 [02:29<00:51, 346.61frames/s][A
+Detected: 0 | Progress:  79%|███████▉  | 66614/84358 [02:30<00:47, 375.86frames/s][A
+Detected: 0 | Progress:  79%|███████▉  | 66656/84358 [02:30<00:45, 387.58frames/s][A
+Detected: 0 | Progress:  79%|███████▉  | 66708/84358 [02:30<00:41, 422.19frames/s][A
+Detected: 0 | Progress:  79%|███████▉  | 66752/84358 [02:30<00:44, 399.69frames/s][A
+Detected: 0 | Progress:  79%|███████▉  | 66798/84358 [02:30<00:42, 414.19frames/s][A
+Detected: 0 | Progress:  79%|███████▉  | 66850/84358 [02:30<00:39, 440.27frames/s][A
+Detected: 0 | Progress:  79%|███████▉  | 66896/84358 [02:30<00:39, 442.15frames/s][A
+Detected: 0 | Progress:  79%|███████▉  | 66942/84358 [02:30<00:41, 423.61frames/s][A
+Detected: 0 | Progress:  79%|███████▉  | 66986/84358 [02:30<00:42, 411.64frames/s][A
+Detected: 0 | Progress:  79%|███████▉  | 67028/84358 [02:31<00:42, 406.33frames/s][A
+Detected: 0 | Progress:  80%|███████▉  | 67070/84358 [02:31<00:43, 399.72frames/s][A
+Detected: 0 | Progress:  80%|███████▉  | 67112/84358 [02:31<00:43, 394.14frames/s][A
+Detected: 0 | Progress:  80%|███████▉  | 67152/84358 [02:31<00:43, 392.71frames/s][A
+Detected: 0 | Progress:  80%|███████▉  | 67192/84358 [02:31<00:46, 371.78frames/s][A
+Detected: 0 | Progress:  80%|███████▉  | 67242/84358 [02:31<00:42, 406.46frames/s][A
+Detected: 0 | Progress:  80%|███████▉  | 67292/84358 [02:31<00:39, 431.50frames/s][A
+Detected: 0 | Progress:  80%|███████▉  | 67342/84358 [02:31<00:38, 447.08frames/s][A
+Detected: 0 | Progress:  80%|███████▉  | 67388/84358 [02:31<00:37, 449.42frames/s][A
+Detected: 0 | Progress:  80%|███████▉  | 67436/84358 [02:31<00:37, 457.16frames/s][A
+Detected: 0 | Progress:  80%|███████▉  | 67482/84358 [02:32<00:37, 447.87frames/s][A
+Detected: 0 | Progress:  80%|████████  | 67528/84358 [02:32<00:44, 375.02frames/s][A
+Detected: 0 | Progress:  80%|████████  | 67568/84358 [02:32<00:51, 324.72frames/s][A
+Detected: 0 | Progress:  80%|████████  | 67604/84358 [02:32<01:02, 269.30frames/s][A
+Detected: 0 | Progress:  80%|████████  | 67634/84358 [02:32<01:08, 245.58frames/s][A
+Detected: 0 | Progress:  80%|████████  | 67662/84358 [02:32<01:12, 231.66frames/s][A
+Detected: 0 | Progress:  80%|████████  | 67688/84358 [02:33<01:14, 222.58frames/s][A
+Detected: 0 | Progress:  80%|████████  | 67712/84358 [02:33<01:15, 221.10frames/s][A
+Detected: 0 | Progress:  80%|████████  | 67736/84358 [02:33<01:14, 223.51frames/s][A
+Detected: 0 | Progress:  80%|████████  | 67760/84358 [02:33<01:14, 222.74frames/s][A
+Detected: 0 | Progress:  80%|████████  | 67784/84358 [02:33<01:16, 215.60frames/s][A
+Detected: 0 | Progress:  80%|████████  | 67844/84358 [02:33<00:52, 314.38frames/s][A
+Detected: 0 | Progress:  80%|████████  | 67878/84358 [02:33<00:55, 298.77frames/s][A
+Detected: 0 | Progress:  81%|████████  | 67910/84358 [02:33<01:03, 260.16frames/s][A
+Detected: 0 | Progress:  81%|████████  | 67938/84358 [02:34<01:07, 244.05frames/s][A
+Detected: 0 | Progress:  81%|████████  | 67964/84358 [02:34<01:09, 235.67frames/s][A
+Detected: 0 | Progress:  81%|████████  | 67990/84358 [02:34<01:09, 236.12frames/s][A
+Detected: 0 | Progress:  81%|████████  | 68016/84358 [02:34<01:11, 229.73frames/s][A
+Detected: 0 | Progress:  81%|████████  | 68040/84358 [02:34<01:11, 228.13frames/s][A
+Detected: 0 | Progress:  81%|████████  | 68064/84358 [02:34<01:12, 224.98frames/s][A
+Detected: 0 | Progress:  81%|████████  | 68088/84358 [02:34<01:12, 223.86frames/s][A
+Detected: 0 | Progress:  81%|████████  | 68112/84358 [02:34<01:12, 223.21frames/s][A
+Detected: 0 | Progress:  81%|████████  | 68142/84358 [02:34<01:07, 241.48frames/s][A
+Detected: 0 | Progress:  81%|████████  | 68188/84358 [02:34<00:53, 301.50frames/s][A
+Detected: 0 | Progress:  81%|████████  | 68238/84358 [02:35<00:45, 353.56frames/s][A
+Detected: 0 | Progress:  81%|████████  | 68286/84358 [02:35<00:41, 385.29frames/s][A
+Detected: 0 | Progress:  81%|████████  | 68334/84358 [02:35<00:39, 410.46frames/s][A
+Detected: 0 | Progress:  81%|████████  | 68382/84358 [02:35<00:37, 427.52frames/s][A
+Detected: 0 | Progress:  81%|████████  | 68426/84358 [02:35<00:38, 416.55frames/s][A
+Detected: 0 | Progress:  81%|████████  | 68474/84358 [02:35<00:36, 431.17frames/s][A
+Detected: 0 | Progress:  81%|████████  | 68522/84358 [02:35<00:35, 445.12frames/s][A
+Detected: 0 | Progress:  81%|████████▏ | 68568/84358 [02:35<00:35, 444.58frames/s][A
+Detected: 0 | Progress:  81%|████████▏ | 68618/84358 [02:35<00:34, 458.43frames/s][A
+Detected: 0 | Progress:  81%|████████▏ | 68668/84358 [02:36<00:33, 467.00frames/s][A
+Detected: 0 | Progress:  81%|████████▏ | 68716/84358 [02:36<00:33, 470.10frames/s][A
+Detected: 0 | Progress:  82%|████████▏ | 68768/84358 [02:36<00:32, 483.90frames/s][A
+Detected: 0 | Progress:  82%|████████▏ | 68824/84358 [02:36<00:30, 501.50frames/s][A
+Detected: 0 | Progress:  82%|████████▏ | 68882/84358 [02:36<00:29, 521.91frames/s][A
+Detected: 0 | Progress:  82%|████████▏ | 68936/84358 [02:36<00:31, 493.28frames/s][A
+Detected: 0 | Progress:  82%|████████▏ | 68986/84358 [02:36<00:34, 447.36frames/s][A
+Detected: 0 | Progress:  82%|████████▏ | 69032/84358 [02:36<00:35, 431.75frames/s][A
+Detected: 0 | Progress:  82%|████████▏ | 69076/84358 [02:36<00:35, 428.87frames/s][A
+Detected: 0 | Progress:  82%|████████▏ | 69130/84358 [02:37<00:33, 455.25frames/s][A
+Detected: 0 | Progress:  82%|████████▏ | 69180/84358 [02:37<00:32, 463.35frames/s][A
+Detected: 0 | Progress:  82%|████████▏ | 69228/84358 [02:37<00:34, 433.51frames/s][A
+Detected: 0 | Progress:  82%|████████▏ | 69272/84358 [02:37<00:36, 416.93frames/s][A
+Detected: 0 | Progress:  82%|████████▏ | 69324/84358 [02:37<00:33, 443.91frames/s][A
+Detected: 0 | Progress:  82%|████████▏ | 69376/84358 [02:37<00:32, 456.83frames/s][A
+Detected: 0 | Progress:  82%|████████▏ | 69430/84358 [02:37<00:31, 479.57frames/s][A
+Detected: 0 | Progress:  82%|████████▏ | 69480/84358 [02:37<00:31, 474.58frames/s][A
+Detected: 0 | Progress:  82%|████████▏ | 69528/84358 [02:37<00:31, 471.18frames/s][A
+Detected: 0 | Progress:  82%|████████▏ | 69576/84358 [02:37<00:31, 465.05frames/s][A
+Detected: 0 | Progress:  83%|████████▎ | 69624/84358 [02:38<00:31, 463.10frames/s][A
+Detected: 0 | Progress:  83%|████████▎ | 69672/84358 [02:38<00:31, 466.66frames/s][A
+Detected: 0 | Progress:  83%|████████▎ | 69720/84358 [02:38<00:31, 469.09frames/s][A
+Detected: 0 | Progress:  83%|████████▎ | 69768/84358 [02:38<00:31, 462.02frames/s][A
+Detected: 0 | Progress:  83%|████████▎ | 69820/84358 [02:38<00:30, 473.51frames/s][A
+Detected: 0 | Progress:  83%|████████▎ | 69868/84358 [02:38<00:31, 461.28frames/s][A
+Detected: 0 | Progress:  83%|████████▎ | 69916/84358 [02:38<00:33, 428.03frames/s][A
+Detected: 0 | Progress:  83%|████████▎ | 69960/84358 [02:38<00:33, 424.67frames/s][A
+Detected: 0 | Progress:  83%|████████▎ | 70004/84358 [02:38<00:34, 419.57frames/s][A
+Detected: 0 | Progress:  83%|████████▎ | 70048/84358 [02:39<00:33, 425.27frames/s][A
+Detected: 0 | Progress:  83%|████████▎ | 70096/84358 [02:39<00:32, 439.75frames/s][A
+Detected: 0 | Progress:  83%|████████▎ | 70158/84358 [02:39<00:29, 488.32frames/s][A
+Detected: 0 | Progress:  83%|████████▎ | 70208/84358 [02:39<00:29, 486.14frames/s][A
+Detected: 0 | Progress:  83%|████████▎ | 70258/84358 [02:39<00:29, 474.13frames/s][A
+Detected: 0 | Progress:  83%|████████▎ | 70308/84358 [02:39<00:29, 476.09frames/s][A
+Detected: 0 | Progress:  83%|████████▎ | 70356/84358 [02:39<00:29, 475.26frames/s][A
+Detected: 0 | Progress:  83%|████████▎ | 70410/84358 [02:39<00:28, 492.93frames/s][A
+Detected: 0 | Progress:  84%|████████▎ | 70464/84358 [02:39<00:27, 501.66frames/s][A
+Detected: 0 | Progress:  84%|████████▎ | 70518/84358 [02:40<00:27, 509.28frames/s][A
+Detected: 0 | Progress:  84%|████████▎ | 70570/84358 [02:40<00:27, 496.40frames/s][A
+Detected: 0 | Progress:  84%|████████▎ | 70620/84358 [02:40<00:27, 490.81frames/s][A
+Detected: 0 | Progress:  84%|████████▍ | 70670/84358 [02:40<00:27, 491.83frames/s][A
+Detected: 0 | Progress:  84%|████████▍ | 70720/84358 [02:40<00:28, 485.24frames/s][A
+Detected: 0 | Progress:  84%|████████▍ | 70770/84358 [02:40<00:28, 479.97frames/s][A
+Detected: 0 | Progress:  84%|████████▍ | 70822/84358 [02:40<00:27, 490.81frames/s][A
+Detected: 0 | Progress:  84%|████████▍ | 70878/84358 [02:40<00:26, 508.33frames/s][A
+Detected: 0 | Progress:  84%|████████▍ | 70930/84358 [02:40<00:26, 497.85frames/s][A
+Detected: 0 | Progress:  84%|████████▍ | 70980/84358 [02:40<00:26, 495.85frames/s][A
+Detected: 0 | Progress:  84%|████████▍ | 71030/84358 [02:41<00:27, 487.15frames/s][A
+Detected: 0 | Progress:  84%|████████▍ | 71084/84358 [02:41<00:26, 499.25frames/s][A
+Detected: 0 | Progress:  84%|████████▍ | 71134/84358 [02:41<00:27, 483.84frames/s][A
+Detected: 0 | Progress:  84%|████████▍ | 71184/84358 [02:41<00:29, 447.71frames/s][A
+Detected: 0 | Progress:  84%|████████▍ | 71230/84358 [02:41<00:29, 447.64frames/s][A
+Detected: 0 | Progress:  84%|████████▍ | 71276/84358 [02:41<00:30, 432.70frames/s][A
+Detected: 0 | Progress:  85%|████████▍ | 71320/84358 [02:41<00:31, 418.77frames/s][A
+Detected: 0 | Progress:  85%|████████▍ | 71364/84358 [02:41<00:31, 416.99frames/s][A
+Detected: 0 | Progress:  85%|████████▍ | 71406/84358 [02:41<00:31, 406.04frames/s][A
+Detected: 0 | Progress:  85%|████████▍ | 71448/84358 [02:42<00:32, 397.60frames/s][A
+Detected: 0 | Progress:  85%|████████▍ | 71488/84358 [02:42<00:32, 397.69frames/s][A
+Detected: 0 | Progress:  85%|████████▍ | 71528/84358 [02:42<00:32, 397.94frames/s][A
+Detected: 0 | Progress:  85%|████████▍ | 71568/84358 [02:42<00:32, 394.79frames/s][A
+Detected: 0 | Progress:  85%|████████▍ | 71608/84358 [02:42<00:34, 365.50frames/s][A
+Detected: 0 | Progress:  85%|████████▍ | 71646/84358 [02:42<00:36, 352.37frames/s][A
+Detected: 0 | Progress:  85%|████████▍ | 71682/84358 [02:42<00:36, 347.46frames/s][A
+Detected: 0 | Progress:  85%|████████▌ | 71718/84358 [02:42<00:36, 344.61frames/s][A
+Detected: 0 | Progress:  85%|████████▌ | 71754/84358 [02:42<00:37, 340.12frames/s][A
+Detected: 0 | Progress:  85%|████████▌ | 71790/84358 [02:43<00:37, 338.82frames/s][A
+Detected: 0 | Progress:  85%|████████▌ | 71824/84358 [02:43<00:37, 332.76frames/s][A
+Detected: 0 | Progress:  85%|████████▌ | 71870/84358 [02:43<00:34, 367.02frames/s][A
+Detected: 0 | Progress:  85%|████████▌ | 71912/84358 [02:43<00:32, 380.45frames/s][A
+Detected: 0 | Progress:  85%|████████▌ | 71952/84358 [02:43<00:33, 371.90frames/s][A
+Detected: 0 | Progress:  85%|████████▌ | 71996/84358 [02:43<00:31, 390.80frames/s][A
+Detected: 0 | Progress:  85%|████████▌ | 72048/84358 [02:43<00:29, 422.74frames/s][A
+Detected: 0 | Progress:  85%|████████▌ | 72100/84358 [02:43<00:27, 447.59frames/s][A
+Detected: 0 | Progress:  86%|████████▌ | 72150/84358 [02:43<00:26, 459.83frames/s][A
+Detected: 0 | Progress:  86%|████████▌ | 72204/84358 [02:43<00:25, 479.90frames/s][A
+Detected: 0 | Progress:  86%|████████▌ | 72256/84358 [02:44<00:24, 487.00frames/s][A
+Detected: 0 | Progress:  86%|████████▌ | 72306/84358 [02:44<00:25, 481.57frames/s][A
+Detected: 0 | Progress:  86%|████████▌ | 72358/84358 [02:44<00:24, 489.39frames/s][A
+Detected: 0 | Progress:  86%|████████▌ | 72408/84358 [02:44<00:25, 474.71frames/s][A
+Detected: 0 | Progress:  86%|████████▌ | 72460/84358 [02:44<00:24, 479.68frames/s][A
+Detected: 0 | Progress:  86%|████████▌ | 72510/84358 [02:44<00:26, 454.83frames/s][A
+Detected: 0 | Progress:  86%|████████▌ | 72556/84358 [02:44<00:27, 422.63frames/s][A
+Detected: 0 | Progress:  86%|████████▌ | 72600/84358 [02:44<00:28, 413.83frames/s][A
+Detected: 0 | Progress:  86%|████████▌ | 72648/84358 [02:44<00:27, 427.44frames/s][A
+Detected: 0 | Progress:  86%|████████▌ | 72692/84358 [02:45<00:28, 415.44frames/s][A
+Detected: 0 | Progress:  86%|████████▌ | 72734/84358 [02:45<00:28, 400.93frames/s][A
+Detected: 0 | Progress:  86%|████████▋ | 72776/84358 [02:45<00:30, 383.63frames/s][A
+Detected: 0 | Progress:  86%|████████▋ | 72816/84358 [02:45<00:30, 376.82frames/s][A
+Detected: 0 | Progress:  86%|████████▋ | 72856/84358 [02:45<00:30, 378.73frames/s][A
+Detected: 0 | Progress:  86%|████████▋ | 72896/84358 [02:45<00:30, 380.96frames/s][A
+Detected: 0 | Progress:  86%|████████▋ | 72936/84358 [02:45<00:30, 379.13frames/s][A
+Detected: 0 | Progress:  87%|████████▋ | 72974/84358 [02:45<00:30, 376.92frames/s][A
+Detected: 0 | Progress:  87%|████████▋ | 73014/84358 [02:45<00:29, 381.41frames/s][A
+Detected: 0 | Progress:  87%|████████▋ | 73054/84358 [02:46<00:29, 378.43frames/s][A
+Detected: 0 | Progress:  87%|████████▋ | 73106/84358 [02:46<00:27, 415.96frames/s][A
+Detected: 0 | Progress:  87%|████████▋ | 73164/84358 [02:46<00:24, 460.38frames/s][A
+Detected: 0 | Progress:  87%|████████▋ | 73222/84358 [02:46<00:22, 489.59frames/s][A
+Detected: 0 | Progress:  87%|████████▋ | 73272/84358 [02:46<00:24, 458.64frames/s][A
+Detected: 0 | Progress:  87%|████████▋ | 73320/84358 [02:46<00:25, 437.16frames/s][A
+Detected: 0 | Progress:  87%|████████▋ | 73366/84358 [02:46<00:25, 436.25frames/s][A
+Detected: 0 | Progress:  87%|████████▋ | 73416/84358 [02:46<00:24, 449.36frames/s][A
+Detected: 0 | Progress:  87%|████████▋ | 73464/84358 [02:46<00:23, 456.03frames/s][A
+Detected: 0 | Progress:  87%|████████▋ | 73516/84358 [02:47<00:22, 471.60frames/s][A
+Detected: 0 | Progress:  87%|████████▋ | 73566/84358 [02:47<00:22, 477.32frames/s][A
+Detected: 0 | Progress:  87%|████████▋ | 73626/84358 [02:47<00:21, 508.19frames/s][A
+Detected: 0 | Progress:  87%|████████▋ | 73686/84358 [02:47<00:20, 531.36frames/s][A
+Detected: 0 | Progress:  87%|████████▋ | 73744/84358 [02:47<00:19, 543.97frames/s][A
+Detected: 0 | Progress:  87%|████████▋ | 73800/84358 [02:47<00:19, 547.39frames/s][A
+Detected: 0 | Progress:  88%|████████▊ | 73856/84358 [02:47<00:19, 547.53frames/s][A
+Detected: 0 | Progress:  88%|████████▊ | 73912/84358 [02:47<00:20, 522.05frames/s][A
+Detected: 0 | Progress:  88%|████████▊ | 73966/84358 [02:47<00:20, 505.59frames/s][A
+Detected: 0 | Progress:  88%|████████▊ | 74018/84358 [02:47<00:21, 491.75frames/s][A
+Detected: 0 | Progress:  88%|████████▊ | 74068/84358 [02:48<00:20, 492.93frames/s][A
+Detected: 0 | Progress:  88%|████████▊ | 74118/84358 [02:48<00:21, 484.54frames/s][A
+Detected: 0 | Progress:  88%|████████▊ | 74168/84358 [02:48<00:21, 477.81frames/s][A
+Detected: 0 | Progress:  88%|████████▊ | 74216/84358 [02:48<00:22, 443.88frames/s][A
+Detected: 0 | Progress:  88%|████████▊ | 74262/84358 [02:48<00:23, 436.49frames/s][A
+Detected: 0 | Progress:  88%|████████▊ | 74306/84358 [02:48<00:24, 413.03frames/s][A
+Detected: 0 | Progress:  88%|████████▊ | 74350/84358 [02:48<00:23, 417.68frames/s][A
+Detected: 0 | Progress:  88%|████████▊ | 74394/84358 [02:48<00:24, 403.58frames/s][A
+Detected: 0 | Progress:  88%|████████▊ | 74436/84358 [02:48<00:25, 396.46frames/s][A
+Detected: 0 | Progress:  88%|████████▊ | 74480/84358 [02:49<00:24, 404.92frames/s][A
+Detected: 0 | Progress:  88%|████████▊ | 74528/84358 [02:49<00:23, 420.68frames/s][A
+Detected: 0 | Progress:  88%|████████▊ | 74580/84358 [02:49<00:21, 447.56frames/s][A
+Detected: 0 | Progress:  88%|████████▊ | 74630/84358 [02:49<00:21, 455.82frames/s][A
+Detected: 0 | Progress:  89%|████████▊ | 74676/84358 [02:49<00:21, 456.10frames/s][A
+Detected: 0 | Progress:  89%|████████▊ | 74728/84358 [02:49<00:20, 470.74frames/s][A
+Detected: 0 | Progress:  89%|████████▊ | 74782/84358 [02:49<00:19, 485.98frames/s][A
+Detected: 0 | Progress:  89%|████████▊ | 74832/84358 [02:49<00:20, 470.75frames/s][A
+Detected: 0 | Progress:  89%|████████▉ | 74880/84358 [02:49<00:22, 422.73frames/s][A
+Detected: 0 | Progress:  89%|████████▉ | 74924/84358 [02:50<00:23, 408.83frames/s][A
+Detected: 0 | Progress:  89%|████████▉ | 74966/84358 [02:50<00:23, 392.73frames/s][A
+Detected: 0 | Progress:  89%|████████▉ | 75006/84358 [02:50<00:23, 391.54frames/s][A
+Detected: 0 | Progress:  89%|████████▉ | 75048/84358 [02:50<00:23, 396.42frames/s][A
+Detected: 0 | Progress:  89%|████████▉ | 75090/84358 [02:50<00:23, 388.88frames/s][A
+Detected: 0 | Progress:  89%|████████▉ | 75130/84358 [02:50<00:23, 389.08frames/s][A
+Detected: 0 | Progress:  89%|████████▉ | 75176/84358 [02:50<00:22, 407.95frames/s][A
+Detected: 0 | Progress:  89%|████████▉ | 75222/84358 [02:50<00:21, 420.18frames/s][A
+Detected: 0 | Progress:  89%|████████▉ | 75266/84358 [02:50<00:21, 423.68frames/s][A
+Detected: 0 | Progress:  89%|████████▉ | 75316/84358 [02:51<00:21, 425.48frames/s][A
+Detected: 0 | Progress:  89%|████████▉ | 75360/84358 [02:51<00:22, 405.92frames/s][A
+Detected: 0 | Progress:  89%|████████▉ | 75402/84358 [02:51<00:22, 396.42frames/s][A
+Detected: 0 | Progress:  89%|████████▉ | 75442/84358 [02:51<00:23, 385.04frames/s][A
+Detected: 0 | Progress:  89%|████████▉ | 75482/84358 [02:51<00:23, 374.16frames/s][A
+Detected: 0 | Progress:  90%|████████▉ | 75520/84358 [02:51<00:23, 368.26frames/s][A
+Detected: 0 | Progress:  90%|████████▉ | 75558/84358 [02:51<00:23, 367.95frames/s][A
+Detected: 0 | Progress:  90%|████████▉ | 75600/84358 [02:51<00:23, 380.01frames/s][A
+Detected: 0 | Progress:  90%|████████▉ | 75644/84358 [02:51<00:21, 396.21frames/s][A
+Detected: 0 | Progress:  90%|████████▉ | 75688/84358 [02:52<00:21, 403.16frames/s][A
+Detected: 0 | Progress:  90%|████████▉ | 75730/84358 [02:52<00:21, 392.92frames/s][A
+Detected: 0 | Progress:  90%|████████▉ | 75774/84358 [02:52<00:21, 402.09frames/s][A
+Detected: 0 | Progress:  90%|████████▉ | 75816/84358 [02:52<00:21, 401.53frames/s][A
+Detected: 0 | Progress:  90%|████████▉ | 75864/84358 [02:52<00:20, 418.71frames/s][A
+Detected: 0 | Progress:  90%|████████▉ | 75908/84358 [02:52<00:20, 419.60frames/s][A
+Detected: 0 | Progress:  90%|█████████ | 75952/84358 [02:52<00:20, 410.17frames/s][A
+Detected: 0 | Progress:  90%|█████████ | 75994/84358 [02:52<00:21, 395.12frames/s][A
+Detected: 0 | Progress:  90%|█████████ | 76036/84358 [02:52<00:20, 397.50frames/s][A
+Detected: 0 | Progress:  90%|█████████ | 76076/84358 [02:52<00:21, 391.88frames/s][A
+Detected: 0 | Progress:  90%|█████████ | 76126/84358 [02:53<00:19, 422.41frames/s][A
+Detected: 0 | Progress:  90%|█████████ | 76176/84358 [02:53<00:18, 442.10frames/s][A
+Detected: 0 | Progress:  90%|█████████ | 76228/84358 [02:53<00:17, 460.43frames/s][A
+Detected: 0 | Progress:  90%|█████████ | 76280/84358 [02:53<00:16, 475.41frames/s][A
+Detected: 0 | Progress:  90%|█████████ | 76330/84358 [02:53<00:16, 476.68frames/s][A
+Detected: 0 | Progress:  91%|█████████ | 76384/84358 [02:53<00:16, 488.03frames/s][A
+Detected: 0 | Progress:  91%|█████████ | 76438/84358 [02:53<00:15, 502.39frames/s][A
+Detected: 0 | Progress:  91%|█████████ | 76494/84358 [02:53<00:15, 518.08frames/s][A
+Detected: 0 | Progress:  91%|█████████ | 76598/84358 [02:53<00:11, 666.91frames/s][A
+Detected: 0 | Progress:  91%|█████████ | 76666/84358 [02:54<00:13, 584.65frames/s][A
+Detected: 0 | Progress:  91%|█████████ | 76728/84358 [02:54<00:14, 528.99frames/s][A
+Detected: 0 | Progress:  91%|█████████ | 76784/84358 [02:54<00:15, 503.96frames/s][A
+Detected: 0 | Progress:  91%|█████████ | 76836/84358 [02:54<00:15, 500.49frames/s][A
+Detected: 0 | Progress:  91%|█████████ | 76888/84358 [02:54<00:15, 474.49frames/s][A
+Detected: 0 | Progress:  91%|█████████ | 76938/84358 [02:54<00:15, 473.03frames/s][A
+Detected: 0 | Progress:  91%|█████████▏| 76994/84358 [02:54<00:14, 495.35frames/s][A
+Detected: 0 | Progress:  91%|█████████▏| 77050/84358 [02:54<00:14, 511.09frames/s][A
+Detected: 0 | Progress:  91%|█████████▏| 77102/84358 [02:54<00:14, 496.19frames/s][A
+Detected: 0 | Progress:  91%|█████████▏| 77156/84358 [02:55<00:14, 504.74frames/s][A
+Detected: 0 | Progress:  92%|█████████▏| 77218/84358 [02:55<00:13, 515.92frames/s][A
+Detected: 0 | Progress:  92%|█████████▏| 77280/84358 [02:55<00:13, 541.69frames/s][A
+Detected: 0 | Progress:  92%|█████████▏| 77340/84358 [02:55<00:13, 528.36frames/s][A
+Detected: 0 | Progress:  92%|█████████▏| 77402/84358 [02:55<00:12, 550.21frames/s][A
+Detected: 0 | Progress:  92%|█████████▏| 77466/84358 [02:55<00:12, 569.88frames/s][A
+Detected: 0 | Progress:  92%|█████████▏| 77528/84358 [02:55<00:11, 584.10frames/s][A
+Detected: 0 | Progress:  92%|█████████▏| 77588/84358 [02:55<00:12, 546.47frames/s][A
+Detected: 0 | Progress:  92%|█████████▏| 77644/84358 [02:56<00:13, 490.60frames/s][A
+Detected: 0 | Progress:  92%|█████████▏| 77696/84358 [02:56<00:14, 473.68frames/s][A
+Detected: 0 | Progress:  92%|█████████▏| 77746/84358 [02:56<00:14, 459.92frames/s][A
+Detected: 0 | Progress:  92%|█████████▏| 77808/84358 [02:56<00:13, 500.05frames/s][A
+Detected: 0 | Progress:  92%|█████████▏| 77860/84358 [02:56<00:13, 469.98frames/s][A
+Detected: 0 | Progress:  92%|█████████▏| 77910/84358 [02:56<00:13, 476.53frames/s][A
+Detected: 0 | Progress:  92%|█████████▏| 77970/84358 [02:56<00:12, 509.95frames/s][A
+Detected: 0 | Progress:  92%|█████████▏| 78022/84358 [02:56<00:12, 495.00frames/s][A
+Detected: 0 | Progress:  93%|█████████▎| 78074/84358 [02:56<00:12, 484.25frames/s][A
+Detected: 0 | Progress:  93%|█████████▎| 78124/84358 [02:57<00:12, 485.34frames/s][A
+Detected: 0 | Progress:  93%|█████████▎| 78180/84358 [02:57<00:12, 503.78frames/s][A
+Detected: 0 | Progress:  93%|█████████▎| 78234/84358 [02:57<00:11, 510.86frames/s][A
+Detected: 0 | Progress:  93%|█████████▎| 78286/84358 [02:57<00:12, 497.70frames/s][A
+Detected: 0 | Progress:  93%|█████████▎| 78336/84358 [02:57<00:12, 493.20frames/s][A
+Detected: 0 | Progress:  93%|█████████▎| 78388/84358 [02:57<00:11, 500.84frames/s][A
+Detected: 0 | Progress:  93%|█████████▎| 78440/84358 [02:57<00:11, 505.70frames/s][A
+Detected: 0 | Progress:  93%|█████████▎| 78492/84358 [02:57<00:11, 500.68frames/s][A
+Detected: 0 | Progress:  93%|█████████▎| 78552/84358 [02:57<00:11, 525.45frames/s][A
+Detected: 0 | Progress:  93%|█████████▎| 78612/84358 [02:57<00:10, 547.20frames/s][A
+Detected: 0 | Progress:  93%|█████████▎| 78674/84358 [02:58<00:10, 565.60frames/s][A
+Detected: 0 | Progress:  93%|█████████▎| 78732/84358 [02:58<00:10, 548.02frames/s][A
+Detected: 0 | Progress:  93%|█████████▎| 78788/84358 [02:58<00:10, 513.46frames/s][A
+Detected: 0 | Progress:  93%|█████████▎| 78850/84358 [02:58<00:10, 541.25frames/s][A
+Detected: 0 | Progress:  94%|█████████▎| 78910/84358 [02:58<00:09, 555.34frames/s][A
+Detected: 0 | Progress:  94%|█████████▎| 78970/84358 [02:58<00:09, 568.02frames/s][A
+Detected: 0 | Progress:  94%|█████████▎| 79032/84358 [02:58<00:09, 579.07frames/s][A
+Detected: 0 | Progress:  94%|█████████▍| 79092/84358 [02:58<00:09, 571.08frames/s][A
+Detected: 0 | Progress:  94%|█████████▍| 79154/84358 [02:58<00:08, 582.50frames/s][A
+Detected: 0 | Progress:  94%|█████████▍| 79216/84358 [02:58<00:08, 591.26frames/s][A
+Detected: 0 | Progress:  94%|█████████▍| 79276/84358 [02:59<00:08, 579.71frames/s][A
+Detected: 0 | Progress:  94%|█████████▍| 79336/84358 [02:59<00:08, 564.38frames/s][A
+Detected: 0 | Progress:  94%|█████████▍| 79394/84358 [02:59<00:09, 501.01frames/s][A
+Detected: 0 | Progress:  94%|█████████▍| 79446/84358 [02:59<00:10, 478.03frames/s][A
+Detected: 0 | Progress:  94%|█████████▍| 79496/84358 [02:59<00:10, 481.34frames/s][A
+Detected: 0 | Progress:  94%|█████████▍| 79546/84358 [02:59<00:10, 461.93frames/s][A
+Detected: 0 | Progress:  94%|█████████▍| 79598/84358 [02:59<00:10, 474.85frames/s][A
+Detected: 0 | Progress:  94%|█████████▍| 79660/84358 [02:59<00:09, 511.16frames/s][A
+Detected: 0 | Progress:  95%|█████████▍| 79724/84358 [03:00<00:08, 545.47frames/s][A
+Detected: 0 | Progress:  95%|█████████▍| 79790/84358 [03:00<00:07, 572.30frames/s][A
+Detected: 0 | Progress:  95%|█████████▍| 79848/84358 [03:00<00:08, 561.79frames/s][A
+Detected: 0 | Progress:  95%|█████████▍| 79906/84358 [03:00<00:07, 560.46frames/s][A
+Detected: 0 | Progress:  95%|█████████▍| 79964/84358 [03:00<00:07, 552.84frames/s][A
+Detected: 0 | Progress:  95%|█████████▍| 80020/84358 [03:00<00:08, 495.17frames/s][A
+Detected: 0 | Progress:  95%|█████████▍| 80072/84358 [03:00<00:10, 417.17frames/s][A
+Detected: 0 | Progress:  95%|█████████▍| 80118/84358 [03:00<00:11, 370.35frames/s][A
+Detected: 0 | Progress:  95%|█████████▌| 80158/84358 [03:01<00:11, 352.47frames/s][A
+Detected: 0 | Progress:  95%|█████████▌| 80196/84358 [03:01<00:12, 333.32frames/s][A
+Detected: 0 | Progress:  95%|█████████▌| 80232/84358 [03:01<00:12, 325.67frames/s][A
+Detected: 0 | Progress:  95%|█████████▌| 80278/84358 [03:01<00:11, 357.95frames/s][A
+Detected: 0 | Progress:  95%|█████████▌| 80334/84358 [03:01<00:09, 409.15frames/s][A
+Detected: 0 | Progress:  95%|█████████▌| 80388/84358 [03:01<00:08, 442.85frames/s][A
+Detected: 0 | Progress:  95%|█████████▌| 80434/84358 [03:01<00:09, 427.56frames/s][A
+Detected: 0 | Progress:  95%|█████████▌| 80488/84358 [03:01<00:08, 456.37frames/s][A
+Detected: 0 | Progress:  95%|█████████▌| 80544/84358 [03:01<00:07, 482.27frames/s][A
+Detected: 0 | Progress:  96%|█████████▌| 80602/84358 [03:02<00:07, 507.42frames/s][A
+Detected: 0 | Progress:  96%|█████████▌| 80660/84358 [03:02<00:07, 526.26frames/s][A
+Detected: 0 | Progress:  96%|█████████▌| 80714/84358 [03:02<00:06, 524.43frames/s][A
+Detected: 0 | Progress:  96%|█████████▌| 80768/84358 [03:02<00:07, 458.73frames/s][A
+Detected: 0 | Progress:  96%|█████████▌| 80816/84358 [03:02<00:08, 419.64frames/s][A
+Detected: 0 | Progress:  96%|█████████▌| 80860/84358 [03:02<00:08, 410.17frames/s][A
+Detected: 0 | Progress:  96%|█████████▌| 80904/84358 [03:02<00:09, 378.90frames/s][A
+Detected: 0 | Progress:  96%|█████████▌| 80944/84358 [03:02<00:09, 344.36frames/s][A
+Detected: 0 | Progress:  96%|█████████▌| 80980/84358 [03:03<00:09, 337.83frames/s][A
+Detected: 0 | Progress:  96%|█████████▌| 81016/84358 [03:03<00:09, 338.70frames/s][A
+Detected: 0 | Progress:  96%|█████████▌| 81052/84358 [03:03<00:09, 341.22frames/s][A
+Detected: 0 | Progress:  96%|█████████▌| 81094/84358 [03:03<00:09, 361.39frames/s][A
+Detected: 0 | Progress:  96%|█████████▌| 81132/84358 [03:03<00:08, 359.87frames/s][A
+Detected: 0 | Progress:  96%|█████████▌| 81172/84358 [03:03<00:08, 366.87frames/s][A
+Detected: 0 | Progress:  96%|█████████▋| 81210/84358 [03:03<00:08, 370.22frames/s][A
+Detected: 0 | Progress:  96%|█████████▋| 81248/84358 [03:03<00:08, 369.12frames/s][A
+Detected: 0 | Progress:  96%|█████████▋| 81292/84358 [03:03<00:07, 388.78frames/s][A
+Detected: 0 | Progress:  96%|█████████▋| 81348/84358 [03:03<00:06, 437.35frames/s][A
+Detected: 0 | Progress:  96%|█████████▋| 81392/84358 [03:04<00:06, 428.96frames/s][A
+Detected: 0 | Progress:  97%|█████████▋| 81448/84358 [03:04<00:06, 465.46frames/s][A
+Detected: 0 | Progress:  97%|█████████▋| 81516/84358 [03:04<00:05, 526.64frames/s][A
+Detected: 0 | Progress:  97%|█████████▋| 81570/84358 [03:04<00:05, 518.69frames/s][A
+Detected: 0 | Progress:  97%|█████████▋| 81648/84358 [03:04<00:04, 592.70frames/s][A
+Detected: 0 | Progress:  97%|█████████▋| 81708/84358 [03:04<00:04, 546.83frames/s][A
+Detected: 0 | Progress:  97%|█████████▋| 81776/84358 [03:04<00:04, 583.51frames/s][A
+Detected: 0 | Progress:  97%|█████████▋| 81846/84358 [03:04<00:04, 613.04frames/s][A
+Detected: 0 | Progress:  97%|█████████▋| 81910/84358 [03:04<00:03, 618.57frames/s][A
+Detected: 0 | Progress:  97%|█████████▋| 81974/84358 [03:05<00:04, 562.86frames/s][A
+Detected: 0 | Progress:  97%|█████████▋| 82084/84358 [03:05<00:03, 707.89frames/s][A
+Detected: 0 | Progress:  97%|█████████▋| 82198/84358 [03:05<00:02, 826.29frames/s][A
+Detected: 0 | Progress:  98%|█████████▊| 82310/84358 [03:05<00:02, 907.46frames/s][A
+Detected: 0 | Progress:  98%|█████████▊| 82422/84358 [03:05<00:01, 968.60frames/s][A
+Detected: 0 | Progress:  98%|█████████▊| 82534/84358 [03:05<00:01, 1010.32frames/s][A
+Detected: 0 | Progress:  98%|█████████▊| 82648/84358 [03:05<00:01, 1048.34frames/s][A
+Detected: 0 | Progress:  98%|█████████▊| 82758/84358 [03:05<00:01, 1060.65frames/s][A
+Detected: 0 | Progress:  98%|█████████▊| 82872/84358 [03:05<00:01, 1080.80frames/s][A
+Detected: 0 | Progress:  98%|█████████▊| 82982/84358 [03:05<00:01, 1074.64frames/s][A
+Detected: 0 | Progress:  98%|█████████▊| 83092/84358 [03:06<00:01, 1081.51frames/s][A
+Detected: 0 | Progress:  99%|█████████▊| 83204/84358 [03:06<00:01, 1087.53frames/s][A
+Detected: 0 | Progress:  99%|█████████▉| 83316/84358 [03:06<00:00, 1094.65frames/s][A
+Detected: 0 | Progress:  99%|█████████▉| 83426/84358 [03:06<00:00, 1068.56frames/s][A
+Detected: 0 | Progress:  99%|█████████▉| 83534/84358 [03:06<00:00, 1066.30frames/s][A
+Detected: 0 | Progress:  99%|█████████▉| 83642/84358 [03:06<00:00, 1043.47frames/s][A
+Detected: 0 | Progress:  99%|█████████▉| 83754/84358 [03:06<00:00, 1064.05frames/s][A
+Detected: 0 | Progress:  99%|█████████▉| 83866/84358 [03:06<00:00, 1076.31frames/s][A
+Detected: 0 | Progress: 100%|█████████▉| 83974/84358 [03:06<00:00, 1014.94frames/s][A
+Detected: 0 | Progress: 100%|█████████▉| 84082/84358 [03:07<00:00, 1030.41frames/s][A
+Detected: 0 | Progress: 100%|█████████▉| 84198/84358 [03:07<00:00, 1067.50frames/s][A
+Detected: 0 | Progress: 100%|█████████▉| 84306/84358 [03:07<00:00, 877.91frames/s] [ADetected: 0 | Progress: 100%|██████████| 84358/84358 [03:07<00:00, 450.32frames/s]
+
+filter clips: 0it [00:00, ?it/s][A
+filter clips: 1it [00:28, 28.28s/it][A

@@ -5,6 +5,7 @@ import megfile
 from collections import OrderedDict
 import functools
 from copy import deepcopy
+from copy import deepcopy
 from data_fetcher import generate_hash_from_paths
 from contextlib import contextmanager
 from utils import volces_get_worker_cnt_worldsize
@@ -14,6 +15,7 @@ from taggers.aesthetics_score import get_aesthetic_score
 import time
 WORKER_CNT,WORLDSIZE = volces_get_worker_cnt_worldsize()
 TMP_DIR = '/data/tmp'
+DEBUG = os.environ.get('DEBUG')
 SCRIPT_PATH = os.path.abspath(__file__)
 @contextmanager
 def sync_oss_file2local_tmp_dir(remote_file,local_file = None):
@@ -101,17 +103,19 @@ class AutoSplitTarWriter:
 from data_fetcher import load_json, dump_json
 from tqdm import tqdm
 import subprocess
-
+import torch
 
 def ffmpeg_crop_video(input_file, start_time, duration,output_file = None, output_format='mp4',trg_shape = None):
     # 构建ffmpeg命令用于裁剪视频
+    # 如果使用-c:v copy来避免重新编码，有可能会引起问题，
+    # 尤其是当你试图从非关键帧（I帧）处开始剪切时。这是因为只复制数据流而不重新编码，所以如果没有从关键帧处开始，解码器可能无法正确解析视频流的开始。
     command = [
         'ffmpeg','-y',
         '-v','quiet',
         '-ss', str(start_time),  # 裁剪开始时间
         '-t', str(duration),     # 裁剪持续时间
         '-i', input_file,        # 输入文件
-        '-c:v', 'copy',            # 复制编码格式以减少编码时间
+        "-c:v", "libx264" if not torch.cuda.is_available() else 'h264_nvenc',          # 使用libx264编码器重新编码
         # '-an',                   # 禁止音频输出
         # '-s', f'200x200',       # 设置新的分辨率
         
@@ -235,15 +239,30 @@ def main(args):
         fetcher = fetch_video_from_tars(inpath,filetypes)
     meta = dict()
     
-    
+    processed_videos = None
+    processed_videos_log = None
+    if args.continue_from:
+        with  open(args.continue_from,'r') as processed_videos_log:
+            processed_videos = set([
+                l.strip('\n') for l in processed_videos_log.readlines()
+            ])
+        print(f"processed_videos : {len(processed_videos)}")
+        processed_videos_log = open(args.continue_from,'a')
+        
+        def filtered_fetcher_func():
+            for video_file in fetcher:
+                if video_file not in processed_videos:
+                    yield video_file
+        filtered_fetcher = filtered_fetcher_func()
+    else:
+        filtered_fetcher = fetcher
 
-    total_clip_count = 0
-    for video_idx,video_file in tqdm(enumerate(fetcher)):
-    # for video_idx,(video_file, clips_metas) in tqdm(enumerate(video_meta.items())):
+    for video_idx,video_file in tqdm(enumerate(filtered_fetcher)):
         
         job_idx = video_idx  
         if job_idx % worldsize != worker_cnt:
             continue
+
         # print(f'{job_idx}-{video_idx}')
         video_fhash = generate_hash_from_paths(video_file,SCRIPT_PATH)
         # process the video files in video tar files & vanilla video files
@@ -257,20 +276,18 @@ def main(args):
                 #  no valid clips containing human faces
                 continue
             video_fname = os.path.basename(video_file).rsplit('.',1)[0]
-            frame_offset_list = clips_metas['clips']
-            clip_meta_list = clips_metas['clip_meta_list']
-            video_meta = {
-                k:clips_metas[k] for k in ['fps','total_frames','ori_shape']
-            }
+            frame_offset_list = clips_metas.pop('clips')
+            clip_meta_list = clips_metas.pop('clip_meta_list')
+            video_meta = deepcopy(clips_metas)
             ori_shape = video_meta['ori_shape']
             def clip_gen():
                 # the clip meta is from the processing of last data curation step
                 for _,(frame_offsets, clip_meta) in enumerate(zip(frame_offset_list, clip_meta_list)):
                     # skip videos with multi face
-                    if clip_meta['n_face'] > max_face_num:
+                    if clip_meta.get('n_face') is not None and clip_meta['n_face'] > max_face_num:
                         pass
                     # skip videos with too much text areas
-                    elif clip_meta['text_area_ratio'] > max_text_area_ratio:
+                    elif clip_meta.get('text_area_ratio') is not None and clip_meta['text_area_ratio'] > max_text_area_ratio:
                         pass
                     else:
                         frame_st,frame_ed = frame_offsets
@@ -338,8 +355,12 @@ def main(args):
                 item_meta['aesthestic_score'] = get_aesthetic_score(tmp_clip_file)
                 
                 if item_meta['motion_score'] < args.motion_th:
+                    print(f"{video_file} clip {clip_idx} motion_score {item_meta['motion_score']} < {args.motion_th}")
+                    os.remove(tmp_clip_file)
                     continue
                 if item_meta['aesthestic_score'] < args.aesthestic_th:
+                    print(f"{video_file} clip {clip_idx} aesthestic_score {item_meta['aesthestic_score']} < {args.aesthestic_th}")
+                    os.remove(tmp_clip_file)
                     continue
                 
                 
@@ -353,7 +374,10 @@ def main(args):
                 )
                 os.remove(tmp_clip_file)
                 os.remove(tmp_meta_file)
-
+        if processed_videos_log is not None:
+            processed_videos_log.write(f'{video_file}\n')
+    if processed_videos_log is not None:
+        processed_videos_log.close()
     tar_writer.close()      
             
 if __name__ == "__main__":
@@ -399,6 +423,13 @@ if __name__ == "__main__":
         type=float,
         default= 0,
         help=' motion得分阈值'
+    )
+    parser.add_argument(
+        "-c",
+        "--continue_from",
+        type=str,
+        default= '',
+        help=' 记录已经处理完的文件'
     )
     
     

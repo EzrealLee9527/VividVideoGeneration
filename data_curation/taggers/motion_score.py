@@ -11,7 +11,7 @@ def get_global_motion_score(video_path, optflow_fps=1, optflow_shortest_px=16)->
     frame_height = cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
     frame_width = cap.get(cv2.CAP_PROP_FRAME_WIDTH)
     fps = int(cap.get(cv2.CAP_PROP_FPS))
-    assert optflow_fps <= fps, "计算光流的帧数不能高于原始视频的帧数"
+    assert optflow_fps <= fps, f"计算光流的帧数不能高于原始视频的帧数 {video_path} {optflow_fps} vs {fps}"
     frame_num = int(cap.get(cv2.CAP_PROP_FRAME_COUNT)) # ==> 总帧数
 
     if frame_height>frame_width:
@@ -23,7 +23,7 @@ def get_global_motion_score(video_path, optflow_fps=1, optflow_shortest_px=16)->
 
     optflow_inp_frames = []
     optflow_out_mags = []
-    for idx in range(0, frame_num-1, fps//optflow_fps):
+    for idx in range(0, frame_num-2, fps//optflow_fps):
         cap.set(cv2.CAP_PROP_POS_FRAMES, idx)
         for _ in range(2):
             ret, frame = cap.read()
