@@ -1,0 +1,48 @@
+fs:
+  output_dir: "outputs"
+  log_path: "worklog.log"
+  tensorboard_dir: "tensorboard"
+  bucket_name: "s3://ljj"
+  user: "linbo"
+  proj_name: "video/stable_video_diffusion/controlnet"
+
+model:
+  model_id: "stabilityai/stable-video-diffusion-img2vid"
+  use_ema: false
+  ema_momentum: 0.9999
+  pretrain_weight: "s3://ljj/linbo/video/stable_video_diffusion/controlnet/20231231_dist_train/final"
+
+data:
+  root_dirs:
+    # - "s3://ljj/Datasets/Videos/processed/CelebV_webdataset_20231211_videoblip"
+    - "/data/puji"
+  num_workers: 8
+  size: 256
+  use_condition_jitter: false
+  condition_jitter_min_ratio: 0.5
+  frame_stride: 1
+  noise_mean: -3.0
+  noise_std: 0.5
+  cache_dir: "/data/cache"
+  cache_size_in_gb: 500
+  num_frames: 14
+  vae_scale_factor: 8
+
+train:
+  resume: true
+  seed: 1234
+  num_iteration: 10000
+  batch_size: 2
+  null_embedding_prob: 0.1
+  optimizer:
+    beta1: 0.9
+    beta2: 0.999
+    lr: 1e-5
+    schedule: "constant"
+    min_lr: 0
+    weight_decay: 1e-2
+
+monitor:
+  save_interval: 100
+  log_interval: 100
+  latest_interval: 100
