@@ -37,16 +37,103 @@ import transformers
 from transformers import CLIPTextModel, CLIPTokenizer, CLIPVisionModelWithProjection, CLIPImageProcessor
 # from ip_adapter import IPAdapterFull
 
-# from animatediff.data.dataset import WebVid10M, PexelsDataset
 from animatediff.utils.util import save_videos_grid, pad_image
 from accelerate import Accelerator
 from einops import repeat
 from animate import MagicAnimate
 from animatediff.magic_animate.controlnet import ControlNetModel
 import importlib
-from animatediff.data.dataset import WebVid10M, PexelsDataset
 import webdataset as wds
 from animatediff.data.dataset_wds import S3VideosIterableDataset
+
+import cv2
+import torch
+import numpy as np
+import sys
+sys.path.append('/data/work/Moore-AnimateAnyone/')
+from cat_facial_landmarks.model import get_model
+from cat_facial_landmarks.transforms import get_test_transforms
+from cat_facial_landmarks.utils import HyperParams as HP
+sys.path.append('/data/work/VividVideoGeneration/animatediff/utils/')
+from videoreader import VideoReader
+from PIL import Image
+from animatediff.data.dataset_wds_cat import PexelsDataset
+
+
+
+@torch.no_grad()
+def torch_gaussian_blur(tensor, kernel_size, sigma):
+    c = tensor.size(1)
+    x_cord = torch.arange(kernel_size)
+    x_grid = x_cord.repeat(kernel_size).view(kernel_size, kernel_size)
+    y_grid = x_grid.t()
+    xy_grid = torch.stack([x_grid, y_grid], dim=-1).float()
+
+    mean = (kernel_size - 1) / 2.0
+    variance = sigma**2.0
+
+    gaussian_kernel = (1.0 / (2.0 * math.pi * variance)) * torch.exp(
+        -torch.sum((xy_grid - mean) ** 2.0, dim=-1) / (2 * variance)
+    )
+    gaussian_kernel = gaussian_kernel / torch.sum(gaussian_kernel)
+
+    gaussian_kernel = gaussian_kernel.view(1, 1, kernel_size, kernel_size)
+    gaussian_kernel = gaussian_kernel.repeat(c, 1, 1, 1)
+
+    padding = kernel_size // 2
+    padded_image = F.pad(tensor, (padding, padding, padding, padding), mode="reflect")
+    blurred_image = F.conv2d(
+        padded_image, gaussian_kernel, stride=1, padding=0, groups=c
+    )
+    return blurred_image
+
+
+@torch.no_grad()
+def find_peaks(heatmap: torch.Tensor):
+    threshold = 0.1
+    n_keypoints = heatmap.size(1) - 1  # ignore the last channel
+    smoothed_heatmap = torch_gaussian_blur(heatmap, 31, 24)
+
+    thresholded_heatmaps = (
+        smoothed_heatmap[:, :-1] * (smoothed_heatmap[:, :-1] > threshold).float()
+    )
+
+    pooled_heatmaps = F.max_pool2d(
+        thresholded_heatmaps, kernel_size=3, stride=1, padding=1, return_indices=False
+    )
+
+    thresholded_heatmaps = thresholded_heatmaps.squeeze(0)
+    pooled_heatmaps = pooled_heatmaps.squeeze(0)
+
+    peaks = (thresholded_heatmaps == pooled_heatmaps) & (thresholded_heatmaps > 0)
+
+    keypoints = [[-1, -1] for _ in range(n_keypoints)]
+    for kp_idx in range(n_keypoints):
+        indices = peaks[kp_idx].nonzero()
+        if len(indices) > 0:
+            max_val, idx = thresholded_heatmaps[kp_idx].view(-1).max(0)
+            keypoints[kp_idx] = [
+                int(idx % thresholded_heatmaps.size(2)),
+                int(idx // thresholded_heatmaps.size(2)),
+            ]
+
+    return keypoints
+
+
+def draw_landmarks(image, keypoints, infer_size=512, inplace=False):
+    h, w, c = image.shape
+    scale = max(h, w) / infer_size
+    if not inplace:
+        image = np.zeros_like(image)
+    for x, y in keypoints:
+        if x == -1 and y == -1:
+            continue
+        y = round(scale * y)
+        x = round(scale * x)
+        image = cv2.circle(image.copy(), (x, y), 3, color=(255, 255, 255), thickness=-1)
+    return image
+
+
 
 def main(
 
@@ -117,7 +204,6 @@ def main(
         froce_text_embedding_zero = False,
 
         ip_ckpt=None,
-        dwpose=None,
 
         
 ):
@@ -165,21 +251,30 @@ def main(
 
     # load dwpose detector, see controlnet_aux: https://github.com/patrickvonplaten/controlnet_aux
     # specify configs, ckpts and device, or it will be downloaded automatically and use cpu by default
-    det_config = dwpose['det_config']
-    det_ckpt = dwpose['det_ckpt']
-    pose_config = dwpose['pose_config']
-    pose_ckpt = dwpose['pose_ckpt']
-    if dwpose_only_face == True:
-        from controlnet_aux_lib import DWposeDetector
-    else:
-        from controlnet_aux import DWposeDetector
-    dwpose_model = DWposeDetector(
-        det_config=det_config,
-        det_ckpt=det_ckpt,
-        pose_config=pose_config,
-        pose_ckpt=pose_ckpt,
-        device=local_rank
-    )
+    det_config = '/data/models/controlnet_aux/src/controlnet_aux/dwpose/yolox_config/yolox_l_8xb8-300e_coco.py'
+    det_ckpt = '/data/models/controlnet_aux/yolox_l_8x8_300e_coco_20211126_140236-d3bd2b23.pth'
+    pose_config = '/data/models/controlnet_aux/src/controlnet_aux/dwpose/dwpose_config/dwpose-l_384x288.py'
+    pose_ckpt = '/data/models/controlnet_aux/dw-ll_ucoco_384.pth'
+
+    # if dwpose_only_face == True:
+    #     from controlnet_aux_lib import DWposeDetector
+    # else:
+    #     from controlnet_aux import DWposeDetector
+    # dwpose_model = DWposeDetector(
+    #     det_config=det_config,
+    #     det_ckpt=det_ckpt,
+    #     pose_config=pose_config,
+    #     pose_ckpt=pose_ckpt,
+    #     device=local_rank
+    # )
+    cat_config = '/data/work/Moore-AnimateAnyone/cat_facial_landmarks/configs/20240125.baseline.step_2000.lr_min_1e-7.sigma_24.yaml'
+    HP.load(cat_config)
+    cat_cfg = HP.instance()
+    cat_kp_net = get_model(cat_cfg)
+    cat_kp_net.eval()
+    cat_kp_state_dict = '/data/models/cat_keypoint/20240201_state_dict.pt'
+    cat_kp_net.load_state_dict(torch.load(cat_kp_state_dict, map_location="cpu"))
+    preprocess_transforms = get_test_transforms(cat_cfg)
 
     # -------- magic_animate --------#
     model = MagicAnimate(config=config,
@@ -239,9 +334,12 @@ def main(
     
 
     # Get the training dataset
-    dataset_cls = getattr(importlib.import_module(data_module, package=None), data_class)
-    train_dataset = dataset_cls(**train_data, is_image=image_finetune)
-    #
+    # dataset_cls = getattr(importlib.import_module(data_module, package=None), data_class)
+    # train_dataset = dataset_cls(**train_data, is_image=image_finetune)
+
+    train_dataset = PexelsDataset(**train_data.cat_kwargs)
+    train_dataloader = torch.utils.data.DataLoader(train_dataset, batch_size=train_batch_size, num_workers=num_workers, collate_fn=None,drop_last=True)
+    
     # train_dataset = PexelsDataset(**train_data)
 
     # distributed_sampler = DistributedSampler(
@@ -262,19 +360,19 @@ def main(
     #     pin_memory=True,
     #     drop_last=True,
     # )
-    def worker_init_fn(_):
-        worker_info = torch.utils.data.get_worker_info()
-        dataset = worker_info.dataset
-        worker_id = worker_info.id
-        return np.random.seed(np.random.get_state()[1][0] + worker_id)
+    # def worker_init_fn(_):
+    #     worker_info = torch.utils.data.get_worker_info()
+    #     dataset = worker_info.dataset
+    #     worker_id = worker_info.id
+    #     return np.random.seed(np.random.get_state()[1][0] + worker_id)
 
-    train_dataloader = wds.WebLoader(
-                train_dataset, 
-                batch_size=train_batch_size,
-                shuffle=False,
-                num_workers=num_workers, 
-                worker_init_fn=None,
-            ).with_length(len(train_dataset))
+    # train_dataloader = wds.WebLoader(
+    #             train_dataset, 
+    #             batch_size=train_batch_size,
+    #             shuffle=False,
+    #             num_workers=num_workers, 
+    #             worker_init_fn=None,
+    #         ).with_length(len(train_dataset))
 
     # Get the training iteration
     if max_train_steps == -1:
@@ -387,30 +485,39 @@ def main(
 
             # >>>>>>>>>>>> get control conditions >>>>>>>>>>>> #
             # TODO： dwpose去掉
-            # pixel_values_pose = batch["pixel_values_pose"].to(local_rank, dtype=weight_type)
-            # with torch.no_grad():
-            #     pixel_values_pose = rearrange(pixel_values_pose, "b f c h w -> b f h w c")
-            with torch.inference_mode():
-                video_values = rearrange(pixel_values, "b c h w -> b h w c")
-                image_np = (video_values * 0.5 + 0.5) * 255
-                image_np = image_np.cpu().numpy().astype(np.uint8)
-                num_frames = image_np.shape[0]
+            pixel_values_pose = batch["pixel_values_pose"].to(local_rank, dtype=weight_type)
+            with torch.no_grad():
+                pixel_values_pose = rearrange(pixel_values_pose, "b f c h w -> b f h w c")
+            # with torch.inference_mode():
+            #     video_values = rearrange(pixel_values, "b c h w -> b h w c")
+            #     image_np = (video_values * 0.5 + 0.5) * 255
+            #     image_np = image_np.cpu().numpy().astype(np.uint8)
+            #     num_frames = image_np.shape[0]
 
-                dwpose_conditions = []
-                for frame_id in range(num_frames):
-                    pil_image = Image.fromarray(image_np[frame_id])
-                    dwpose_image = dwpose_model(pil_image, output_type='np', image_resolution=pixel_values.shape[-1])
-                    dwpose_conditions.append(dwpose_image)
+            #     dwpose_conditions = []
+            #     for frame_id in range(num_frames):
+            #         # pil_image = Image.fromarray(image_np[frame_id])
+            #         # dwpose_image = dwpose_model(pil_image, output_type='np', image_resolution=pixel_values.shape[-1])
+                    
+            #         processed_image = preprocess_transforms(image_np[frame_id])
+            #         processed_image.unsqueeze_(0)
+            #         predict_heatmap = cat_kp_net.eval_forward(processed_image)
+            #         keypoints = find_peaks(predict_heatmap)
 
-                    # debug
-                    # if accelerator.is_main_process:
-                    #     img = Image.fromarray(dwpose_image)
-                    #     img.save(f"pose_{frame_id}.jpg")
+            #         dwpose_image = draw_landmarks(image_np[frame_id], keypoints, infer_size=512)
+                        
 
-                pixel_values_pose = torch.Tensor(np.array(dwpose_conditions))
-                pixel_values_pose = rearrange(pixel_values_pose, "(b f) h w c -> b f h w c", b=train_batch_size)
-                pixel_values_pose = pixel_values_pose.to(local_rank, dtype=weight_type)
-                pixel_values_pose = ((pixel_values_pose / 255.0) - 0.5) * 2
+            #         dwpose_conditions.append(dwpose_image)
+
+            #         # debug
+            #         # if accelerator.is_main_process:
+            #         #     img = Image.fromarray(dwpose_image)
+            #         #     img.save(f"pose_{frame_id}.jpg")
+
+            #     pixel_values_pose = torch.Tensor(np.array(dwpose_conditions))
+            #     pixel_values_pose = rearrange(pixel_values_pose, "(b f) h w c -> b f h w c", b=train_batch_size)
+            #     pixel_values_pose = pixel_values_pose.to(local_rank, dtype=weight_type)
+            #     pixel_values_pose = ((pixel_values_pose / 255.0) - 0.5) * 2
             # print('pixel_values_pose', pixel_values_pose.shape, pixel_values_pose.max(), pixel_values_pose.min())
 
             # >>>>>>>>>>>> get reference image conditions >>>>>>>>>>>> #
@@ -445,15 +552,17 @@ def main(
                         clip_image = image_processor(images=ref_pil_image_pad, return_tensors="pt").pixel_values
                         image_emb = image_encoder(clip_image.to(local_rank, dtype=weight_type),
                                                 output_hidden_states=True).hidden_states[-2]
+                        # image_emb = image_encoder(clip_image.to(local_rank, dtype=weight_type)).image_embeds
+                        # image_emb = image_emb.unsqueeze(1)
                         encoder_hidden_states.append(image_emb)
                         
                         # negative image embeddings
-                        image_np_neg = np.zeros_like(image_np)
-                        ref_pil_image_neg = Image.fromarray(image_np_neg.astype(np.uint8))
-                        ref_pil_image_pad = pad_image(ref_pil_image_neg)
-                        clip_image_neg = image_processor(images=ref_pil_image_pad, return_tensors="pt").pixel_values
-                        image_emb_neg = image_encoder(clip_image_neg.to(local_rank, dtype=weight_type),
-                                                        output_hidden_states=True).hidden_states[-2]
+                        # image_np_neg = np.zeros_like(image_np)
+                        # ref_pil_image_neg = Image.fromarray(image_np_neg.astype(np.uint8))
+                        # ref_pil_image_pad = pad_image(ref_pil_image_neg)
+                        # clip_image_neg = image_processor(images=ref_pil_image_pad, return_tensors="pt").pixel_values
+                        # image_emb_neg = image_encoder(clip_image_neg.to(local_rank, dtype=weight_type),
+                        #                                 output_hidden_states=True).hidden_states[-2]
 
                         # image_emb = torch.cat([image_emb_neg, image_emb])
                         image_emb = torch.cat([torch.zeros_like(image_emb), image_emb])
@@ -465,10 +574,10 @@ def main(
                     encoder_hidden_states = torch.cat(encoder_hidden_states)
                     encoder_hidden_states_val = torch.cat(encoder_hidden_states_val)
                     # <<<<<<<<<<< Drop the image embedding for cfg train <<<<<<<<<<<<<#
-                    drop_image_embeds = batch["drop_image_embeds"].to(local_rank)
-                    mask = drop_image_embeds > 0
-                    mask = mask.unsqueeze(1).unsqueeze(2).expand_as(encoder_hidden_states)
-                    encoder_hidden_states[mask] = 0
+                    # drop_image_embeds = batch["drop_image_embeds"].to(local_rank)
+                    # mask = drop_image_embeds > 0
+                    # mask = mask.unsqueeze(1).unsqueeze(2).expand_as(encoder_hidden_states)
+                    # encoder_hidden_states[mask] = 0
                 else:
                     encoder_hidden_states = None
                     encoder_hidden_states_val = None
@@ -611,11 +720,7 @@ def main(
                     samples.append(sample)
 
                 samples = torch.concat(samples)
-                if samples.shape[2] == 1:
-                    suffix = '.png'
-                else:
-                    suffix = '.mp4'
-                save_path = f"{output_dir}/samples/sample-{global_step}{suffix}"
+                save_path = f"{output_dir}/samples/sample-{global_step}.gif"
                 save_videos_grid(samples, save_path)
                 logging.info(f"Saved samples to {save_path}")
 

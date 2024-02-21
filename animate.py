@@ -45,15 +45,11 @@ class MagicAnimate(torch.nn.Module):
 
         if config == "configs/training/animation.yaml":
             config = OmegaConf.load(config)
-        inference_config = OmegaConf.load(config['inference_config'])
         self.device = device
         self.train_batch_size = train_batch_size
 
         
         motion_module = config['motion_module']
-
-        if unet_additional_kwargs is None:
-            unet_additional_kwargs = OmegaConf.to_container(inference_config.unet_additional_kwargs)
 
         ### >>> create animation pipeline >>> ###
         self.tokenizer = CLIPTokenizer.from_pretrained(config['pretrained_model_path'], subfolder="tokenizer")
@@ -187,7 +183,7 @@ class MagicAnimate(torch.nn.Module):
         self.pipeline = TrainPipeline(
             vae=self.vae, text_encoder=self.text_encoder, tokenizer=self.tokenizer, unet=self.unet,
             controlnet=self.controlnet,
-            scheduler=DDIMScheduler(**OmegaConf.to_container(inference_config.noise_scheduler_kwargs)),
+            scheduler=DDIMScheduler(**OmegaConf.to_container(config['noise_scheduler_kwargs'])),
             # NOTE: UniPCMultistepScheduler
         ).to(device)
 

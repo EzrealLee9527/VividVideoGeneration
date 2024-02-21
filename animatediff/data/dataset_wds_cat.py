@@ -26,7 +26,7 @@ from transformers import CLIPProcessor
 from PIL import Image, ImageDraw
 from torch.utils.data.dataset import Dataset
 from decord import VideoReader
-
+from mobile_sam import SamAutomaticMaskGenerator, sam_model_registry
 
 from controlnet_aux import DWposeDetector
 det_config = '/work00/magic_animate_unofficial/controlnet_aux/src/controlnet_aux/dwpose/yolox_config/yolox_l_8xb8-300e_coco.py'
@@ -35,6 +35,9 @@ pose_config = '/work00/magic_animate_unofficial/controlnet_aux/src/controlnet_au
 pose_ckpt = '/models00/controlnet_aux/dw-ll_ucoco_384.pth'
 
 import facer
+import torch
+import multiprocessing
+
 
 def crop_and_resize(frame, target_size=None, crop_rect=None):
     height, width = frame.size
@@ -119,6 +122,7 @@ class S3VideosIterableDataset(IterableDataset):
         clip_model_path="openai/clip-vit-base-patch32",
         is_train=True,
         is_det_face=False,
+        is_segment=False,
     ):
         self.tarfilepath_list = self.get_tarfilepath_list(data_dirs)
         self.wds_shuffle      = shuffle
@@ -132,7 +136,7 @@ class S3VideosIterableDataset(IterableDataset):
         self.is_image         = is_image
         self.dataset_length   = int(dataset_length)
         self.is_det_face      = is_det_face
-
+        self.is_segment       = is_segment
         ######################### animateanyone #########################        
         self.is_train = is_train
         self.spilt = 'train' if self.is_train else 'test'
@@ -142,7 +146,8 @@ class S3VideosIterableDataset(IterableDataset):
         self.pixel_transforms = transforms.Compose([
             # transforms.RandomHorizontalFlip(),
             transforms.Resize([sample_size[0],sample_size[0]]),
-            transforms.CenterCrop(sample_size),
+            # transforms.CenterCrop(sample_size),
+            transforms.RandomCrop(sample_size),
             transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5], inplace=True),
         ])
                 
@@ -155,8 +160,18 @@ class S3VideosIterableDataset(IterableDataset):
         # )
         if self.is_det_face:
             self.face_detector = facer.face_detector('retinaface/mobilenet', device="cpu")
+        if self.is_segment:
+            model_type = "vit_t"
+            sam_checkpoint = "./MobileSAM/weights/mobile_sam.pt"
+            if torch.cuda.is_available():
+                multiprocessing.set_start_method('spawn', force=True)
 
-
+            device = "cuda" if torch.cuda.is_available() else "cpu"
+            mobile_sam = sam_model_registry[model_type](checkpoint=sam_checkpoint)
+            mobile_sam.to(device=device)
+            mobile_sam.eval()
+            self.mask_generator = SamAutomaticMaskGenerator(mobile_sam)
+            
 
     def get_tarfilepath_list(self, data_dirs):
         tarfile_path_list = []
@@ -289,6 +304,13 @@ class S3VideosIterableDataset(IterableDataset):
             value_dict['image_only_indicator'] = torch.zeros(1, self.video_length)
         return value_dict
 
+    def random_render_background(self, image, random_color):
+        masks = self.mask_generator.generate(image)
+        sam_mask = masks[0]['segmentation']
+        background = Image.new("RGB", image.shape[:2], random_color)    
+        result = Image.composite(Image.fromarray(image[:,:,::-1]), background, Image.fromarray(sam_mask))   
+        return result
+    
     def get_clip_frames_and_conditions(self, video_bytes:bytes, meta_dic:dict) -> torch.Tensor:
         frames = []
         with iio.imopen(video_bytes, "r", plugin="pyav") as file:
@@ -304,16 +326,20 @@ class S3VideosIterableDataset(IterableDataset):
             # get pixel_values
             pixel_values = frames[clip_indices, ...]
 
-            # face detect and crop
-            if self.is_det_face:
-                img_for_face_det = torch.tensor(pixel_values[0]).to(torch.uint8).unsqueeze(0).permute(0, 3, 1, 2)
-                with torch.inference_mode():
-                    faces = self.face_detector(img_for_face_det)
-                    assert faces['image_ids'].numel() > 0
-                    face_rect = faces['rects'][0].numpy()
-                    pixel_values = [np.array(crop_and_resize(Image.fromarray(c), target_size=None, crop_rect=face_rect)) for c in pixel_values]
-                    pixel_values = np.array(pixel_values)
+            # 过滤黑图
+            for pixel_value in pixel_values:
+                assert pixel_value.mean() > 10
 
+            # face detect and crop
+            # if self.is_det_face:
+            #     img_for_face_det = torch.tensor(pixel_values[0]).to(torch.uint8).unsqueeze(0).permute(0, 3, 1, 2)
+            #     with torch.inference_mode():
+            #         faces = self.face_detector(img_for_face_det)
+            #         assert faces['image_ids'].numel() > 0
+            #         face_rect = faces['rects'][0].numpy()
+            #         pixel_values = [np.array(crop_and_resize(Image.fromarray(c), target_size=None, crop_rect=face_rect)) for c in pixel_values]
+            #         pixel_values = np.array(pixel_values)                
+                
             # get label from json
             # pixel_values_ldmk = np.zeros_like(pixel_values)
             # landmarks = meta_dic['tag']['faces'][0]['landmark_2d_106']
@@ -348,15 +374,29 @@ class S3VideosIterableDataset(IterableDataset):
             # ref_img_idx = random.randint(0, self.video_length - 1)
             # ref_img = pixel_values[ref_img_idx]
             # face detect and crop
-            if self.is_det_face:
-                img_for_face_det = torch.tensor(ref_img).to(torch.uint8).unsqueeze(0).permute(0, 3, 1, 2)
+            # if self.is_det_face:
+            #     img_for_face_det = torch.tensor(ref_img).to(torch.uint8).unsqueeze(0).permute(0, 3, 1, 2)
+            #     with torch.inference_mode():
+            #         faces = self.face_detector(img_for_face_det)
+            #         assert faces['image_ids'].numel() > 0
+            #         face_rect = faces['rects'][0].numpy()
+            #         ref_img = np.array(crop_and_resize(Image.fromarray(ref_img), target_size=None, crop_rect=face_rect))
+            
+            if self.is_segment and random.random() < 10.02:
+                print('do seg')
+                random_color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+                pixel_values = [np.array(self.random_render_background(c, random_color)) for c in pixel_values]
+                pixel_values = np.ascontiguousarray(np.array(pixel_values)[...,::-1])
+                ref_img = np.ascontiguousarray(np.array(self.random_render_background(ref_img, random_color))[...,::-1])
+                
                 with torch.inference_mode():
+                    img_for_face_det = torch.tensor(pixel_values[0]).to(torch.uint8).unsqueeze(0).permute(0, 3, 1, 2)
                     faces = self.face_detector(img_for_face_det)
                     assert faces['image_ids'].numel() > 0
-                    face_rect = faces['rects'][0].numpy()
-                    ref_img = np.array(crop_and_resize(Image.fromarray(ref_img), target_size=None, crop_rect=face_rect))
-                
 
+                    img_for_face_det = torch.tensor(ref_img).to(torch.uint8).unsqueeze(0).permute(0, 3, 1, 2)
+                    faces = self.face_detector(img_for_face_det)
+                    assert faces['image_ids'].numel() > 0
             # clip_ref_image = torch.zeros(pixel_values.shape[0], 1, 3, 224, 224)
             # ref_img_pil = Image.fromarray(ref_img)
             # clip_ref_image = self.clip_image_processor(images=ref_img_pil, return_tensors="pt").pixel_values
@@ -397,8 +437,7 @@ class S3VideosIterableDataset(IterableDataset):
                 pixel_values_ref_img = pixel_values_ref_img.squeeze(0)
                 
                 # clip_ref_image = clip_ref_image.unsqueeze(1) # [bs,1,768]
-                # drop_image_embeds = 1 if random.random() < 0.1 else 0
-                drop_image_embeds = 0
+                drop_image_embeds = 1 if random.random() < 0.1 else 0
                 sample = dict(
                     pixel_values=pixel_values, 
                     # pixel_values_pose=pixel_values_pose,
@@ -468,9 +507,9 @@ class PexelsDataset(Dataset):
     def __init__(
             self,
             data_dir,
-            sample_size=(512, 512), sample_stride=1, sample_n_frames=16, is_test=False
+            sample_size=(512, 512), sample_stride=1, sample_n_frames=16, is_det_face=False, is_test=False
     ):
-        self.dataset = glob(data_dir+'/*')
+        self.dataset = glob(data_dir+'/*/*')
 
         self.length = len(self.dataset)
         print(f"data scale: {self.length}")
@@ -479,6 +518,7 @@ class PexelsDataset(Dataset):
         self.sample_n_frames = sample_n_frames
 
         self.sample_size = sample_size
+        self.is_det_face = is_det_face
 
         self.pixel_transforms = transforms.Compose([
             transforms.Resize([self.sample_size[0],self.sample_size[0]]),
@@ -486,20 +526,53 @@ class PexelsDataset(Dataset):
             transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5], inplace=True),
         ])
 
-    def get_batch(self, idx):
-        video_dir = self.dataset[idx]
-        video_reader = VideoReader(video_dir)
+        if self.is_det_face:
+            self.face_detector = facer.face_detector('retinaface/mobilenet', device="cpu")
+
+    def get_video_and_label(self, video_path):
+        video_reader = imageio.mimread(video_path,memtest=False)
         video_length = len(video_reader)
+        # print(video_path, video_length)
 
         clip_length = min(video_length, (self.sample_n_frames - 1) * self.sample_stride + 1)
         start_idx = random.randint(0, video_length - clip_length)
-        batch_index = np.linspace(start_idx, start_idx + clip_length - 1, self.sample_n_frames, dtype=int)
+        # batch_index = np.linspace(start_idx, start_idx + clip_length - 1, self.sample_n_frames, dtype=int)
+        # image_np = video_reader.get_batch(batch_index).asnumpy()
 
-        image_np = video_reader.get_batch(batch_index).asnumpy()
-        
+        frames = video_reader[1:][start_idx:start_idx+self.sample_n_frames]
+        frames = [x[:,:,:3] for x in frames]
+        image_np = np.array(frames)
+
+        kps_path = video_path.replace('puji', 'puji_label')
+        video_reader = imageio.mimread(kps_path,memtest=False)
+        frames = video_reader[start_idx:start_idx+self.sample_n_frames]
+        frames = [x[:,:,:3] for x in frames]
+        image_kps = np.array(frames)
+
         del video_reader
+        return image_np, image_kps
 
-        return image_np
+    def get_batch(self, idx):
+        video_path = self.dataset[idx]
+        # print('video_path', video_path)
+        # video_reader = VideoReader(video_path)
+        image_np, image_kps = self.get_video_and_label(video_path)
+        
+
+        # assert (
+        #     len(frames) == self.video_length), f'{len(frames)}, self.video_length={self.video_length}'
+        
+        
+
+        return image_np, video_path, image_kps
+    
+    def get_transfrom_video(self, image_np):
+        pixel_values = [np.array(crop_and_resize(Image.fromarray(c), target_size=None)) for c in image_np]
+        pixel_values = np.array(pixel_values)
+        pixel_values = torch.from_numpy(pixel_values).permute(0, 3, 1, 2).contiguous() / 255.0
+        pixel_values = self.pixel_transforms(pixel_values)
+        return pixel_values
+
 
     def __len__(self):
         return self.length
@@ -508,24 +581,40 @@ class PexelsDataset(Dataset):
 
         while True:
             try:
-                image_np = self.get_batch(idx)
+                image_np, video_path, image_kps = self.get_batch(idx)
+                # if self.is_det_face:
+                #     img_for_face_det = torch.tensor(np.array(image_np)[0]).to(torch.uint8).unsqueeze(0).permute(0, 3, 1, 2)
+                #     print('det face')
+                #     with torch.inference_mode():
+                #         faces = self.face_detector(img_for_face_det)
+                #         print(faces.keys())
+                #         assert faces['image_ids'].numel() > 0
+                #         face_rect = faces['rects'][0].numpy()
+                #     print('face_rect')
+                # else:
+                #     face_rect = None
+
+                pixel_values = self.get_transfrom_video(image_np)
+                pixel_values_pose = self.get_transfrom_video(image_kps)
+                ref_idx = random.randint(0, self.sample_n_frames - 1)
+                pixel_values_ref_img = pixel_values[ref_idx]
+
                 break
 
             except Exception as e:
                 idx = random.randint(0, self.length - 1)
-           
-        pixel_values = [np.array(crop_and_resize(Image.fromarray(c), target_size=None, crop_rect=None)) for c in image_np]
-        pixel_values = np.array(pixel_values)
-        pixel_values = torch.from_numpy(pixel_values).permute(0, 3, 1, 2).contiguous() / 255.0
-        pixel_values = self.pixel_transforms(pixel_values)
+                traceback.print_exc()
+                continue
+                
+        
 
-        ref_idx = random.randint(0, self.length - 1)
-        pixel_values_ref_img = pixel_values[ref_idx]
-        print('pixel_values', pixel_values.shape, pixel_values.max(), pixel_values.min())     
-        print('pixel_values_ref_img', pixel_values_ref_img.shape)     
+        
+  
         sample = dict(
                     pixel_values=pixel_values, 
                     pixel_values_ref_img=pixel_values_ref_img,
+                    pixel_values_pose=pixel_values_pose,
+                    video_name=video_path.split('/')[-1],
                     )
         return sample
 
@@ -567,24 +656,27 @@ if __name__ == "__main__":
     import resource
     from tqdm import tqdm
     import cv2
-    TEST_TYPE = 'train'
+    TEST_TYPE = 'test'
     if TEST_TYPE == 'train':
         dataset = S3VideosIterableDataset(
-            [
-                # 's3://ljj/Datasets/Videos/processed/CelebV_webdataset_20231211',
-            #  's3://ljj/Datasets/Videos/processed/hdvila100m_20231216',
-             's3://ljj/Datasets/Videos/processed/pexels_20231217',
-            #  's3://ljj/Datasets/Videos/processed/xiaohongshu_webdataset_20231212',
-            ],
-            video_length = 16,
+                    ['s3://ljj/Datasets/Videos/processed/CelebV_webdataset_20231211',
+                      # 's3://ljj/Datasets/Videos/processed/hdvila100m_20231216',
+                      # 's3://ljj/Datasets/Videos/processed/pexels_20231217',
+                      # 's3://ljj/Datasets/Videos/processed/xiaohongshu_webdataset_20231212',
+                      ],
+            video_length = 4,
             resolution = 512,
             frame_stride = 2,
+            is_segment=True,
+            is_det_face=True,
+            endpoint_url= "http://oss.i.shaipower.com:80"
+            
         )
         dataloader = wds.WebLoader(
             dataset, 
             batch_size=1,
             shuffle=False,
-            num_workers=8,
+            num_workers=1,
             collate_fn = None,
         ).with_length(len(dataset))
         # pbar = tqdm()
@@ -593,9 +685,10 @@ if __name__ == "__main__":
             # # pbar.update(1)
             # # import pdb; pdb.set_trace()
             # print(f"RAM PEAK: {resource.getrusage(resource.RUSAGE_SELF).ru_maxrss/(1024**3):.4f}")
-            # print(data['pixel_values'].shape)
+            print(data['pixel_values'].shape)
+            print(data['pixel_values_ref_img'].shape)
             for i in range(data['pixel_values'].shape[0]):
-                save_videos_grid(data['pixel_values'][i:i + 1].permute(0, 2, 1, 3, 4), os.path.join(".", f"debug/pixel_values{idx}-{i}.gif"), rescale=True)
+                save_videos_grid(data['pixel_values'][i:i + 1].permute(0, 2, 1, 3, 4), os.path.join(".", f"debug/train/pixel_values{idx}-{i}.gif"), rescale=True)
                 # save_videos_grid(data['pixel_values_pose'][i:i + 1].permute(0, 2, 1, 3, 4), os.path.join(".", f"debug/pixel_values_pose{idx}-{i}.gif"), rescale=True)
                 # pixel_values_ref_img = ((data['pixel_values_ref_img'][i:i + 1].permute(0, 2, 3, 1)[0]+1)/2*255).numpy().astype('uint8')
                 # cv2.imwrite(os.path.join(".", f"debug/pixel_values_ldmk{idx}-{i}.png"), pixel_values_ref_img)
@@ -608,15 +701,18 @@ if __name__ == "__main__":
                 'pixel_values_ref_img': torch.stack([x['pixel_values_ref_img'] for x in batch])
             }
         dataset = PexelsDataset(
-        '/data/work/animate_based_ap_ctrl/data/templates/pexels_crop',
+        '/data/datasets/puji',
         sample_size=(512, 512), sample_stride=8, sample_n_frames=16,)
 
         dataloader = torch.utils.data.DataLoader(dataset, batch_size=4, num_workers=1, collate_fn=None)
         for idx, batch in enumerate(dataloader):
             print(batch['pixel_values'].shape)
             for i in range(batch['pixel_values'].shape[0]):
+                batch['pixel_values'][batch['pixel_values_pose']>0] = 1
                 save_videos_grid(batch['pixel_values'][i:i + 1].permute(0, 2, 1, 3, 4), os.path.join(".", f"debug/test/pixel_values{idx}-{i}.mp4"), rescale=True)
                 pixel_values_ref_img = ((batch['pixel_values_ref_img'][i:i + 1].permute(0, 2, 3, 1)[0]+1)/2*255).numpy().astype('uint8')
                 cv2.imwrite(os.path.join(".", f"debug/test/pixel_values_ref_img{idx}-{i}.png"), pixel_values_ref_img[:,:,::-1])
 
-            break
+                save_videos_grid(batch['pixel_values_pose'][i:i + 1].permute(0, 2, 1, 3, 4), os.path.join(".", f"debug/test/pixel_values_pose{idx}-{i}.mp4"), rescale=True)
+
+            # break

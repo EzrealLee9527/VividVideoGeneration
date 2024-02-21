@@ -266,7 +266,7 @@ class ReferenceAttentionControl():
 
                     # 背景相加 和前景做attn
                     # hidden_states相加 encoder_hidden_states用concat
-                    conditioning_scale = 0.5
+                    conditioning_scale = 1.0
                     assert len(self.bank) == 1
                     modify_norm_hidden_states = norm_hidden_states + self.bank[0] * conditioning_scale
                     hidden_states_uc = self.attn1(modify_norm_hidden_states, 
@@ -619,7 +619,9 @@ class ReferenceAttentionControl():
                 writer_attn_modules = [module for module in torch_dfs(writer.unet) if isinstance(module, BasicTransformerBlock)]
             reader_attn_modules = sorted(reader_attn_modules, key=lambda x: -x.norm1.normalized_shape[0])    
             writer_attn_modules = sorted(writer_attn_modules, key=lambda x: -x.norm1.normalized_shape[0])
+            # print('writer_attn_modules', writer_attn_modules[0])
             for r, w in zip(reader_attn_modules, writer_attn_modules):
+                # print('w.bank', len(w.bank), w.bank[0].shape)
                 r.bank = [v.clone().to(dtype) for v in w.bank]
                 # w.bank.clear()
         if self.reference_adain:
