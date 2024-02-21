@@ -1,4 +1,5 @@
 import einops
+import random
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -41,52 +42,42 @@ class StableVideoDiffusion(nn.Module):
         self.unet.load_state_dict(unet.state_dict())
         self.controlnet = ControlNetSpatioTemporalModel.from_unet(self.unet)
 
+        self.vae.eval()
         self.vae.requires_grad_(False)
+        self.image_encoder.eval()
         self.image_encoder.requires_grad_(False)
         self.unet.requires_grad_(False)
         self.controlnet.requires_grad_(True)
 
+        self.scheduler.set_timesteps(self.num_train_timesteps)
         self.config = config
 
-    def forward(
-        self,
-        clip_input,
-        vae_image_input,
-        vae_video_input,
-        added_time_ids,
-        controlnet_cond,
-    ) -> torch.Tensor:
-        return self.train_forward(
-            clip_input,
-            vae_image_input,
-            vae_video_input,
-            added_time_ids,
-            controlnet_cond,
-        )
+    def forward(self, image, video, added_time_ids, controlnet_cond) -> torch.Tensor:
+        return self.train_forward(image, video, added_time_ids, controlnet_cond)
 
     def train_forward(
-        self,
-        clip_input,
-        vae_image_input,
-        vae_video_input,
-        added_time_ids,
-        controlnet_cond,
+        self, image, video, added_time_ids, controlnet_cond
     ) -> torch.Tensor:
-        image_embeddings = self._clip_encode_image(clip_input)
-        image_latents = self._vae_encode_image(vae_image_input)
-        video_latents = self._vae_encode_video(vae_video_input)
+        image_embeddings = self._clip_encode_image(image)
 
-        batch_size = video_latents.size(0)
-        timesteps = torch.randint(
-            0, self.num_train_timesteps, size=(batch_size,), device=self.sigmas.device
-        )
-        # timesteps = self.scheduler.timesteps[timesteps]
-        noise = torch.randn_like(video_latents)
-        noisy_video_latents = self._add_noise(video_latents, noise, timesteps)
+        vae_image_inputs = self._add_noise(video[:, 0, ...], added_time_ids[:, 2])
+        image_latents = self._vae_encode_image(vae_image_inputs)
 
-        unet_inputs = self._scale_model_input(noisy_video_latents, timesteps)
+        video_latents = self._vae_encode_video(video)
+        sigmas, timesteps = self._sample_sigmas_and_timesteps(video_latents.size(0))
+        sigmas = sigmas.to(video_latents.device, video_latents.dtype)
+        timesteps = timesteps.to(video_latents.device, video_latents.dtype)
+        noisy_video_latents = self._add_noise(video_latents, sigmas)
+        unet_inputs = self._scale_model_input(noisy_video_latents, sigmas)
         unet_inputs = torch.cat([unet_inputs, image_latents], dim=2)
         control_model_input = unet_inputs
+
+        null_mask = (
+            torch.rand(size=(video_latents.size(0),))
+            > self.config.train.null_embedding_prob
+        ).to(image_embeddings.device, image_embeddings.dtype)
+        null_mask = einops.rearrange(null_mask, "b -> b 1 1")
+        image_embeddings = image_embeddings * null_mask
 
         down_block_res_samples, mid_block_res_sample = self.controlnet(
             control_model_input,
@@ -107,10 +98,10 @@ class StableVideoDiffusion(nn.Module):
             return_dict=False,
         )[0]
 
-        pred_original_samples = self.pred_original_samples(
-            noise_preds, timesteps, noisy_video_latents
+        pred_original_samples = self._pred_original_samples(
+            noisy_video_latents, noise_preds, sigmas
         )
-        loss = F.mse_loss(pred_original_samples.float(), video_latents.float())
+        loss = self._calc_loss(pred_original_samples, video_latents, sigmas)
         return loss
 
     def configure_optimizers(self) -> Tuple[Optimizer, LRScheduler]:
@@ -133,14 +124,10 @@ class StableVideoDiffusion(nn.Module):
                 lr_scheduler = optim.lr_scheduler.LambdaLR(optimizer, lambda x: 1)
         return optimizer, lr_scheduler
 
-    def set_timesteps(self, device, dtype):
-        self.scheduler.set_timesteps(self.num_train_timesteps, device=device)
-        self.sigmas = self.scheduler.sigmas.to(dtype)
-
     @torch.no_grad()
     def _clip_encode_image(self, image: torch.Tensor) -> torch.Tensor:
         image_embeddings = self.image_encoder(image).image_embeds
-        image_embeddings = image_embeddings.unsqueeze(1)
+        image_embeddings = einops.rearrange(image_embeddings, "b c -> b 1 c")
         return image_embeddings
 
     @torch.no_grad()
@@ -154,7 +141,7 @@ class StableVideoDiffusion(nn.Module):
     @torch.no_grad()
     def _vae_encode_video(self, video: torch.Tensor) -> torch.Tensor:
         video_frames = einops.rearrange(video, "b f c h w -> (b f) c h w")
-        video_latents = self.vae.encode(video_frames).latent_dist.sample()
+        video_latents = self.vae.encode(video_frames).latent_dist.mode()
         video_latents = einops.rearrange(
             video_latents, "(b f) c h w -> b f c h w ", f=self.num_frames
         )
@@ -162,40 +149,56 @@ class StableVideoDiffusion(nn.Module):
         return video_latents
 
     @torch.no_grad()
-    def _add_noise(self, original_samples, noise, timesteps):
-        sigma = self.sigmas[timesteps].flatten()
-        sigma = einops.repeat(sigma, "b -> b 1 1 1 1")
-        noisy_samples = original_samples + noise * sigma
-        noisy_samples
+    def _add_noise(
+        self, original_samples: torch.Tensor, strength: torch.Tensor
+    ) -> torch.Tensor:
+        pattern = " ".join(["1" for _ in range(original_samples.dim() - 1)])
+        strength = einops.rearrange(strength, f"b -> b {pattern}")
+        noise = torch.randn_like(original_samples)
+        noisy_samples = original_samples + noise * strength
         return noisy_samples
 
     @torch.no_grad()
-    def _scale_model_input(self, noisy_video_latents, timesteps):
-        sigma = self.sigmas[timesteps]
-        sigma = einops.rearrange(sigma, "b -> b 1 1 1 1")
-        noisy_video_latents /= (sigma**2 + 1) ** 0.5
+    def _sample_sigmas_and_timesteps(self, batch_size):
+        timestep_idx = torch.randint(0, self.num_train_timesteps, size=(batch_size,))
+        sigmas = self.scheduler.sigmas[timestep_idx]
+        timesteps = self.scheduler.timesteps[timestep_idx]
+        return sigmas, timesteps
+
+    @torch.no_grad()
+    def _scale_model_input(
+        self, noisy_video_latents: torch.Tensor, sigmas: torch.Tensor
+    ) -> torch.Tensor:
+        sigmas = einops.rearrange(sigmas, "b -> b 1 1 1 1")
+        c_in = 1 / (sigmas**2 + 1) ** 0.5
+        noisy_video_latents = noisy_video_latents * c_in
         return noisy_video_latents
 
-    def pred_original_samples(
+    def _pred_original_samples(
         self,
-        noise_preds,
-        timesteps,
-        noisy_video_latents,
-        s_churn: float = 0.0,
-        s_noise: float = 1.0,
-    ):
-        sigma = self.sigmas[timesteps]
-        gamma = min(s_churn / (len(self.sigmas) - 1), 2**0.5 - 1)
-        noise = torch.randn_like(noise_preds)
-        eps = noise * s_noise
-        sigma = einops.rearrange(sigma, "b -> b 1 1 1 1")
-        sigma_hat = sigma * (gamma + 1)
-        if gamma > 0:
-            noisy_video_latents += eps * (sigma_hat**2 - sigma**2) ** 0.5
-        pred_original_sample = noise_preds * (-sigma / (sigma**2 + 1) ** 0.5) + (
-            noisy_video_latents / (sigma**2 + 1)
-        )
+        noisy_video_latents: torch.Tensor,
+        noise_preds: torch.Tensor,
+        sigmas: torch.Tensor,
+    ) -> torch.Tensor:
+        sigmas = einops.rearrange(sigmas, "b -> b 1 1 1 1")
+        c_skip = 1 / (sigmas**2 + 1)
+        c_out = -sigmas / (sigmas**2 + 1) ** 0.5
+        pred_original_sample = c_skip * noisy_video_latents + c_out * noise_preds
         return pred_original_sample
+
+    def _calc_loss(
+        self,
+        pred_original_samples: torch.Tensor,
+        video_latents: torch.Tensor,
+        sigmas: torch.Tensor,
+    ) -> torch.Tensor:
+        sigmas = einops.rearrange(sigmas, "b -> b 1 1 1 1")
+        loss_weight = (sigmas**2 + 1) / sigmas**2
+        loss = F.mse_loss(
+            pred_original_samples.float(), video_latents.float(), reduction="none"
+        )
+        loss *= loss_weight
+        return loss.mean()
 
 
 def get_pipeline(model_id: str) -> StableVideoDiffusionPipeline:

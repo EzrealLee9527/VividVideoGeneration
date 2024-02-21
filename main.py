@@ -8,6 +8,7 @@ from lightning.fabric.loggers import TensorBoardLogger
 
 from model import get_pipeline, get_model
 from dataset import get_dataloader
+# from cat_dataset import get_dataloader
 from utils import LoggerHelper, TrainHelper, HyperParams as HP
 
 # type hint
@@ -69,58 +70,56 @@ def train(
     pbar.update(train_helper.clock.step)
 
     model.controlnet.train()
-    for idx, batch in enumerate(dataloader):
-        metrics = {}
-        clip_input = batch["clip_input"].to(fabric.device)
-        vae_image_input = batch["vae_image_input"].to(fabric.device)
-        vae_video_input = batch["vae_video_input"].to(fabric.device)
-        added_time_ids = batch["added_time_ids"].to(fabric.device)
-        controlnet_cond = batch["controlnet_cond"].to(fabric.device)
+    while True:
+        for idx, batch in enumerate(dataloader):
+            metrics = {}
+            image = batch["image"].to(fabric.device)
+            video = batch["video"].to(fabric.device)
+            added_time_ids = batch["added_time_ids"].to(fabric.device)
+            controlnet_cond = batch["controlnet_cond"].to(fabric.device)
 
-        loss = model(
-            clip_input,
-            vae_image_input,
-            vae_video_input,
-            added_time_ids,
-            controlnet_cond,
-        )
-        fabric.backward(loss)
-        optimizer.step()
-        optimizer.zero_grad()
-        lr_scheduler.step()
+            loss = model(image, video, added_time_ids, controlnet_cond)
+            fabric.backward(loss)
+            optimizer.step()
+            optimizer.zero_grad()
+            lr_scheduler.step()
 
-        metrics["loss"] = fabric.all_reduce(loss, reduce_op="mean").item()
-        metrics["lr"] = lr_scheduler.get_last_lr()[0]
+            metrics["loss"] = fabric.all_reduce(loss, reduce_op="mean").item()
+            metrics["lr"] = lr_scheduler.get_last_lr()[0]
 
-        train_helper.clock.update()
-        pbar.update()
-        pbar.set_postfix(metrics)
+            train_helper.clock.update()
+            pbar.update()
+            pbar.set_postfix(metrics)
 
-        if cfg.model.use_ema:
-            train_helper.ema.update(model.controlnet, cfg.model.ema_momentum)
+            if cfg.model.use_ema:
+                train_helper.ema.update(model.controlnet, cfg.model.ema_momentum)
 
-        if train_helper.clock.step % cfg.monitor.log_interval == 0:
-            logger.info(LoggerHelper.dict2str(metrics))
+            if train_helper.clock.step % cfg.monitor.log_interval == 0:
+                logger.info(LoggerHelper.dict2str(metrics))
 
-        if fabric.is_global_zero:
-            fabric.log_dict(metrics, step=train_helper.clock.step)
+            if fabric.is_global_zero:
+                fabric.log_dict(metrics, step=train_helper.clock.step)
 
-        fabric.barrier()
-        if train_helper.clock.step % cfg.monitor.latest_interval == 0:
-            checkpoint = os.path.join(cfg.fs.model_dir, "latest")
-            train_helper.save_state(checkpoint, model, optimizer, lr_scheduler)
+            fabric.barrier()
+            if train_helper.clock.step % cfg.monitor.latest_interval == 0:
+                checkpoint = os.path.join(cfg.fs.model_dir, "latest")
+                train_helper.save_state(checkpoint, model, optimizer, lr_scheduler)
 
-        fabric.barrier()
-        if train_helper.clock.step % cfg.monitor.save_interval == 0:
-            checkpoint = os.path.join(
-                cfg.fs.model_dir, f"step_{train_helper.clock.step}"
-            )
-            train_helper.save_state(checkpoint, model, optimizer, lr_scheduler)
+            fabric.barrier()
+            if train_helper.clock.step % cfg.monitor.save_interval == 0:
+                checkpoint = os.path.join(
+                    cfg.fs.model_dir, f"step_{train_helper.clock.step}"
+                )
+                train_helper.save_state(checkpoint, model, optimizer, lr_scheduler)
+
+            fabric.barrier()
+            if train_helper.clock.step > cfg.train.num_iteration:
+                checkpoint = os.path.join(cfg.fs.model_dir, "final")
+                train_helper.save_state(checkpoint, model, optimizer, lr_scheduler)
+                break
 
         fabric.barrier()
         if train_helper.clock.step > cfg.train.num_iteration:
-            checkpoint = os.path.join(cfg.fs.model_dir, "final")
-            train_helper.save_state(checkpoint, model, optimizer, lr_scheduler)
             break
 
 
@@ -139,7 +138,7 @@ def main():
 
     fabric = L.Fabric(
         strategy="deepspeed_stage_3",
-        precision="16-mixed",
+        precision="bf16-mixed",
         loggers=TensorBoardLogger(
             root_dir=cfg.fs.exp_dir, name=cfg.fs.tensorboard_dir, version="train_event"
         ),
@@ -173,7 +172,7 @@ def main():
     dataloader = get_dataloader(cfg)
     # setup model and optimizer
     model, optimizer = fabric.setup(model, optimizer)
-    model.set_timesteps(fabric.device, fabric._precision._desired_dtype)
+    # dataloader = fabric.setup_dataloaders(dataloader)
 
     if cfg.train.resume:
         checkpoint = os.path.join(cfg.fs.model_dir, "latest")
