@@ -34,7 +34,6 @@ def draw_pose(pose, H, W):
 class DWposeDetector:
     def __init__(self, det_config=None, det_ckpt=None, pose_config=None, pose_ckpt=None, device="cpu"):
         from .wholebody import Wholebody
-
         self.pose_estimation = Wholebody(det_config, det_ckpt, pose_config, pose_ckpt, device)
     
     def to(self, device):

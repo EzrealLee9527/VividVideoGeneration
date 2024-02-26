@@ -59,15 +59,19 @@ def zero_rank_print(s):
     if (not dist.is_initialized()) and (dist.is_initialized() and dist.get_rank() == 0): print("### " + s)
 
 
-def save_videos_grid(videos: torch.Tensor, path: str, rescale=False, n_rows=6, fps=8):
+def save_videos_grid(videos: torch.Tensor, path: str, rescale=False, n_rows=6, fps=8, save_every_image=False, dir_path=None):
     videos = rearrange(videos, "b c t h w -> t b c h w")
     outputs = []
-    for x in videos:
+    for i, x in enumerate(videos):
         x = torchvision.utils.make_grid(x, nrow=n_rows)
         x = x.transpose(0, 1).transpose(1, 2).squeeze(-1)
         if rescale:
             x = (x + 1.0) / 2.0  # -1,1 -> 0,1
-        x = (x * 255).numpy().astype(np.uint8)
+        if x.max() <= 1.0:
+            x = (x * 255).numpy().astype(np.uint8)
+        else:
+            x = x.numpy().astype(np.uint8)
+        
         outputs.append(x)
 
     os.makedirs(os.path.dirname(path), exist_ok=True)
@@ -75,7 +79,21 @@ def save_videos_grid(videos: torch.Tensor, path: str, rescale=False, n_rows=6, f
         imageio.mimsave(path, outputs, fps=fps, loop=0)
     else:
         imageio.mimsave(path, outputs, fps=fps)
-
+    
+    if save_every_image:
+        dir_base_path = path[:-4]
+        os.makedirs(dir_base_path, exist_ok=True)
+        for i, x in enumerate(videos):
+            x = torchvision.utils.make_grid(x, nrow=n_rows)
+            x = x.transpose(0, 1).transpose(1, 2).squeeze(-1)
+            if rescale:
+                x = (x + 1.0) / 2.0  # -1,1 -> 0,1
+            if x.max() <= 1.0:
+                x = (x * 255).numpy().astype(np.uint8)
+            else:
+                x = x.numpy().astype(np.uint8)
+            
+            Image.fromarray(x).save(f"{dir_base_path}/_{i}.png")
 
 # DDIM Inversion
 @torch.no_grad()

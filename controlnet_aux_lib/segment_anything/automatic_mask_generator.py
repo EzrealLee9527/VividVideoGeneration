@@ -180,6 +180,8 @@ class SamAutomaticMaskGenerator:
 
         # Write mask records
         curr_anns = []
+        for k, v in mask_data.items():
+            print(f'key in mask data contain {k}')
         for idx in range(len(mask_data["segmentations"])):
             ann = {
                 "segmentation": mask_data["segmentations"][idx],

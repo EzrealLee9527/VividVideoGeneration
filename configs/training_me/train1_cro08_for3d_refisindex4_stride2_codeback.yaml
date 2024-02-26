@@ -1,0 +1,137 @@
+image_finetune: false
+output_dir: "/dev/shm/yangshurong/magicanimate/"
+pretrained_model_path: '/root/.cache/yangshurong/StableDiffusion'
+pretrained_vae_path: "/root/.cache/yangshurong/magic_pretrain/sd-vae-ft-mse"
+
+# ip_ckpt: "/data/work/IP-Adapter/IP-Adapter/models/ip-adapter-full-face_sd15.bin"
+pretrained_appearance_encoder_path: "/root/.cache/yangshurong/magic_pretrain/MagicAnimate/appearance_encoder"
+# pretrained_appearance_encoder_path: ""
+
+pretrained_controlnet_path: "/root/.cache/yangshurong/magic_pretrain/MagicAnimate/densepose_controlnet"
+# motion_module: "/root/.cache/yangshurong/magic_pretrain/MagicAnimate/temporal_attention/temporal_attention.ckpt"
+motion_module: ""
+inference_config: "configs/inference/magic_inference.yaml"
+pretrained_unet_path: ""
+
+use_2d_cross_rate: 0.8
+control_aux_type: "densepose_dwpose"
+remove_background: false
+remove_referencenet: false
+clip_image_type: "background"
+concat_noise_image_type: ""
+ref_image_type: "origin"
+add_noise_image_type: ""
+special_ref_index: 4
+valid_seed: 42
+
+# stage1 trained
+appearance_controlnet_motion_checkpoint_path: ""
+# appearance_controlnet_motion_checkpoint_path: "/data/work/animate_based_ap_stage2/outputs/train_stage1_w_imageencoder_celebv-2023-12-31T00-01-25/checkpoints/checkpoint-steps2500.ckpt"
+
+unet_additional_kwargs:
+  unet_use_cross_frame_attention: false
+  unet_use_temporal_attention: false
+  use_motion_module: false # stage1
+  motion_module_resolutions:
+  - 1
+  - 2
+  - 4
+  - 8
+  motion_module_mid_block: false
+  motion_module_decoder_only: false
+  motion_module_type: Vanilla
+  motion_module_kwargs:
+    num_attention_heads: 8
+    num_transformer_block: 1
+    attention_block_types:
+    - Temporal_Self
+    - Temporal_Self
+    temporal_position_encoding: true
+    temporal_position_encoding_max_len: 24
+    temporal_attention_dim_div: 1
+
+  # Addition for image embeddings
+  use_image_condition            : false
+
+
+noise_scheduler_kwargs:
+  num_train_timesteps: 1000
+  beta_start:          0.00085
+  beta_end:            0.012
+  beta_schedule:       "scaled_linear" # 这部分animatediff和magic不一样？
+  steps_offset:        1
+  clip_sample:         false
+
+data_module:          'animatediff.data.dataset_wds'
+data_class:           'S3VideosIterableDataset'
+train_data:
+  data_dirs:          [
+                          "s3://data-transfer-tos-shanghai-818/midjourney/jmh/Video/wds/CelebV_webdataset_20231211_videoblip",
+                          # "s3://data-transfer-tos-shanghai-818/midjourney/jmh/Video/wds/hdvila100m_20231216",
+                          "s3://data-transfer-tos-shanghai-818/midjourney/jmh/Video/wds/pexels_20231217",
+                          # "s3://data-transfer-tos-shanghai-818/midjourney/jmh/Video/wds/xiaohongshu_webdataset_20231212",
+                      ]
+  resolution:         [512, 512]
+  frame_stride:       2
+  video_length:       16
+  shuffle:            true
+  resampled:          true
+  dataset_length:     1000000
+  endpoint_url:       "http://oss.i.shaipower.com:80"
+
+validation_data:
+  source_image:
+    - "./new_test_data/000.jpg"
+    - "./new_test_data/Jimmy_O._Yang.webp"
+    - "./new_test_data/000.png"
+    - "./new_test_data/sunwei_crop.jpg"
+    - "./new_test_data/000.png"
+    - "./new_test_data/61B17EC6-4F7E-42ba-B843-73451754F6FC.png"
+
+  video_path:
+    - "./me_test_data/my_data_8_dense_dw.gif"
+    - "./me_test_data/my_data_8_dense_dw.gif"
+    - "./me_test_data/my_data_8_dense_dw.gif"
+    - "./me_test_data/my_data_8_dense_dw.gif"
+    - "./me_test_data/my_data_8_dense_dw.gif"
+    - "./me_test_data/my_data_8_dense_dw.gif"
+
+  num_inference_steps: 25
+  guidance_scale: 2.0
+  sample_size: [512, 512]
+  frame_stride: 1
+  S: 1
+
+context:
+  context_frames: 16
+  context_stride: 1
+  context_overlap: 0
+
+# stage1 TODO: image_encoder部分？
+trainable_modules:
+  - "appearance_encoder"
+  - "controlnet"
+  # - "unet.conv_in"
+  # - "motion_module"
+
+
+unet_checkpoint_path: ""
+
+gradient_accumulation_steps: 4
+
+learning_rate:    3.e-5
+train_batch_size: 2
+num_workers: 4
+
+max_train_epoch:      100
+max_train_steps:      1000000
+checkpointing_epochs: -1
+checkpointing_steps:  1000
+
+validation_steps:       1000
+validation_steps_tuple: [2, 100, 500]
+
+mixed_precision_training: true
+enable_xformers_memory_efficient_attention: true
+
+is_debug: False

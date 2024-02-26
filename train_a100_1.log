@@ -1,0 +1,621 @@
+Detected kernel version 5.4.210, which is below the recommended minimum of 5.5.0; this can cause the process to hang. It is recommended to upgrade the kernel to the minimum version or higher.
+/data/users/jingminhao/code/yangshurong/VividVideoGeneration_r/controlnet_aux_lib/segment_anything/modeling/tiny_vit_sam.py:654: UserWarning: Overwriting tiny_vit_5m_224 in registry with controlnet_aux_lib.segment_anything.modeling.tiny_vit_sam.tiny_vit_5m_224. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  return register_model(fn_wrapper)
+/data/users/jingminhao/code/yangshurong/VividVideoGeneration_r/controlnet_aux_lib/segment_anything/modeling/tiny_vit_sam.py:654: UserWarning: Overwriting tiny_vit_11m_224 in registry with controlnet_aux_lib.segment_anything.modeling.tiny_vit_sam.tiny_vit_11m_224. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  return register_model(fn_wrapper)
+/data/users/jingminhao/code/yangshurong/VividVideoGeneration_r/controlnet_aux_lib/segment_anything/modeling/tiny_vit_sam.py:654: UserWarning: Overwriting tiny_vit_21m_224 in registry with controlnet_aux_lib.segment_anything.modeling.tiny_vit_sam.tiny_vit_21m_224. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  return register_model(fn_wrapper)
+/data/users/jingminhao/code/yangshurong/VividVideoGeneration_r/controlnet_aux_lib/segment_anything/modeling/tiny_vit_sam.py:654: UserWarning: Overwriting tiny_vit_21m_384 in registry with controlnet_aux_lib.segment_anything.modeling.tiny_vit_sam.tiny_vit_21m_384. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  return register_model(fn_wrapper)
+/data/users/jingminhao/code/yangshurong/VividVideoGeneration_r/controlnet_aux_lib/segment_anything/modeling/tiny_vit_sam.py:654: UserWarning: Overwriting tiny_vit_21m_512 in registry with controlnet_aux_lib.segment_anything.modeling.tiny_vit_sam.tiny_vit_21m_512. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  return register_model(fn_wrapper)
+02/26/2024 10:23:02 - INFO - torch.distributed.nn.jit.instantiator - Created a temporary directory at /tmp/tmpeol1_f8k
+02/26/2024 10:23:02 - INFO - torch.distributed.nn.jit.instantiator - Writing /tmp/tmpeol1_f8k/_remote_module_non_scriptable.py
+Loads checkpoint by local backend from path: /root/.cache/yangshurong/magic_pretrain/control_aux/yolox_l_8x8_300e_coco_20211126_140236-d3bd2b23.pth
+Loads checkpoint by local backend from path: /root/.cache/yangshurong/magic_pretrain/control_aux/dw-ll_ucoco_384.pth
+02/26/2024 10:23:08 - INFO - detectron2.checkpoint.detection_checkpoint - [DetectionCheckpointer] Loading from /root/.cache/yangshurong/magic_pretrain/control_aux/densepose_model.pkl ...
+02/26/2024 10:23:08 - INFO - fvcore.common.checkpoint - [Checkpointer] Loading from /root/.cache/yangshurong/magic_pretrain/control_aux/densepose_model.pkl ...
+02/26/2024 10:23:08 - INFO - fvcore.common.checkpoint - Reading a file from 'Detectron2 Model Zoo'
+Initializing UNet MagicAnimate Pipeline...
+loaded temporal unet's pretrained weights from /root/.cache/yangshurong/StableDiffusion/unet ...
+### missing keys: 560; 
+### unexpected keys: 0;
+### Temporal Module Parameters: 417.1376 M
+load controlnet type is 2d
+The config attributes {'addition_embed_type': None, 'addition_embed_type_num_heads': 64, 'addition_time_embed_dim': None, 'conditioning_channels': 3, 'encoder_hid_dim': None, 'encoder_hid_dim_type': None, 'global_pool_conditions': False, 'num_attention_heads': None, 'transformer_layers_per_block': 1} were passed to ControlNetModel, but are not expected and will be ignored. Please verify your config.json configuration file.
+It is recommended to provide `attention_head_dim` when calling `get_down_block`. Defaulting `attention_head_dim` to 8.
+It is recommended to provide `attention_head_dim` when calling `get_down_block`. Defaulting `attention_head_dim` to 8.
+It is recommended to provide `attention_head_dim` when calling `get_down_block`. Defaulting `attention_head_dim` to 8.
+It is recommended to provide `attention_head_dim` when calling `get_down_block`. Defaulting `attention_head_dim` to 8.
+load all model from checkpoint: /root/.cache/yangshurong/magic_pretrain/checkpoint-steps7000.ckpt
+global_step: 7000
+load checkpoint: appearance_encoder_state_dict 662
+load checkpoint: controlnet_state_dict 340
+load checkpoint: unet_state_dict 686
+load checkpoint: appearance_encoder missing keys: 0, unexpected keys: 0
+load checkpoint: controlnet missing keys: 0, unexpected keys: 0
+load checkpoint: unet missing keys: 560, unexpected keys: 0
+load motion_module from /root/.cache/yangshurong/magic_pretrain/MagicAnimate/temporal_attention/temporal_attention.ckpt
+load motion_module params len is 1246
+load motion_module missing 0, unexpected 0
+/data/users/jingminhao/code/yangshurong/VividVideoGeneration_r/animatediff/magic_animate/unet_model/pipeline.py:44: FutureWarning: Importing `DiffusionPipeline` or `ImagePipelineOutput` from diffusers.pipeline_utils is deprecated. Please import from diffusers.pipelines.pipeline_utils instead.
+  from diffusers.pipeline_utils import DiffusionPipeline
+/data/users/jingminhao/code/yangshurong/VividVideoGeneration_r/animatediff/magic_animate/unet_model/pipeline.py:106: FutureWarning: The configuration file of this scheduler: DDIMScheduler {
+  "_class_name": "DDIMScheduler",
+  "_diffusers_version": "0.21.4",
+  "beta_end": 0.012,
+  "beta_schedule": "linear",
+  "beta_start": 0.00085,
+  "clip_sample": true,
+  "clip_sample_range": 1.0,
+  "dynamic_thresholding_ratio": 0.995,
+  "num_train_timesteps": 1000,
+  "prediction_type": "epsilon",
+  "rescale_betas_zero_snr": false,
+  "sample_max_value": 1.0,
+  "set_alpha_to_one": true,
+  "steps_offset": 0,
+  "thresholding": false,
+  "timestep_spacing": "leading",
+  "trained_betas": null
+}
+ is outdated. `steps_offset` should be set to 1 instead of 0. Please make sure to update the config accordingly as leaving `steps_offset` might led to incorrect results in future versions. If you have downloaded this checkpoint from the Hugging Face Hub, it would be very nice if you could open a Pull request for the `scheduler/scheduler_config.json` file
+  deprecate("steps_offset!=1", "1.0.0",
+/data/users/jingminhao/code/yangshurong/VividVideoGeneration_r/animatediff/magic_animate/unet_model/pipeline.py:120: FutureWarning: The configuration file of this scheduler: DDIMScheduler {
+  "_class_name": "DDIMScheduler",
+  "_diffusers_version": "0.21.4",
+  "beta_end": 0.012,
+  "beta_schedule": "linear",
+  "beta_start": 0.00085,
+  "clip_sample": true,
+  "clip_sample_range": 1.0,
+  "dynamic_thresholding_ratio": 0.995,
+  "num_train_timesteps": 1000,
+  "prediction_type": "epsilon",
+  "rescale_betas_zero_snr": false,
+  "sample_max_value": 1.0,
+  "set_alpha_to_one": true,
+  "steps_offset": 1,
+  "thresholding": false,
+  "timestep_spacing": "leading",
+  "trained_betas": null
+}
+ has not set the configuration `clip_sample`. `clip_sample` should be set to False in the configuration file. Please make sure to update the config accordingly as not setting `clip_sample` in the config might lead to incorrect results in future versions. If you have downloaded this checkpoint from the Hugging Face Hub, it would be very nice if you could open a Pull request for the `scheduler/scheduler_config.json` file
+  deprecate("clip_sample not set", "1.0.0",
+Initialization Done!
+use clip code image, image type is background
+trainable_params 520
+trainable params number: 520
+trainable params scale: 417.138 M
+02/26/2024 10:23:45 - INFO - botocore.credentials - Found credentials in shared credentials file: ~/.aws/credentials
+02/26/2024 10:23:45 - INFO - megfile.s3_path - using ~/.aws/config: http://tos-s3-cn-shanghai.ivolces.com
+finish get tarfile_path_list len is 1907
+***** Running training *****
+  Num examples = 1000000
+  Num Epochs = 8
+  Instantaneous batch size per device = 1
+  Total train batch size (w. parallel, distributed & accumulation) = 8
+  Gradient Accumulation steps = 8
+  Total optimization steps = 1000000
+  num_processes = 1
+  0%|          | 0/1000000 [00:00<?, ?it/s]Steps:   0%|          | 0/1000000 [00:00<?, ?it/s]t-20240226154624-7r6l6-worker-0:30957:30957 [0] NCCL INFO Bootstrap : Using eth0:192.18.24.180<0>
+t-20240226154624-7r6l6-worker-0:30957:30957 [0] NCCL INFO NET/Plugin : No plugin found (libnccl-net.so), using internal implementation
+t-20240226154624-7r6l6-worker-0:30957:30957 [0] NCCL INFO cudaDriverVersion 11040
+NCCL version 2.14.3+cuda11.7
+t-20240226154624-7r6l6-worker-0:30957:31138 [0] NCCL INFO NCCL_IB_DISABLE set by environment to 0.
+t-20240226154624-7r6l6-worker-0:30957:31138 [0] NCCL INFO Failed to open libibverbs.so[.1]
+t-20240226154624-7r6l6-worker-0:30957:31138 [0] NCCL INFO NET/Socket : Using [0]eth0:192.18.24.180<0>
+t-20240226154624-7r6l6-worker-0:30957:31138 [0] NCCL INFO Using network Socket
+t-20240226154624-7r6l6-worker-0:30957:31138 [0] NCCL INFO Setting affinity for GPU 0 to ffffff,ffffffff
+t-20240226154624-7r6l6-worker-0:30957:31138 [0] NCCL INFO Channel 00/32 :    0
+t-20240226154624-7r6l6-worker-0:30957:31138 [0] NCCL INFO Channel 01/32 :    0
+t-20240226154624-7r6l6-worker-0:30957:31138 [0] NCCL INFO Channel 02/32 :    0
+t-20240226154624-7r6l6-worker-0:30957:31138 [0] NCCL INFO Channel 03/32 :    0
+t-20240226154624-7r6l6-worker-0:30957:31138 [0] NCCL INFO Channel 04/32 :    0
+t-20240226154624-7r6l6-worker-0:30957:31138 [0] NCCL INFO Channel 05/32 :    0
+t-20240226154624-7r6l6-worker-0:30957:31138 [0] NCCL INFO Channel 06/32 :    0
+t-20240226154624-7r6l6-worker-0:30957:31138 [0] NCCL INFO Channel 07/32 :    0
+t-20240226154624-7r6l6-worker-0:30957:31138 [0] NCCL INFO Channel 08/32 :    0
+t-20240226154624-7r6l6-worker-0:30957:31138 [0] NCCL INFO Channel 09/32 :    0
+t-20240226154624-7r6l6-worker-0:30957:31138 [0] NCCL INFO Channel 10/32 :    0
+t-20240226154624-7r6l6-worker-0:30957:31138 [0] NCCL INFO Channel 11/32 :    0
+t-20240226154624-7r6l6-worker-0:30957:31138 [0] NCCL INFO Channel 12/32 :    0
+t-20240226154624-7r6l6-worker-0:30957:31138 [0] NCCL INFO Channel 13/32 :    0
+t-20240226154624-7r6l6-worker-0:30957:31138 [0] NCCL INFO Channel 14/32 :    0
+t-20240226154624-7r6l6-worker-0:30957:31138 [0] NCCL INFO Channel 15/32 :    0
+t-20240226154624-7r6l6-worker-0:30957:31138 [0] NCCL INFO Channel 16/32 :    0
+t-20240226154624-7r6l6-worker-0:30957:31138 [0] NCCL INFO Channel 17/32 :    0
+t-20240226154624-7r6l6-worker-0:30957:31138 [0] NCCL INFO Channel 18/32 :    0
+t-20240226154624-7r6l6-worker-0:30957:31138 [0] NCCL INFO Channel 19/32 :    0
+t-20240226154624-7r6l6-worker-0:30957:31138 [0] NCCL INFO Channel 20/32 :    0
+t-20240226154624-7r6l6-worker-0:30957:31138 [0] NCCL INFO Channel 21/32 :    0
+t-20240226154624-7r6l6-worker-0:30957:31138 [0] NCCL INFO Channel 22/32 :    0
+t-20240226154624-7r6l6-worker-0:30957:31138 [0] NCCL INFO Channel 23/32 :    0
+t-20240226154624-7r6l6-worker-0:30957:31138 [0] NCCL INFO Channel 24/32 :    0
+t-20240226154624-7r6l6-worker-0:30957:31138 [0] NCCL INFO Channel 25/32 :    0
+t-20240226154624-7r6l6-worker-0:30957:31138 [0] NCCL INFO Channel 26/32 :    0
+t-20240226154624-7r6l6-worker-0:30957:31138 [0] NCCL INFO Channel 27/32 :    0
+t-20240226154624-7r6l6-worker-0:30957:31138 [0] NCCL INFO Channel 28/32 :    0
+t-20240226154624-7r6l6-worker-0:30957:31138 [0] NCCL INFO Channel 29/32 :    0
+t-20240226154624-7r6l6-worker-0:30957:31138 [0] NCCL INFO Channel 30/32 :    0
+t-20240226154624-7r6l6-worker-0:30957:31138 [0] NCCL INFO Channel 31/32 :    0
+t-20240226154624-7r6l6-worker-0:30957:31138 [0] NCCL INFO Trees [0] -1/-1/-1->0->-1 [1] -1/-1/-1->0->-1 [2] -1/-1/-1->0->-1 [3] -1/-1/-1->0->-1 [4] -1/-1/-1->0->-1 [5] -1/-1/-1->0->-1 [6] -1/-1/-1->0->-1 [7] -1/-1/-1->0->-1 [8] -1/-1/-1->0->-1 [9] -1/-1/-1->0->-1 [10] -1/-1/-1->0->-1 [11] -1/-1/-1->0->-1 [12] -1/-1/-1->0->-1 [13] -1/-1/-1->0->-1 [14] -1/-1/-1->0->-1 [15] -1/-1/-1->0->-1 [16] -1/-1/-1->0->-1 [17] -1/-1/-1->0->-1 [18] -1/-1/-1->0->-1 [19] -1/-1/-1->0->-1 [20] -1/-1/-1->0->-1 [21] -1/-1/-1->0->-1 [22] -1/-1/-1->0->-1 [23] -1/-1/-1->0->-1 [24] -1/-1/-1->0->-1 [25] -1/-1/-1->0->-1 [26] -1/-1/-1->0->-1 [27] -1/-1/-1->0->-1 [28] -1/-1/-1->0->-1 [29] -1/-1/-1->0->-1 [30] -1/-1/-1->0->-1 [31] -1/-1/-1->0->-1
+t-20240226154624-7r6l6-worker-0:30957:31138 [0] NCCL INFO Connected all rings
+t-20240226154624-7r6l6-worker-0:30957:31138 [0] NCCL INFO Connected all trees
+t-20240226154624-7r6l6-worker-0:30957:31138 [0] NCCL INFO 32 coll channels, 32 p2p channels, 32 p2p channels per peer
+t-20240226154624-7r6l6-worker-0:30957:31138 [0] NCCL INFO comm 0x54e0f800 rank 0 nranks 1 cudaDev 0 busId 65030 - Init COMPLETE
+/data/users/jingminhao/miniconda3/envs/ysr_magicanimate_test/lib/python3.10/site-packages/torchvision/transforms/functional.py:1603: UserWarning: The default value of the antialias parameter of all the resizing transforms (Resize(), RandomResizedCrop(), etc.) will change from None to True in v0.17, in order to be consistent across the PIL and Tensor backends. To suppress this warning, directly pass antialias=True (recommended, future default), antialias=None (current default, which means False for Tensors and True for PIL), or antialias=False (only works on Tensors - PIL will still use antialiasing). This also applies if you are using the inference transforms from the models weights: update the call to weights.transforms(antialias=True).
+  warnings.warn(
+/data/users/jingminhao/miniconda3/envs/ysr_magicanimate_test/lib/python3.10/site-packages/torchvision/transforms/functional.py:1603: UserWarning: The default value of the antialias parameter of all the resizing transforms (Resize(), RandomResizedCrop(), etc.) will change from None to True in v0.17, in order to be consistent across the PIL and Tensor backends. To suppress this warning, directly pass antialias=True (recommended, future default), antialias=None (current default, which means False for Tensors and True for PIL), or antialias=False (only works on Tensors - PIL will still use antialiasing). This also applies if you are using the inference transforms from the models weights: update the call to weights.transforms(antialias=True).
+  warnings.warn(
+/data/users/jingminhao/miniconda3/envs/ysr_magicanimate_test/lib/python3.10/site-packages/torchvision/transforms/functional.py:1603: UserWarning: The default value of the antialias parameter of all the resizing transforms (Resize(), RandomResizedCrop(), etc.) will change from None to True in v0.17, in order to be consistent across the PIL and Tensor backends. To suppress this warning, directly pass antialias=True (recommended, future default), antialias=None (current default, which means False for Tensors and True for PIL), or antialias=False (only works on Tensors - PIL will still use antialiasing). This also applies if you are using the inference transforms from the models weights: update the call to weights.transforms(antialias=True).
+  warnings.warn(
+/data/users/jingminhao/miniconda3/envs/ysr_magicanimate_test/lib/python3.10/site-packages/torchvision/transforms/functional.py:1603: UserWarning: The default value of the antialias parameter of all the resizing transforms (Resize(), RandomResizedCrop(), etc.) will change from None to True in v0.17, in order to be consistent across the PIL and Tensor backends. To suppress this warning, directly pass antialias=True (recommended, future default), antialias=None (current default, which means False for Tensors and True for PIL), or antialias=False (only works on Tensors - PIL will still use antialiasing). This also applies if you are using the inference transforms from the models weights: update the call to weights.transforms(antialias=True).
+  warnings.warn(
+/data/users/jingminhao/miniconda3/envs/ysr_magicanimate_test/lib/python3.10/site-packages/torch/functional.py:504: UserWarning: torch.meshgrid: in an upcoming release, it will be required to pass the indexing argument. (Triggered internally at /opt/conda/conda-bld/pytorch_1678411187366/work/aten/src/ATen/native/TensorShape.cpp:3483.)
+  return _VF.meshgrid(tensors, **kwargs)  # type: ignore[attr-defined]
+/data/users/jingminhao/miniconda3/envs/ysr_magicanimate_test/lib/python3.10/site-packages/xformers/ops/fmha/flash.py:338: UserWarning: TypedStorage is deprecated. It will be removed in the future and UntypedStorage will be the only storage class. This should only matter to you if you are using storages directly.  To access UntypedStorage directly, use tensor.untyped_storage() instead of tensor.storage()
+  and inp.query.storage().data_ptr() == inp.key.storage().data_ptr()
+Steps:   0%|          | 1/1000000 [00:11<3174:18:37, 11.43s/it]Steps:   0%|          | 1/1000000 [00:11<3174:18:37, 11.43s/it, lr=3e-5, step_loss=0.0192]02/26/2024 10:24:00 - INFO - torch.nn.parallel.distributed - Reducer buckets have been rebuilt in this iteration.
+/data/users/jingminhao/miniconda3/envs/ysr_magicanimate_test/lib/python3.10/site-packages/xformers/ops/fmha/flash.py:338: UserWarning: TypedStorage is deprecated. It will be removed in the future and UntypedStorage will be the only storage class. This should only matter to you if you are using storages directly.  To access UntypedStorage directly, use tensor.untyped_storage() instead of tensor.storage()
+  and inp.query.storage().data_ptr() == inp.key.storage().data_ptr()
+Steps:   0%|          | 2/1000000 [00:14<1795:30:37,  6.46s/it, lr=3e-5, step_loss=0.0192]Steps:   0%|          | 2/1000000 [00:14<1795:30:37,  6.46s/it, lr=3e-5, step_loss=0.0729]/data/users/jingminhao/miniconda3/envs/ysr_magicanimate_test/lib/python3.10/site-packages/xformers/ops/fmha/flash.py:338: UserWarning: TypedStorage is deprecated. It will be removed in the future and UntypedStorage will be the only storage class. This should only matter to you if you are using storages directly.  To access UntypedStorage directly, use tensor.untyped_storage() instead of tensor.storage()
+  and inp.query.storage().data_ptr() == inp.key.storage().data_ptr()
+Steps:   0%|          | 3/1000000 [00:17<1346:50:35,  4.85s/it, lr=3e-5, step_loss=0.0729]Steps:   0%|          | 3/1000000 [00:17<1346:50:35,  4.85s/it, lr=3e-5, step_loss=0.122] /data/users/jingminhao/miniconda3/envs/ysr_magicanimate_test/lib/python3.10/site-packages/xformers/ops/fmha/flash.py:338: UserWarning: TypedStorage is deprecated. It will be removed in the future and UntypedStorage will be the only storage class. This should only matter to you if you are using storages directly.  To access UntypedStorage directly, use tensor.untyped_storage() instead of tensor.storage()
+  and inp.query.storage().data_ptr() == inp.key.storage().data_ptr()
+Steps:   0%|          | 4/1000000 [00:20<1180:42:29,  4.25s/it, lr=3e-5, step_loss=0.122]Steps:   0%|          | 4/1000000 [00:20<1180:42:29,  4.25s/it, lr=3e-5, step_loss=0.00337]/data/users/jingminhao/miniconda3/envs/ysr_magicanimate_test/lib/python3.10/site-packages/xformers/ops/fmha/flash.py:338: UserWarning: TypedStorage is deprecated. It will be removed in the future and UntypedStorage will be the only storage class. This should only matter to you if you are using storages directly.  To access UntypedStorage directly, use tensor.untyped_storage() instead of tensor.storage()
+  and inp.query.storage().data_ptr() == inp.key.storage().data_ptr()
+Steps:   0%|          | 5/1000000 [00:23<1052:37:12,  3.79s/it, lr=3e-5, step_loss=0.00337]Steps:   0%|          | 5/1000000 [00:23<1052:37:12,  3.79s/it, lr=3e-5, step_loss=0.0419] /data/users/jingminhao/miniconda3/envs/ysr_magicanimate_test/lib/python3.10/site-packages/xformers/ops/fmha/flash.py:338: UserWarning: TypedStorage is deprecated. It will be removed in the future and UntypedStorage will be the only storage class. This should only matter to you if you are using storages directly.  To access UntypedStorage directly, use tensor.untyped_storage() instead of tensor.storage()
+  and inp.query.storage().data_ptr() == inp.key.storage().data_ptr()
+Steps:   0%|          | 6/1000000 [00:26<971:34:00,  3.50s/it, lr=3e-5, step_loss=0.0419] Steps:   0%|          | 6/1000000 [00:26<971:34:00,  3.50s/it, lr=3e-5, step_loss=0.00499]/data/users/jingminhao/miniconda3/envs/ysr_magicanimate_test/lib/python3.10/site-packages/xformers/ops/fmha/flash.py:338: UserWarning: TypedStorage is deprecated. It will be removed in the future and UntypedStorage will be the only storage class. This should only matter to you if you are using storages directly.  To access UntypedStorage directly, use tensor.untyped_storage() instead of tensor.storage()
+  and inp.query.storage().data_ptr() == inp.key.storage().data_ptr()
+Steps:   0%|          | 7/1000000 [00:29<923:25:05,  3.32s/it, lr=3e-5, step_loss=0.00499]Steps:   0%|          | 7/1000000 [00:29<923:25:05,  3.32s/it, lr=3e-5, step_loss=0.0426] /data/users/jingminhao/miniconda3/envs/ysr_magicanimate_test/lib/python3.10/site-packages/xformers/ops/fmha/flash.py:338: UserWarning: TypedStorage is deprecated. It will be removed in the future and UntypedStorage will be the only storage class. This should only matter to you if you are using storages directly.  To access UntypedStorage directly, use tensor.untyped_storage() instead of tensor.storage()
+  and inp.query.storage().data_ptr() == inp.key.storage().data_ptr()
+Steps:   0%|          | 8/1000000 [00:32<899:53:04,  3.24s/it, lr=3e-5, step_loss=0.0426]Steps:   0%|          | 8/1000000 [00:32<899:53:04,  3.24s/it, lr=3e-5, step_loss=0.123] /data/users/jingminhao/miniconda3/envs/ysr_magicanimate_test/lib/python3.10/site-packages/xformers/ops/fmha/flash.py:338: UserWarning: TypedStorage is deprecated. It will be removed in the future and UntypedStorage will be the only storage class. This should only matter to you if you are using storages directly.  To access UntypedStorage directly, use tensor.untyped_storage() instead of tensor.storage()
+  and inp.query.storage().data_ptr() == inp.key.storage().data_ptr()
+Steps:   0%|          | 9/1000000 [00:35<867:38:20,  3.12s/it, lr=3e-5, step_loss=0.123]Steps:   0%|          | 9/1000000 [00:35<867:38:20,  3.12s/it, lr=3e-5, step_loss=0.0434]/data/users/jingminhao/miniconda3/envs/ysr_magicanimate_test/lib/python3.10/site-packages/xformers/ops/fmha/flash.py:338: UserWarning: TypedStorage is deprecated. It will be removed in the future and UntypedStorage will be the only storage class. This should only matter to you if you are using storages directly.  To access UntypedStorage directly, use tensor.untyped_storage() instead of tensor.storage()
+  and inp.query.storage().data_ptr() == inp.key.storage().data_ptr()
+Steps:   0%|          | 10/1000000 [00:38<849:21:33,  3.06s/it, lr=3e-5, step_loss=0.0434]Steps:   0%|          | 10/1000000 [00:38<849:21:33,  3.06s/it, lr=3e-5, step_loss=0.0212]/data/users/jingminhao/miniconda3/envs/ysr_magicanimate_test/lib/python3.10/site-packages/xformers/ops/fmha/flash.py:338: UserWarning: TypedStorage is deprecated. It will be removed in the future and UntypedStorage will be the only storage class. This should only matter to you if you are using storages directly.  To access UntypedStorage directly, use tensor.untyped_storage() instead of tensor.storage()
+  and inp.query.storage().data_ptr() == inp.key.storage().data_ptr()
+Steps:   0%|          | 11/1000000 [00:41<845:34:43,  3.04s/it, lr=3e-5, step_loss=0.0212]Steps:   0%|          | 11/1000000 [00:41<845:34:43,  3.04s/it, lr=3e-5, step_loss=0.0464]/data/users/jingminhao/miniconda3/envs/ysr_magicanimate_test/lib/python3.10/site-packages/xformers/ops/fmha/flash.py:338: UserWarning: TypedStorage is deprecated. It will be removed in the future and UntypedStorage will be the only storage class. This should only matter to you if you are using storages directly.  To access UntypedStorage directly, use tensor.untyped_storage() instead of tensor.storage()
+  and inp.query.storage().data_ptr() == inp.key.storage().data_ptr()
+Steps:   0%|          | 12/1000000 [00:44<836:17:44,  3.01s/it, lr=3e-5, step_loss=0.0464]Steps:   0%|          | 12/1000000 [00:44<836:17:44,  3.01s/it, lr=3e-5, step_loss=0.0914]/data/users/jingminhao/miniconda3/envs/ysr_magicanimate_test/lib/python3.10/site-packages/xformers/ops/fmha/flash.py:338: UserWarning: TypedStorage is deprecated. It will be removed in the future and UntypedStorage will be the only storage class. This should only matter to you if you are using storages directly.  To access UntypedStorage directly, use tensor.untyped_storage() instead of tensor.storage()
+  and inp.query.storage().data_ptr() == inp.key.storage().data_ptr()
+Steps:   0%|          | 13/1000000 [00:47<831:34:28,  2.99s/it, lr=3e-5, step_loss=0.0914]Steps:   0%|          | 13/1000000 [00:47<831:34:28,  2.99s/it, lr=3e-5, step_loss=0.0859]/data/users/jingminhao/miniconda3/envs/ysr_magicanimate_test/lib/python3.10/site-packages/xformers/ops/fmha/flash.py:338: UserWarning: TypedStorage is deprecated. It will be removed in the future and UntypedStorage will be the only storage class. This should only matter to you if you are using storages directly.  To access UntypedStorage directly, use tensor.untyped_storage() instead of tensor.storage()
+  and inp.query.storage().data_ptr() == inp.key.storage().data_ptr()
+Steps:   0%|          | 14/1000000 [00:50<850:07:04,  3.06s/it, lr=3e-5, step_loss=0.0859]Steps:   0%|          | 14/1000000 [00:50<850:07:04,  3.06s/it, lr=3e-5, step_loss=0.033] /data/users/jingminhao/miniconda3/envs/ysr_magicanimate_test/lib/python3.10/site-packages/xformers/ops/fmha/flash.py:338: UserWarning: TypedStorage is deprecated. It will be removed in the future and UntypedStorage will be the only storage class. This should only matter to you if you are using storages directly.  To access UntypedStorage directly, use tensor.untyped_storage() instead of tensor.storage()
+  and inp.query.storage().data_ptr() == inp.key.storage().data_ptr()
+Steps:   0%|          | 15/1000000 [00:53<847:00:42,  3.05s/it, lr=3e-5, step_loss=0.033]Steps:   0%|          | 15/1000000 [00:53<847:00:42,  3.05s/it, lr=3e-5, step_loss=0.0338]/data/users/jingminhao/miniconda3/envs/ysr_magicanimate_test/lib/python3.10/site-packages/xformers/ops/fmha/flash.py:338: UserWarning: TypedStorage is deprecated. It will be removed in the future and UntypedStorage will be the only storage class. This should only matter to you if you are using storages directly.  To access UntypedStorage directly, use tensor.untyped_storage() instead of tensor.storage()
+  and inp.query.storage().data_ptr() == inp.key.storage().data_ptr()
+Steps:   0%|          | 16/1000000 [00:56<845:32:56,  3.04s/it, lr=3e-5, step_loss=0.0338]Steps:   0%|          | 16/1000000 [00:56<845:32:56,  3.04s/it, lr=3e-5, step_loss=0.0302]/data/users/jingminhao/miniconda3/envs/ysr_magicanimate_test/lib/python3.10/site-packages/xformers/ops/fmha/flash.py:338: UserWarning: TypedStorage is deprecated. It will be removed in the future and UntypedStorage will be the only storage class. This should only matter to you if you are using storages directly.  To access UntypedStorage directly, use tensor.untyped_storage() instead of tensor.storage()
+  and inp.query.storage().data_ptr() == inp.key.storage().data_ptr()
+Steps:   0%|          | 17/1000000 [00:59<844:00:05,  3.04s/it, lr=3e-5, step_loss=0.0302]Steps:   0%|          | 17/1000000 [00:59<844:00:05,  3.04s/it, lr=3e-5, step_loss=0.0024]/data/users/jingminhao/miniconda3/envs/ysr_magicanimate_test/lib/python3.10/site-packages/xformers/ops/fmha/flash.py:338: UserWarning: TypedStorage is deprecated. It will be removed in the future and UntypedStorage will be the only storage class. This should only matter to you if you are using storages directly.  To access UntypedStorage directly, use tensor.untyped_storage() instead of tensor.storage()
+  and inp.query.storage().data_ptr() == inp.key.storage().data_ptr()
+Steps:   0%|          | 18/1000000 [01:02<841:41:04,  3.03s/it, lr=3e-5, step_loss=0.0024]Steps:   0%|          | 18/1000000 [01:02<841:41:04,  3.03s/it, lr=3e-5, step_loss=0.5]   /data/users/jingminhao/miniconda3/envs/ysr_magicanimate_test/lib/python3.10/site-packages/xformers/ops/fmha/flash.py:338: UserWarning: TypedStorage is deprecated. It will be removed in the future and UntypedStorage will be the only storage class. This should only matter to you if you are using storages directly.  To access UntypedStorage directly, use tensor.untyped_storage() instead of tensor.storage()
+  and inp.query.storage().data_ptr() == inp.key.storage().data_ptr()
+Steps:   0%|          | 19/1000000 [01:05<838:52:56,  3.02s/it, lr=3e-5, step_loss=0.5]Steps:   0%|          | 19/1000000 [01:05<838:52:56,  3.02s/it, lr=3e-5, step_loss=0.129]/data/users/jingminhao/miniconda3/envs/ysr_magicanimate_test/lib/python3.10/site-packages/xformers/ops/fmha/flash.py:338: UserWarning: TypedStorage is deprecated. It will be removed in the future and UntypedStorage will be the only storage class. This should only matter to you if you are using storages directly.  To access UntypedStorage directly, use tensor.untyped_storage() instead of tensor.storage()
+  and inp.query.storage().data_ptr() == inp.key.storage().data_ptr()
+Steps:   0%|          | 20/1000000 [01:09<878:41:25,  3.16s/it, lr=3e-5, step_loss=0.129]
+  0%|          | 0/6 [00:00<?, ?it/s][Atest_video ./me_test_data/my_data_8_dense_dw.gif
+control (16, 512, 512, 3)
+/data/users/jingminhao/code/yangshurong/VividVideoGeneration_r/train3d_all.py:740: DeprecationWarning: ANTIALIAS is deprecated and will be removed in Pillow 10 (2023-07-01). Use LANCZOS or Resampling.LANCZOS instead.
+  frame_resized = frame_cropped.resize(target_size, Image.ANTIALIAS)
+this inference use classifier_free_guidance
+/data/users/jingminhao/code/yangshurong/VividVideoGeneration_r/animatediff/magic_animate/unet_model/pipeline.py:730: FutureWarning: Accessing config attribute `in_channels` directly via 'UNet3DConditionModel' object attribute is deprecated. Please access 'in_channels' over 'UNet3DConditionModel's config object instead, e.g. 'unet.config.in_channels'.
+  num_channels_latents = self.unet.in_channels
+
+
+  0%|          | 0/25 [00:00<?, ?it/s][A[A
+
+  4%|▍         | 1/25 [00:00<00:18,  1.29it/s][A[A
+
+  8%|▊         | 2/25 [00:01<00:16,  1.40it/s][A[A
+
+ 12%|█▏        | 3/25 [00:02<00:15,  1.44it/s][A[A
+
+ 16%|█▌        | 4/25 [00:02<00:14,  1.46it/s][A[A
+
+ 20%|██        | 5/25 [00:03<00:13,  1.47it/s][A[A
+
+ 24%|██▍       | 6/25 [00:04<00:12,  1.48it/s][A[A
+
+ 28%|██▊       | 7/25 [00:04<00:12,  1.48it/s][A[A
+
+ 32%|███▏      | 8/25 [00:05<00:11,  1.48it/s][A[A
+
+ 36%|███▌      | 9/25 [00:06<00:10,  1.48it/s][A[A
+
+ 40%|████      | 10/25 [00:06<00:10,  1.48it/s][A[A
+
+ 44%|████▍     | 11/25 [00:07<00:09,  1.49it/s][A[A
+
+ 48%|████▊     | 12/25 [00:08<00:08,  1.49it/s][A[A
+
+ 52%|█████▏    | 13/25 [00:08<00:08,  1.48it/s][A[A
+
+ 56%|█████▌    | 14/25 [00:09<00:07,  1.48it/s][A[A
+
+ 60%|██████    | 15/25 [00:10<00:06,  1.49it/s][A[A
+
+ 64%|██████▍   | 16/25 [00:10<00:06,  1.48it/s][A[A
+
+ 68%|██████▊   | 17/25 [00:11<00:05,  1.49it/s][A[A
+
+ 72%|███████▏  | 18/25 [00:12<00:04,  1.49it/s][A[A
+
+ 76%|███████▌  | 19/25 [00:12<00:04,  1.49it/s][A[A
+
+ 80%|████████  | 20/25 [00:13<00:03,  1.49it/s][A[A
+
+ 84%|████████▍ | 21/25 [00:14<00:02,  1.49it/s][A[A
+
+ 88%|████████▊ | 22/25 [00:14<00:02,  1.49it/s][A[A
+
+ 92%|█████████▏| 23/25 [00:15<00:01,  1.48it/s][A[A
+
+ 96%|█████████▌| 24/25 [00:16<00:00,  1.48it/s][A[A
+
+100%|██████████| 25/25 [00:16<00:00,  1.48it/s][A[A100%|██████████| 25/25 [00:16<00:00,  1.48it/s]
+
+
+  0%|          | 0/16 [00:00<?, ?it/s][A[A
+
+ 31%|███▏      | 5/16 [00:00<00:00, 39.49it/s][A[A
+
+ 56%|█████▋    | 9/16 [00:00<00:00, 28.37it/s][A[A
+
+ 75%|███████▌  | 12/16 [00:00<00:00, 26.04it/s][A[A
+
+ 94%|█████████▍| 15/16 [00:00<00:00, 24.82it/s][A[A100%|██████████| 16/16 [00:00<00:00, 26.24it/s]
+Saved samples to /dev/shm/yangshurong/magicanimate/train12_cro08_for3d_refisindex4_stride2_codeback_frommagic-2024-02-26T10-23-01/samples/sample_20/000_my_data_8_dense_dw.gif
+
+ 17%|█▋        | 1/6 [00:24<02:04, 24.89s/it][Atest_video ./me_test_data/my_data_8_dense_dw.gif
+control (16, 512, 512, 3)
+/data/users/jingminhao/code/yangshurong/VividVideoGeneration_r/train3d_all.py:740: DeprecationWarning: ANTIALIAS is deprecated and will be removed in Pillow 10 (2023-07-01). Use LANCZOS or Resampling.LANCZOS instead.
+  frame_resized = frame_cropped.resize(target_size, Image.ANTIALIAS)
+this inference use classifier_free_guidance
+/data/users/jingminhao/code/yangshurong/VividVideoGeneration_r/animatediff/magic_animate/unet_model/pipeline.py:730: FutureWarning: Accessing config attribute `in_channels` directly via 'UNet3DConditionModel' object attribute is deprecated. Please access 'in_channels' over 'UNet3DConditionModel's config object instead, e.g. 'unet.config.in_channels'.
+  num_channels_latents = self.unet.in_channels
+
+
+  0%|          | 0/25 [00:00<?, ?it/s][A[A
+
+  4%|▍         | 1/25 [00:00<00:16,  1.44it/s][A[A
+
+  8%|▊         | 2/25 [00:01<00:15,  1.47it/s][A[A
+
+ 12%|█▏        | 3/25 [00:02<00:14,  1.48it/s][A[A
+
+ 16%|█▌        | 4/25 [00:02<00:14,  1.48it/s][A[A
+
+ 20%|██        | 5/25 [00:03<00:13,  1.48it/s][A[A
+
+ 24%|██▍       | 6/25 [00:04<00:12,  1.48it/s][A[A
+
+ 28%|██▊       | 7/25 [00:04<00:12,  1.49it/s][A[A
+
+ 32%|███▏      | 8/25 [00:05<00:11,  1.49it/s][A[A
+
+ 36%|███▌      | 9/25 [00:06<00:10,  1.48it/s][A[A
+
+ 40%|████      | 10/25 [00:06<00:10,  1.49it/s][A[A
+
+ 44%|████▍     | 11/25 [00:07<00:09,  1.48it/s][A[A
+
+ 48%|████▊     | 12/25 [00:08<00:08,  1.48it/s][A[A
+
+ 52%|█████▏    | 13/25 [00:08<00:08,  1.48it/s][A[A
+
+ 56%|█████▌    | 14/25 [00:09<00:07,  1.49it/s][A[A
+
+ 60%|██████    | 15/25 [00:10<00:06,  1.48it/s][A[A
+
+ 64%|██████▍   | 16/25 [00:10<00:06,  1.48it/s][A[A
+
+ 68%|██████▊   | 17/25 [00:11<00:05,  1.48it/s][A[A
+
+ 72%|███████▏  | 18/25 [00:12<00:04,  1.48it/s][A[A
+
+ 76%|███████▌  | 19/25 [00:12<00:04,  1.48it/s][A[A
+
+ 80%|████████  | 20/25 [00:13<00:03,  1.48it/s][A[A
+
+ 84%|████████▍ | 21/25 [00:14<00:02,  1.48it/s][A[A
+
+ 88%|████████▊ | 22/25 [00:14<00:02,  1.48it/s][A[A
+
+ 92%|█████████▏| 23/25 [00:15<00:01,  1.48it/s][A[A
+
+ 96%|█████████▌| 24/25 [00:16<00:00,  1.48it/s][A[A
+
+100%|██████████| 25/25 [00:16<00:00,  1.48it/s][A[A100%|██████████| 25/25 [00:16<00:00,  1.48it/s]
+
+
+  0%|          | 0/16 [00:00<?, ?it/s][A[A
+
+ 31%|███▏      | 5/16 [00:00<00:00, 42.07it/s][A[A
+
+ 62%|██████▎   | 10/16 [00:00<00:00, 28.07it/s][A[A
+
+ 88%|████████▊ | 14/16 [00:00<00:00, 25.67it/s][A[A100%|██████████| 16/16 [00:00<00:00, 26.58it/s]
+Saved samples to /dev/shm/yangshurong/magicanimate/train12_cro08_for3d_refisindex4_stride2_codeback_frommagic-2024-02-26T10-23-01/samples/sample_20/Jimmy_O_my_data_8_dense_dw.gif
+
+ 33%|███▎      | 2/6 [00:49<01:39, 24.80s/it][Atest_video ./me_test_data/my_data_8_dense_dw.gif
+control (16, 512, 512, 3)
+/data/users/jingminhao/code/yangshurong/VividVideoGeneration_r/train3d_all.py:740: DeprecationWarning: ANTIALIAS is deprecated and will be removed in Pillow 10 (2023-07-01). Use LANCZOS or Resampling.LANCZOS instead.
+  frame_resized = frame_cropped.resize(target_size, Image.ANTIALIAS)
+this inference use classifier_free_guidance
+/data/users/jingminhao/code/yangshurong/VividVideoGeneration_r/animatediff/magic_animate/unet_model/pipeline.py:730: FutureWarning: Accessing config attribute `in_channels` directly via 'UNet3DConditionModel' object attribute is deprecated. Please access 'in_channels' over 'UNet3DConditionModel's config object instead, e.g. 'unet.config.in_channels'.
+  num_channels_latents = self.unet.in_channels
+
+
+  0%|          | 0/25 [00:00<?, ?it/s][A[A
+
+  4%|▍         | 1/25 [00:00<00:16,  1.42it/s][A[A
+
+  8%|▊         | 2/25 [00:01<00:15,  1.46it/s][A[A
+
+ 12%|█▏        | 3/25 [00:02<00:14,  1.48it/s][A[A
+
+ 16%|█▌        | 4/25 [00:02<00:14,  1.48it/s][A[A
+
+ 20%|██        | 5/25 [00:03<00:13,  1.48it/s][A[A
+
+ 24%|██▍       | 6/25 [00:04<00:12,  1.48it/s][A[A
+
+ 28%|██▊       | 7/25 [00:04<00:12,  1.48it/s][A[A
+
+ 32%|███▏      | 8/25 [00:05<00:11,  1.48it/s][A[A
+
+ 36%|███▌      | 9/25 [00:06<00:10,  1.48it/s][A[A
+
+ 40%|████      | 10/25 [00:06<00:10,  1.49it/s][A[A
+
+ 44%|████▍     | 11/25 [00:07<00:09,  1.49it/s][A[A
+
+ 48%|████▊     | 12/25 [00:08<00:08,  1.48it/s][A[A
+
+ 52%|█████▏    | 13/25 [00:08<00:08,  1.48it/s][A[A
+
+ 56%|█████▌    | 14/25 [00:09<00:07,  1.49it/s][A[A
+
+ 60%|██████    | 15/25 [00:10<00:06,  1.49it/s][A[A
+
+ 64%|██████▍   | 16/25 [00:10<00:06,  1.49it/s][A[A
+
+ 68%|██████▊   | 17/25 [00:11<00:05,  1.48it/s][A[A
+
+ 72%|███████▏  | 18/25 [00:12<00:04,  1.49it/s][A[A
+
+ 76%|███████▌  | 19/25 [00:12<00:04,  1.49it/s][A[A
+
+ 80%|████████  | 20/25 [00:13<00:03,  1.49it/s][A[A
+
+ 84%|████████▍ | 21/25 [00:14<00:02,  1.49it/s][A[A
+
+ 88%|████████▊ | 22/25 [00:14<00:02,  1.49it/s][A[A
+
+ 92%|█████████▏| 23/25 [00:15<00:01,  1.49it/s][A[A
+
+ 96%|█████████▌| 24/25 [00:16<00:00,  1.49it/s][A[A
+
+100%|██████████| 25/25 [00:16<00:00,  1.49it/s][A[A100%|██████████| 25/25 [00:16<00:00,  1.48it/s]
+
+
+  0%|          | 0/16 [00:00<?, ?it/s][A[A
+
+ 31%|███▏      | 5/16 [00:00<00:00, 42.05it/s][A[A
+
+ 62%|██████▎   | 10/16 [00:00<00:00, 28.07it/s][A[A
+
+ 88%|████████▊ | 14/16 [00:00<00:00, 25.67it/s][A[A100%|██████████| 16/16 [00:00<00:00, 26.58it/s]
+Saved samples to /dev/shm/yangshurong/magicanimate/train12_cro08_for3d_refisindex4_stride2_codeback_frommagic-2024-02-26T10-23-01/samples/sample_20/000_my_data_8_dense_dw.gif
+
+ 50%|█████     | 3/6 [01:13<01:13, 24.46s/it][Atest_video ./me_test_data/my_data_8_dense_dw.gif
+control (16, 512, 512, 3)
+/data/users/jingminhao/code/yangshurong/VividVideoGeneration_r/train3d_all.py:740: DeprecationWarning: ANTIALIAS is deprecated and will be removed in Pillow 10 (2023-07-01). Use LANCZOS or Resampling.LANCZOS instead.
+  frame_resized = frame_cropped.resize(target_size, Image.ANTIALIAS)
+this inference use classifier_free_guidance
+/data/users/jingminhao/code/yangshurong/VividVideoGeneration_r/animatediff/magic_animate/unet_model/pipeline.py:730: FutureWarning: Accessing config attribute `in_channels` directly via 'UNet3DConditionModel' object attribute is deprecated. Please access 'in_channels' over 'UNet3DConditionModel's config object instead, e.g. 'unet.config.in_channels'.
+  num_channels_latents = self.unet.in_channels
+
+
+  0%|          | 0/25 [00:00<?, ?it/s][A[A
+
+  4%|▍         | 1/25 [00:00<00:16,  1.44it/s][A[A
+
+  8%|▊         | 2/25 [00:01<00:15,  1.47it/s][A[A
+
+ 12%|█▏        | 3/25 [00:02<00:15,  1.46it/s][A[A
+
+ 16%|█▌        | 4/25 [00:02<00:14,  1.47it/s][A[A
+
+ 20%|██        | 5/25 [00:03<00:13,  1.48it/s][A[A
+
+ 24%|██▍       | 6/25 [00:04<00:12,  1.48it/s][A[A
+
+ 28%|██▊       | 7/25 [00:04<00:12,  1.48it/s][A[A
+
+ 32%|███▏      | 8/25 [00:05<00:11,  1.49it/s][A[A
+
+ 36%|███▌      | 9/25 [00:06<00:10,  1.49it/s][A[A
+
+ 40%|████      | 10/25 [00:06<00:10,  1.49it/s][A[A
+
+ 44%|████▍     | 11/25 [00:07<00:09,  1.49it/s][A[A
+
+ 48%|████▊     | 12/25 [00:08<00:08,  1.49it/s][A[A
+
+ 52%|█████▏    | 13/25 [00:08<00:08,  1.48it/s][A[A
+
+ 56%|█████▌    | 14/25 [00:09<00:07,  1.49it/s][A[A
+
+ 60%|██████    | 15/25 [00:10<00:06,  1.48it/s][A[A
+
+ 64%|██████▍   | 16/25 [00:10<00:06,  1.49it/s][A[A
+
+ 68%|██████▊   | 17/25 [00:11<00:05,  1.49it/s][A[A
+
+ 72%|███████▏  | 18/25 [00:12<00:04,  1.48it/s][A[A
+
+ 76%|███████▌  | 19/25 [00:12<00:04,  1.48it/s][A[A
+
+ 80%|████████  | 20/25 [00:13<00:03,  1.48it/s][A[A
+
+ 84%|████████▍ | 21/25 [00:14<00:02,  1.48it/s][A[A
+
+ 88%|████████▊ | 22/25 [00:14<00:02,  1.48it/s][A[A
+
+ 92%|█████████▏| 23/25 [00:15<00:01,  1.48it/s][A[A
+
+ 96%|█████████▌| 24/25 [00:16<00:00,  1.48it/s][A[A
+
+100%|██████████| 25/25 [00:16<00:00,  1.48it/s][A[A100%|██████████| 25/25 [00:16<00:00,  1.48it/s]
+
+
+  0%|          | 0/16 [00:00<?, ?it/s][A[A
+
+ 31%|███▏      | 5/16 [00:00<00:00, 42.02it/s][A[A
+
+ 62%|██████▎   | 10/16 [00:00<00:00, 28.07it/s][A[A
+
+ 88%|████████▊ | 14/16 [00:00<00:00, 25.67it/s][A[A100%|██████████| 16/16 [00:00<00:00, 26.58it/s]
+Saved samples to /dev/shm/yangshurong/magicanimate/train12_cro08_for3d_refisindex4_stride2_codeback_frommagic-2024-02-26T10-23-01/samples/sample_20/sunwei_crop_my_data_8_dense_dw.gif
+
+ 67%|██████▋   | 4/6 [01:37<00:48, 24.21s/it][Atest_video ./me_test_data/my_data_8_dense_dw.gif
+control (16, 512, 512, 3)
+/data/users/jingminhao/code/yangshurong/VividVideoGeneration_r/train3d_all.py:740: DeprecationWarning: ANTIALIAS is deprecated and will be removed in Pillow 10 (2023-07-01). Use LANCZOS or Resampling.LANCZOS instead.
+  frame_resized = frame_cropped.resize(target_size, Image.ANTIALIAS)
+this inference use classifier_free_guidance
+/data/users/jingminhao/code/yangshurong/VividVideoGeneration_r/animatediff/magic_animate/unet_model/pipeline.py:730: FutureWarning: Accessing config attribute `in_channels` directly via 'UNet3DConditionModel' object attribute is deprecated. Please access 'in_channels' over 'UNet3DConditionModel's config object instead, e.g. 'unet.config.in_channels'.
+  num_channels_latents = self.unet.in_channels
+
+
+  0%|          | 0/25 [00:00<?, ?it/s][A[A
+
+  4%|▍         | 1/25 [00:00<00:16,  1.44it/s][A[A
+
+  8%|▊         | 2/25 [00:01<00:15,  1.47it/s][A[A
+
+ 12%|█▏        | 3/25 [00:02<00:14,  1.48it/s][A[A
+
+ 16%|█▌        | 4/25 [00:02<00:14,  1.48it/s][A[A
+
+ 20%|██        | 5/25 [00:03<00:13,  1.49it/s][A[A
+
+ 24%|██▍       | 6/25 [00:04<00:12,  1.49it/s][A[A
+
+ 28%|██▊       | 7/25 [00:04<00:12,  1.49it/s][A[A
+
+ 32%|███▏      | 8/25 [00:05<00:11,  1.49it/s][A[A
+
+ 36%|███▌      | 9/25 [00:06<00:10,  1.48it/s][A[A
+
+ 40%|████      | 10/25 [00:06<00:10,  1.48it/s][A[A
+
+ 44%|████▍     | 11/25 [00:07<00:09,  1.48it/s][A[A
+
+ 48%|████▊     | 12/25 [00:08<00:08,  1.48it/s][A[A
+
+ 52%|█████▏    | 13/25 [00:08<00:08,  1.48it/s][A[A
+
+ 56%|█████▌    | 14/25 [00:09<00:07,  1.48it/s][A[A
+
+ 60%|██████    | 15/25 [00:10<00:06,  1.49it/s][A[A
+
+ 64%|██████▍   | 16/25 [00:10<00:06,  1.49it/s][A[A
+
+ 68%|██████▊   | 17/25 [00:11<00:05,  1.49it/s][A[A
+
+ 72%|███████▏  | 18/25 [00:12<00:04,  1.49it/s][A[A
+
+ 76%|███████▌  | 19/25 [00:12<00:04,  1.48it/s][A[A
+
+ 80%|████████  | 20/25 [00:13<00:03,  1.48it/s][A[A
+
+ 84%|████████▍ | 21/25 [00:14<00:02,  1.48it/s][A[A
+
+ 88%|████████▊ | 22/25 [00:14<00:02,  1.48it/s][A[A
+
+ 92%|█████████▏| 23/25 [00:15<00:01,  1.48it/s][A[A
+
+ 96%|█████████▌| 24/25 [00:16<00:00,  1.48it/s][A[A
+
+100%|██████████| 25/25 [00:16<00:00,  1.48it/s][A[A100%|██████████| 25/25 [00:16<00:00,  1.48it/s]
+
+
+  0%|          | 0/16 [00:00<?, ?it/s][A[A
+
+ 31%|███▏      | 5/16 [00:00<00:00, 41.96it/s][A[A
+
+ 62%|██████▎   | 10/16 [00:00<00:00, 28.04it/s][A[A
+
+ 88%|████████▊ | 14/16 [00:00<00:00, 25.65it/s][A[A100%|██████████| 16/16 [00:00<00:00, 26.56it/s]
+Saved samples to /dev/shm/yangshurong/magicanimate/train12_cro08_for3d_refisindex4_stride2_codeback_frommagic-2024-02-26T10-23-01/samples/sample_20/000_my_data_8_dense_dw.gif
+
+ 83%|████████▎ | 5/6 [02:01<00:24, 24.11s/it][Atest_video ./me_test_data/my_data_8_dense_dw.gif
+control (16, 512, 512, 3)
+/data/users/jingminhao/code/yangshurong/VividVideoGeneration_r/train3d_all.py:740: DeprecationWarning: ANTIALIAS is deprecated and will be removed in Pillow 10 (2023-07-01). Use LANCZOS or Resampling.LANCZOS instead.
+  frame_resized = frame_cropped.resize(target_size, Image.ANTIALIAS)
+ 83%|████████▎ | 5/6 [02:01<00:24, 24.35s/it]
+download failed: s3://data-transfer-tos-shanghai-818/midjourney/jmh/Video/wds/CelebV_webdataset_20231211_videoblip/archive0_1_126.tar to - [Errno 32] Broken pipe
+download failed: s3://data-transfer-tos-shanghai-818/midjourney/jmh/Video/wds/CelebV_webdataset_20231211_videoblip/archive0_1_999.tar to - [Errno 32] Broken pipe
+download failed: s3://data-transfer-tos-shanghai-818/midjourney/jmh/Video/wds/CelebV_webdataset_20231211_videoblip/archive0_1_1512.tar to - [Errno 32] Broken pipe
+Traceback (most recent call last):
+  File "/data/users/jingminhao/code/yangshurong/VividVideoGeneration_r/train3d_all.py", line 1009, in <module>
+    main(name=name, launcher=args.launcher, use_wandb=args.wandb, **config)
+  File "/data/users/jingminhao/code/yangshurong/VividVideoGeneration_r/train3d_all.py", line 686, in main
+    eval_model(validation_data,
+  File "/data/users/jingminhao/code/yangshurong/VividVideoGeneration_r/train3d_all.py", line 867, in eval_model
+    dwpose_model_result_dict = dwpose_model(source_image_pil)
+  File "/data/users/jingminhao/code/yangshurong/VividVideoGeneration_r/controlnet_resource/dense_dwpose/densedw.py", line 22, in __call__
+    dense_frame = self.dense_model(img, convert_rgb=False)
+  File "/data/users/jingminhao/code/yangshurong/VividVideoGeneration_r/controlnet_resource/dense_aux/densepredictor.py", line 27, in __call__
+    outputs = self.predictor(img)["instances"]
+  File "/data/users/jingminhao/miniconda3/envs/ysr_magicanimate_test/lib/python3.10/site-packages/detectron2/engine/defaults.py", line 319, in __call__
+    predictions = self.model([inputs])[0]
+  File "/data/users/jingminhao/miniconda3/envs/ysr_magicanimate_test/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/data/users/jingminhao/miniconda3/envs/ysr_magicanimate_test/lib/python3.10/site-packages/detectron2/modeling/meta_arch/rcnn.py", line 150, in forward
+    return self.inference(batched_inputs)
+  File "/data/users/jingminhao/miniconda3/envs/ysr_magicanimate_test/lib/python3.10/site-packages/detectron2/modeling/meta_arch/rcnn.py", line 203, in inference
+    images = self.preprocess_image(batched_inputs)
+  File "/data/users/jingminhao/miniconda3/envs/ysr_magicanimate_test/lib/python3.10/site-packages/detectron2/modeling/meta_arch/rcnn.py", line 228, in preprocess_image
+    images = [(x - self.pixel_mean) / self.pixel_std for x in images]
+  File "/data/users/jingminhao/miniconda3/envs/ysr_magicanimate_test/lib/python3.10/site-packages/detectron2/modeling/meta_arch/rcnn.py", line 228, in <listcomp>
+    images = [(x - self.pixel_mean) / self.pixel_std for x in images]
+RuntimeError: The size of tensor a (4) must match the size of tensor b (3) at non-singleton dimension 0
+download failed: s3://data-transfer-tos-shanghai-818/midjourney/jmh/Video/wds/CelebV_webdataset_20231211_videoblip/archive0_1_611.tar to - [Errno 32] Broken pipe
+Steps:   0%|          | 20/1000000 [03:11<2660:56:57,  9.58s/it, lr=3e-5, step_loss=0.129]
+ERROR:torch.distributed.elastic.multiprocessing.api:failed (exitcode: 1) local_rank: 0 (pid: 30957) of binary: /data/users/jingminhao/miniconda3/envs/ysr_magicanimate_test/bin/python
+Traceback (most recent call last):
+  File "/data/users/jingminhao/miniconda3/envs/ysr_magicanimate_test/bin/accelerate", line 8, in <module>
+    sys.exit(main())
+  File "/data/users/jingminhao/miniconda3/envs/ysr_magicanimate_test/lib/python3.10/site-packages/accelerate/commands/accelerate_cli.py", line 47, in main
+    args.func(args)
+  File "/data/users/jingminhao/miniconda3/envs/ysr_magicanimate_test/lib/python3.10/site-packages/accelerate/commands/launch.py", line 985, in launch_command
+    multi_gpu_launcher(args)
+  File "/data/users/jingminhao/miniconda3/envs/ysr_magicanimate_test/lib/python3.10/site-packages/accelerate/commands/launch.py", line 654, in multi_gpu_launcher
+    distrib_run.run(args)
+  File "/data/users/jingminhao/miniconda3/envs/ysr_magicanimate_test/lib/python3.10/site-packages/torch/distributed/run.py", line 785, in run
+    elastic_launch(
+  File "/data/users/jingminhao/miniconda3/envs/ysr_magicanimate_test/lib/python3.10/site-packages/torch/distributed/launcher/api.py", line 134, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+  File "/data/users/jingminhao/miniconda3/envs/ysr_magicanimate_test/lib/python3.10/site-packages/torch/distributed/launcher/api.py", line 250, in launch_agent
+    raise ChildFailedError(
+torch.distributed.elastic.multiprocessing.errors.ChildFailedError: 
+============================================================
+train3d_all.py FAILED
+------------------------------------------------------------
+Failures:
+  <NO_OTHER_FAILURES>
+------------------------------------------------------------
+Root Cause (first observed failure):
+[0]:
+  time      : 2024-02-26_10:27:01
+  host      : t-20240226154624-7r6l6-worker-0.t-20240226154624-7r6l6-worker.mlplatform-customtask.svc.cluster.local
+  rank      : 0 (local_rank: 0)
+  exitcode  : 1 (pid: 30957)
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+============================================================
