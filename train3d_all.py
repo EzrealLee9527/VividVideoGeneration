@@ -845,6 +845,8 @@ def eval_model(validation_data,
             source_image = Image.fromarray(origin_video[0])
         else:
             source_image = Image.open(source_image)
+            if np.array(source_image).shape[2] == 4:
+                source_image = source_image.convert("RGB")
 
         # img_for_face_det = torch.tensor(np.array(source_image)).to(local_rank, torch.uint8).unsqueeze(0).permute(0, 3, 1, 2)
         # if image_encoder is not None:
