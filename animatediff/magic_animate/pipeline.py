@@ -709,7 +709,10 @@ class AnimationPipeline(DiffusionPipeline):
             num_videos_per_prompt=num_videos_per_prompt,
             do_classifier_free_guidance=do_classifier_free_guidance,
         )
-        controlnet_uncond_images, controlnet_cond_images = control.chunk(2)
+        if do_classifier_free_guidance:
+            controlnet_uncond_images, controlnet_cond_images = control.chunk(2)
+        else:
+            controlnet_cond_images = control
 
         # Prepare timesteps
         self.scheduler.set_timesteps(num_inference_steps, device=device)
@@ -794,8 +797,8 @@ class AnimationPipeline(DiffusionPipeline):
             appearance_encoder(
                 ref_image_latents.repeat(
                     context_batch_size * (2 if do_classifier_free_guidance else 1), 1, 1, 1),
-                # torch.zeros_like(t),
-                t,
+                torch.zeros_like(t),
+                # t,
                 encoder_hidden_states=text_embeddings,
                 return_dict=False,
             )
@@ -805,6 +808,7 @@ class AnimationPipeline(DiffusionPipeline):
             ))
             num_context_batches = math.ceil(
                 len(context_queue) / context_batch_size)
+
             for i in range(num_context_batches):
                 context = context_queue[i *
                                         context_batch_size: (i + 1) * context_batch_size]
@@ -822,6 +826,8 @@ class AnimationPipeline(DiffusionPipeline):
                     controlnet_latent_input, "b c f h w -> (b f) c h w")
 
                 # controlnet inference
+                # tmp
+                # controlnet_conditioning_scale = 0.0
                 down_block_res_samples, mid_block_res_sample = self.controlnet(
                     controlnet_latent_input,
                     t,
@@ -844,7 +850,6 @@ class AnimationPipeline(DiffusionPipeline):
                 for j, k in enumerate(np.concatenate(np.array(context))):
                     controlnet_res_samples_cache_dict[k] = (
                         [sample[j:j + 1] for sample in down_block_res_samples], mid_block_res_sample[j:j + 1])
-
             context_queue = list(context_scheduler(
                 0, num_inference_steps, latents.shape[2], context_frames, context_stride, context_overlap
             ))
@@ -919,6 +924,9 @@ class AnimationPipeline(DiffusionPipeline):
                     noise_pred / counter).chunk(2)
                 noise_pred = noise_pred_uncond + guidance_scale * \
                     (noise_pred_text - noise_pred_uncond)
+            # else:
+            #     print('counter', counter)
+            #     noise_pred = noise_pred / counter
 
             # compute the previous noisy sample x_t -> x_t-1
             latents = self.scheduler.step(
@@ -1097,8 +1105,8 @@ class AnimationPipeline(DiffusionPipeline):
         """
         appearance_encoder(
             ref_image_latents,
-            # torch.zeros_like(t),
-            t,
+            torch.zeros_like(t),
+            # t,
             encoder_hidden_states=text_embeddings,
             return_dict=False,
         )
@@ -1109,11 +1117,12 @@ class AnimationPipeline(DiffusionPipeline):
         # print('controlnet_latent_input', controlnet_latent_input.shape)
         # print('controlnet_text_embeddings_c', controlnet_text_embeddings_c.shape)
         # print('controlnet_cond_images', controlnet_cond_images.shape)
-        # print('t',t.shape)
+        # print('t',t)
+        # print('t.repeat(latents.shape[2])', t.repeat(latents.shape[2]))
         # controlnet inference
         down_block_res_samples, mid_block_res_sample = self.controlnet(
             controlnet_latent_input,
-            t.repeat(latents.shape[2]),
+            t.unsqueeze(1).repeat(1,latents.shape[2]).reshape(-1),
             encoder_hidden_states=controlnet_text_embeddings_c,
             controlnet_cond=controlnet_cond_images,
             conditioning_scale=controlnet_conditioning_scale,

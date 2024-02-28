@@ -397,8 +397,8 @@ class S3VideosIterableDataset(IterableDataset):
                 pixel_values_ref_img = pixel_values_ref_img.squeeze(0)
                 
                 # clip_ref_image = clip_ref_image.unsqueeze(1) # [bs,1,768]
-                # drop_image_embeds = 1 if random.random() < 0.1 else 0
-                drop_image_embeds = 0
+                drop_image_embeds = 1 if random.random() < 0.1 else 0
+                # drop_image_embeds = 0
                 sample = dict(
                     pixel_values=pixel_values, 
                     # pixel_values_pose=pixel_values_pose,

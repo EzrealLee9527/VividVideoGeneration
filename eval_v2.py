@@ -264,8 +264,10 @@ def main(args):
                 #     device, dtype=weight_type), output_hidden_states=True).hidden_states[-2]
 
                 # image_prompt_embeddings = torch.cat([image_emb_neg, image_emb])
-
-                image_prompt_embeddings = torch.cat([torch.zeros_like(image_emb), image_emb])
+                if config.guidance_scale > 1:
+                    image_prompt_embeddings = torch.cat([torch.zeros_like(image_emb), image_emb])
+                else:
+                    image_prompt_embeddings = image_emb
                 print('image_prompt_embeddings', image_prompt_embeddings.shape)
 
         print(f"current seed: {torch.initial_seed()}")
