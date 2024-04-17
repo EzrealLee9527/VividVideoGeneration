@@ -129,7 +129,10 @@ save_individual_videos: false
 
 
 unet_additional_kwargs:
+<<<<<<< HEAD
   use_inflated_groupnorm: false
+=======
+>>>>>>> fcab889
   unet_use_cross_frame_attention: false
   unet_use_temporal_attention: false
   use_motion_module: true
@@ -156,3 +159,8 @@ noise_scheduler_kwargs:
   beta_start: 0.00085
   beta_end: 0.012
   beta_schedule: "linear"
+<<<<<<< HEAD
+=======
+
+inference_config: "configs/inference/magic_inference.yaml"
+>>>>>>> fcab889

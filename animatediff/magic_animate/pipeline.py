@@ -798,7 +798,6 @@ class AnimationPipeline(DiffusionPipeline):
                 ref_image_latents.repeat(
                     context_batch_size * (2 if do_classifier_free_guidance else 1), 1, 1, 1),
                 torch.zeros_like(t),
-                # t,
                 encoder_hidden_states=text_embeddings,
                 return_dict=False,
             )
@@ -1106,7 +1105,6 @@ class AnimationPipeline(DiffusionPipeline):
         appearance_encoder(
             ref_image_latents,
             torch.zeros_like(t),
-            # t,
             encoder_hidden_states=text_embeddings,
             return_dict=False,
         )

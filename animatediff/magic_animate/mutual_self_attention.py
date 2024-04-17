@@ -266,7 +266,7 @@ class ReferenceAttentionControl():
 
                     # 背景相加 和前景做attn
                     # hidden_states相加 encoder_hidden_states用concat
-                    # conditioning_scale = 1.0
+                    # conditioning_scale = 0.5
                     # assert len(self.bank) == 1
                     # modify_norm_hidden_states = norm_hidden_states + self.bank[0] * conditioning_scale
                     # hidden_states_uc = self.attn1(modify_norm_hidden_states, 
